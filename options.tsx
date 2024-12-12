@@ -28,12 +28,10 @@ const defaultConfig = {
 
 function OptionsPage() {
   const [config, setConfig] = useState<Config>(defaultConfig)
-  const [status, setStatus] = useState<string>()
   const storage = new Storage({
     area: "local"
   })
 
-  const isDev = process.env.NODE_ENV === "development"
   const platforms: Config["platform"][] = ["gslide", "zoom", "slack", "meet"]
   const fonts = [
     "メイリオ",
@@ -99,7 +97,7 @@ function OptionsPage() {
       const config = await storage.get<Config>("config")
       console.log(config)
 
-      setConfig(config)
+      setConfig(config || defaultConfig)
     })()
   }, [])
 
@@ -232,16 +230,6 @@ function OptionsPage() {
         onClick={handleSubmit}>
         Submit
       </button>
-      {isDev ? (
-        <button
-          className="p-2 rounded border border-gray-400 bg-white hover:bg-gray-100"
-          onClick={sampleComments}>
-          Sample
-        </button>
-      ) : (
-        ""
-      )}
-      <div>{status}</div>
     </div>
   )
 }

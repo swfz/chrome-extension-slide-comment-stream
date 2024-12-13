@@ -3,6 +3,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 import { Roles } from "~types/types"
+import { initializer } from "~lib/initializer"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://example.com/"],
@@ -21,14 +22,7 @@ type ResponseBody = {
   message: string
 }
 
-(async() => {
-  const res = await sendToBackground({
-    name: "connector",
-    body: {role: 'streamer', action: 'disconnect'}
-  })
-
-  console.warn(res.message)
-})();
+initializer(ROLE)
 
 const initialHandler: PlasmoMessaging.MessageHandler<
   RequestBody,

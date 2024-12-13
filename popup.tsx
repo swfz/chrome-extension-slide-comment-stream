@@ -1,32 +1,29 @@
 import { useEffect, useState } from "react"
 import { Storage } from "@plasmohq/storage"
+import { useStorage } from "@plasmohq/storage/hook"
 
 import { sendToBackground, sendToContentScript } from "@plasmohq/messaging"
 import "./style.css"
 
-type Status = {
-  slide: boolean;
-  comment: boolean;
-  sakura: boolean;
-}
-
 function IndexPopup() {
-  const [sampleComment, setSampleComment] = useState('');
-  const [state, setState] = useState({});
-
-  const storage = new Storage({
-    area: "local"
+  const [sampleComment, setSampleComment] = useState<string>('');
+  const [connectionStatus] = useStorage({
+    key: "state",
+    instance: new Storage({
+      area: "local"
+    })
   })
+
+  console.log('state',connectionStatus);
 
   const handleStart = async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
     const res = await sendToContentScript({
       name: "hoge",
-      command: "Load",
+      action: "Load",
       tabId: tab.id
     })
     console.warn(res)
-    // sendToBackground({name: 'hoge', body: {tabId}})
   }
 
   // slide上でサンプルコメント流せるようにする
@@ -35,7 +32,6 @@ function IndexPopup() {
   }
 
   // 各タブとの連携状況
-
   return (
     <div className="w-64 m-1">
       <p>
@@ -65,11 +61,10 @@ function IndexPopup() {
 
       <div className="m-1">
         <p>Status</p>
-        <div>Slide ready: </div>
-        <div>Comment Subscribe ready:</div>
-        <div>Sakura ready: </div>
+        <div>Slide ready: {connectionStatus?.streamer ? '✅' : '❌'}</div>
+        <div>Comment Subscribe ready: {connectionStatus?.subscriber ? '✅' : '❌'}</div>
+        <div>Sakura ready: {connectionStatus?.poster ? '✅' : '❌'}</div>
       </div>
-
 
     </div>
   )

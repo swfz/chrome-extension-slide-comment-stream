@@ -2,35 +2,48 @@ import type { PlasmoCSConfig } from "plasmo"
 
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
+import { Roles } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://example.com/"],
   all_frames: true
 }
 
+const ROLE: Roles = 'streamer'
+
 type RequestBody = {
-  body: {
-    command: "Load" | "Subscribe"
-  }
+  action: "Load" | "Subscribe"
+  from: "Streamer"|"Subscriber"|"Poster"
+  tabId: number|null
 }
 
 type ResponseBody = {
   message: string
 }
 
+(async() => {
+  const res = await sendToBackground({
+    name: "connector",
+    body: {role: 'streamer', action: 'disconnect'}
+  })
+
+  console.warn(res.message)
+})();
+
 const initialHandler: PlasmoMessaging.MessageHandler<
   RequestBody,
   ResponseBody
 > = async (req, res) => {
   console.warn("req", req)
-  if (req.command === "Load") {
-    await sendToBackground({
-      name: "hoge",
-      body: { command: "Load", from: "Streamer", tabId: req.tabId }
+  if (req.action === "Load") {
+    const response = await sendToBackground({
+      name: "connector",
+      body: {role: ROLE, action: "connect", tabId: req.tabId }
     })
+    res.send(response.message)
   }
 
-  if (req.command === "Subscribe") {
+  if (req.action === "Subscribe") {
     const boxElement = document.querySelector<HTMLDivElement>("div")
 
     const addComment = (comment: string) => {
@@ -47,9 +60,10 @@ const initialHandler: PlasmoMessaging.MessageHandler<
     )
 
     comments.forEach((comment) => addComment(comment))
+    res.send('subscribed')
   }
 }
 
 listen(initialHandler)
 
-console.log("sampel example.com ext")
+console.log("loaded. streamer content script.")

@@ -2,6 +2,9 @@ import type { PlasmoCSConfig } from "plasmo"
 
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
+import { Roles } from "~types/types"
+
+const ROLE: Roles = 'subscriber'
 
 export const config: PlasmoCSConfig = {
   matches: ["https://app.slack.com/client/*"],
@@ -58,8 +61,8 @@ const subscribeComments = (platform, observeElement, sendResponse) => {
 
   const observer = new MutationObserver(async function (records) {
     await sendToBackground({
-      name: "hoge",
-      body: { command: "Subscribe", comments: extractComment(records) }
+      name: "forwarder",
+      body: { action: "Subscribe", comments: extractComment(records) }
     })
     // chrome.runtime.sendMessage({command: 'SendSubscribedComments', comments: extractComment(records)})
   })
@@ -71,9 +74,18 @@ const subscribeComments = (platform, observeElement, sendResponse) => {
     message: "A listener has been added to the PRESENTER side."
   })
 }
-console.warn("example ext slack")
 
-const initialHandler: PlasmoMessaging.MessageHandler<string, string> = async (
+(async() => {
+  const res = await sendToBackground({
+    name: "connector",
+    body: {role: 'subscriber', action: 'disconnect'}
+  })
+
+  console.warn(res.message)
+})();
+
+
+const initialHandler: PlasmoMessaging.MessageHandler = async (
   req,
   res
 ) => {
@@ -90,19 +102,15 @@ const initialHandler: PlasmoMessaging.MessageHandler<string, string> = async (
 
   console.warn(observeElement)
 
-  // if (observeElement === null) {
-  //     console.warn('not found node');
-
-  //     return;
-  //   }
-
   subscribeComments("slack", observeElement, res.send)
 
-  await sendToBackground({
-    name: "hoge",
-    body: { command: "Load", from: "Subscriber", tabId: req.tabId }
+  const response = await sendToBackground({
+    name: "connector",
+    body: {role: ROLE, action: 'connect', tabId: req.tabId}
   })
-  // res.send(hoge)
+  res.send(response.message)
 }
 
 listen(initialHandler)
+
+console.log("loaded. subscriber content script.")

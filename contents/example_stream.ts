@@ -2,15 +2,16 @@ import type { PlasmoCSConfig } from "plasmo"
 
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
-import { Roles } from "~types/types"
+
 import { initialize } from "~lib/initializer"
+import { Roles } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://example.com/"],
   all_frames: true
 }
 
-const ROLE: Roles = 'streamer'
+const ROLE: Roles = "streamer"
 
 initialize(ROLE)
 
@@ -19,7 +20,7 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   if (req.action === "Load") {
     const response = await sendToBackground({
       name: "connector",
-      body: {role: ROLE, action: "connect", tabId: req.tabId }
+      body: { role: ROLE, action: "connect", tabId: req.tabId }
     })
     res.send(response.message)
   }
@@ -41,7 +42,7 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
     )
 
     comments.forEach((comment) => addComment(comment))
-    res.send('subscribed')
+    res.send("subscribed")
   }
 }
 

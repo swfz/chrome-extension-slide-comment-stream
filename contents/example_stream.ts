@@ -3,7 +3,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 import { Roles } from "~types/types"
-import { initializer } from "~lib/initializer"
+import { initialize } from "~lib/initializer"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://example.com/"],
@@ -12,22 +12,9 @@ export const config: PlasmoCSConfig = {
 
 const ROLE: Roles = 'streamer'
 
-type RequestBody = {
-  action: "Load" | "Subscribe"
-  from: "Streamer"|"Subscriber"|"Poster"
-  tabId: number|null
-}
+initialize(ROLE)
 
-type ResponseBody = {
-  message: string
-}
-
-initializer(ROLE)
-
-const initialHandler: PlasmoMessaging.MessageHandler<
-  RequestBody,
-  ResponseBody
-> = async (req, res) => {
+const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   console.warn("req", req)
   if (req.action === "Load") {
     const response = await sendToBackground({

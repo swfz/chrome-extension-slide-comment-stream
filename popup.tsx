@@ -14,8 +14,6 @@ function IndexPopup() {
     })
   })
 
-  console.log('state',connectionStatus);
-
   const handleStart = async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
     const res = await sendToContentScript({
@@ -28,6 +26,9 @@ function IndexPopup() {
   const handleSampleComment = async () => {
     await sendToBackground({name: "forwarder", body: {action: "Subscribe", comments: [sampleComment]}})
   }
+
+  // TODO: コメントリストのDL機能
+  // TODO: sakura機能
 
   return (
     <div className="w-64 m-1 flex flex-col">

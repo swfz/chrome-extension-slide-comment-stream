@@ -1,7 +1,7 @@
 import { sendToBackground } from "@plasmohq/messaging"
 import { Roles } from "~types/types"
 
-export const initializer = async (role: Roles) => {
+export const initialize = async (role: Roles) => {
   const res = await sendToBackground({
     name: "connector",
     body: {role, action: 'disconnect'}

@@ -3,7 +3,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 import { Roles } from "~types/types"
-import { initializer } from "~lib/initializer"
+import { initialize } from "~lib/initializer"
 
 const ROLE: Roles = 'subscriber'
 
@@ -76,7 +76,7 @@ const subscribeComments = (platform, observeElement, sendResponse) => {
   })
 }
 
-initializer(ROLE)
+initialize(ROLE)
 
 const initialHandler: PlasmoMessaging.MessageHandler = async (
   req,

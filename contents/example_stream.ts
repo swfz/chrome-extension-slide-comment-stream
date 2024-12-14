@@ -8,7 +8,6 @@ import { Storage } from "@plasmohq/storage"
 
 import { exampleExtractor } from "~lib/extractor/example"
 import { initialize } from "~lib/initializer"
-import { clapFilters } from "~lib/streamer"
 import { Roles } from "~types/types"
 
 export const config: PlasmoCSConfig = {

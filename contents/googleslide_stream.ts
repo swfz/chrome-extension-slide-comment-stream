@@ -1,3 +1,4 @@
+import clapImage from "data-base64:~assets/sign_language_black_24dp.svg"
 import type { PlasmoCSConfig } from "plasmo"
 
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
@@ -57,10 +58,7 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
     p.style.margin = "0"
 
     const img = document.createElement("img")
-    const imageUrl = chrome.runtime.getURL(
-      "images/sign_language_black_24dp.svg"
-    )
-    img.src = imageUrl
+    img.src = clapImage
 
     clapElement.appendChild(p)
     clapElement.appendChild(img)

@@ -12,31 +12,39 @@ type Config = {
   duration: number
   sizePx: number
   clap: string
+  clapSize: number
   plant: boolean
 }
 
 const defaultConfig = {
   platform: "slack",
-  color: "#000000",
+  color: "#FFFFFF",
   font: "",
   speedPx: 5,
   duration: 4,
   sizePx: 50,
-  clap: "none",
+  clap: "black",
+  clapSize: 80,
   plant: false
 }
-// 各種設定
-// さくらコメント設定
 
 function OptionsPage() {
   const [config, setConfig] = useState<Config>(defaultConfig)
-  const [previewBackground, setPreviewBackground] = useState<string>("#000000")
+  const [previewBackground, setPreviewBackground] = useState<string>("#FFFFFF")
 
   const storage = new Storage({
     area: "local"
   })
 
-  const platforms: Config["platform"][] = ["gslide", "zoom", "slack", "meet"]
+  const clapFilters = {
+    black:
+      "brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(26%) hue-rotate(88deg) brightness(87%) contrast(105%)",
+    white:
+      "brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%)",
+    pink: "brightness(0) saturate(100%) invert(29%) sepia(69%) saturate(6456%) hue-rotate(316deg) brightness(103%) contrast(107%)"
+  }
+
+  const platforms: Config["platform"][] = ["zoom", "slack", "meet"]
   const fonts = [
     "メイリオ",
     "ＭＳ ゴシック",
@@ -45,31 +53,30 @@ function OptionsPage() {
     "HGP創英角ﾎﾟｯﾌﾟ体"
   ]
 
-  const claps = ["none", "black", "white", "pink"]
+  const claps = ["black", "white", "pink"]
 
-  const handlePlatformChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setConfig((prev) => ({ ...prev, platform: event.target.value }))
+  const handleNumberChange = (key: keyof Config) => {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      setConfig((prev) => ({ ...prev, [key]: parseInt(event.target.value) }))
+    }
   }
-  const handleColorChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setConfig((prev) => ({ ...prev, color: event.target.value }))
+
+  const handleSelectChange = (key: keyof Config) => {
+    return (event: ChangeEvent<HTMLSelectElement>) => {
+      setConfig((prev) => ({ ...prev, [key]: event.target.value }))
+    }
   }
-  const handleFontChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setConfig((prev) => ({ ...prev, font: event.target.value }))
+
+  const handleColorChange = (key: keyof Config) => {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      setConfig((prev) => ({ ...prev, [key]: event.target.value }))
+    }
   }
-  const handleDurationChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setConfig((prev) => ({ ...prev, duration: parseInt(event.target.value) }))
-  }
-  const handleSpeedPxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setConfig((prev) => ({ ...prev, speedPx: parseInt(event.target.value) }))
-  }
-  const handleSizePxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setConfig((prev) => ({ ...prev, sizePx: parseInt(event.target.value) }))
-  }
-  const handleClapChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setConfig((prev) => ({ ...prev, clap: event.target.value }))
-  }
-  const handlePlantChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setConfig((prev) => ({ ...prev, plant: event.target.checked }))
+
+  const handleBoolChange = (key: keyof Config) => {
+    return (event: ChangeEvent<HTMLInputElement>) => {
+      setConfig((prev) => ({ ...prev, [key]: event.target.checked }))
+    }
   }
 
   const handleSubmit = async () => {
@@ -108,7 +115,7 @@ function OptionsPage() {
               </label>
               <select
                 value={config.platform}
-                onChange={handlePlatformChange}
+                onChange={handleSelectChange("platform")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 {platforms.map((platform) => {
                   return (
@@ -131,7 +138,7 @@ function OptionsPage() {
                   id="color"
                   type="color"
                   className="w-16 h-8 p-0 border border-gray-300 rounded"
-                  onChange={handleColorChange}
+                  onChange={handleColorChange("color")}
                   value={config.color}></input>
               </div>
             </div>
@@ -144,7 +151,7 @@ function OptionsPage() {
               </label>
               <select
                 value={config.font}
-                onChange={handleFontChange}
+                onChange={handleSelectChange("font")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 {fonts.map((font) => {
                   return (
@@ -160,7 +167,7 @@ function OptionsPage() {
               <label
                 htmlFor="duration"
                 className="block text-sm font-medium text-gray-700">
-                Duration(seconds):{" "}
+                Duration(seconds):
               </label>
               <p className="text-sm text-gray-500">
                 The number of seconds until the comment scrolls away
@@ -168,7 +175,7 @@ function OptionsPage() {
               <input
                 id="duration"
                 type="number"
-                onChange={handleDurationChange}
+                onChange={handleNumberChange("duration")}
                 className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={config.duration}></input>
             </div>
@@ -177,12 +184,12 @@ function OptionsPage() {
               <label
                 htmlFor="speed"
                 className="block text-sm font-medium text-gray-700">
-                Speed(px/frame):{" "}
+                Speed(px/frame):
               </label>
               <input
                 id="speed"
                 type="number"
-                onChange={handleSpeedPxChange}
+                onChange={handleNumberChange("speedPx")}
                 className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={config.speedPx}></input>
             </div>
@@ -191,7 +198,7 @@ function OptionsPage() {
               <label
                 htmlFor="size"
                 className="block text-sm font-medium text-gray-700">
-                Size(px):{" "}
+                Size(px):
               </label>
               <p className="text-sm text-gray-500">
                 The size of the comment in pixels
@@ -199,7 +206,7 @@ function OptionsPage() {
               <input
                 id="size"
                 type="number"
-                onChange={handleSizePxChange}
+                onChange={handleNumberChange("sizePx")}
                 className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={config.sizePx}></input>
             </div>
@@ -215,7 +222,7 @@ function OptionsPage() {
               </p>
               <select
                 value={config.clap}
-                onChange={handleClapChange}
+                onChange={handleSelectChange("clap")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 {claps.map((value) => {
                   return (
@@ -225,6 +232,24 @@ function OptionsPage() {
                   )
                 })}
               </select>
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="clapSize"
+                className="block text-sm font-medium text-gray-700">
+                Clap(size):
+              </label>
+              <p className="text-sm text-gray-500">
+                The image tag size(width and height) of the clap effect when a
+                clap comment is posted
+              </p>
+              <input
+                id="clapSize"
+                type="number"
+                onChange={handleNumberChange("clapSize")}
+                className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={config.clapSize}></input>
             </div>
 
             <div className="space-y-2">
@@ -240,7 +265,7 @@ function OptionsPage() {
               <input
                 id="plant"
                 type="checkbox"
-                onChange={handlePlantChange}
+                onChange={handleBoolChange("plant")}
                 checked={config.plant}></input>
             </div>
           </div>
@@ -256,6 +281,10 @@ function OptionsPage() {
 
         <div className="flex flex-col p-6 space-y-6">
           <h2 className="text-xl font-bold text-gray-90">Preview</h2>
+          <p>
+            On the left, the style settings for comments are applied, and on the
+            right, the style settings for applause are applied
+          </p>
           <div className="text-sm font-medium text-gray-700">
             Preview Background Color:
             <input
@@ -265,6 +294,7 @@ function OptionsPage() {
           </div>
 
           <div
+            className="p-4 flex flex-row border border-gray-900"
             style={{
               backgroundColor: previewBackground
             }}>
@@ -276,6 +306,15 @@ function OptionsPage() {
                 fontFamily: config.font
               }}>
               Preview
+            </div>
+            <div className="grow"></div>
+            <div style={{ filter: clapFilters[config.clap] }}>
+              <img
+                src="assets/sign_language_black_24dp.svg"
+                alt="clap effect"
+                height={config.clapSize}
+                width={config.clapSize}
+              />
             </div>
           </div>
         </div>

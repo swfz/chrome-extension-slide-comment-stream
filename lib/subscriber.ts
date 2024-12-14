@@ -1,11 +1,11 @@
 import { sendToBackground } from "@plasmohq/messaging"
 
-import { Extractor, Platform } from "~types/types"
+import { CommentExtractor, Platform } from "~types/types"
 
 import { slackExtractor } from "./extractor/slack"
 import { zoomExtractor } from "./extractor/zoom"
 
-const extractors: { [P in Platform]: Extractor } = {
+const extractors: { [P in Platform]: CommentExtractor } = {
   slack: slackExtractor,
   zoom: zoomExtractor
 }

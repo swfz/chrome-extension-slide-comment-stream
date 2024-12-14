@@ -1,6 +1,6 @@
-import { Extractor } from "~types/types"
+import { CommentExtractor } from "~types/types"
 
-export const zoomExtractor: Extractor = {
+export const zoomExtractor: CommentExtractor = {
   listNodeExtractFn: () => {
     const iframeElement = document.querySelector<HTMLIFrameElement>(
       ".pwa-webclient__iframe"

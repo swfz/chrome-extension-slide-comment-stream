@@ -1,6 +1,6 @@
-import { Extractor } from "~types/types"
+import { CommentExtractor } from "~types/types"
 
-export const slackExtractor: Extractor = {
+export const slackExtractor: CommentExtractor = {
   listNodeExtractFn: () => {
     return document.querySelector<HTMLDivElement>(
       '.p-threads_flexpane_container .c-virtual_list__scroll_container[data-qa="slack_kit_list"]'

@@ -14,8 +14,12 @@ export type MessageArgs = {
 }
 
 export type Platform = "googleslide" | "zoom" | "slack"
-export interface Extractor {
+export interface CommentExtractor {
   listNodeExtractFn: () => HTMLElement | null | undefined
   isTargetElement: (el: HTMLElement) => boolean
   commentExtractFn: (el: HTMLElement) => string | null | undefined
+}
+
+export interface SlideExtractor {
+  boxElementFn: () => HTMLElement | null | undefined
 }

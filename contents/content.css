@@ -1,8 +1,117 @@
+/* For Comment */
 @keyframes slideLeft {
   from {
     transform: translateX(0);
   }
   to {
     transform: translateX(-150vw);
+  }
+}
+
+/* For Clap */
+@keyframes shake1 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-3px, 2px);
+  }
+  50% {
+    transform: translate(2px, -3px);
+  }
+  75% {
+    transform: translate(-2px, -2px);
+  }
+}
+
+@keyframes shake2 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-2px, 3px);
+  }
+  40% {
+    transform: translate(3px, -2px);
+  }
+  60% {
+    transform: translate(-3px, -1px);
+  }
+  80% {
+    transform: translate(2px, 2px);
+  }
+}
+
+@keyframes shake3 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  15% {
+    transform: translate(-3px, 1px);
+  }
+  35% {
+    transform: translate(2px, 2px);
+  }
+  55% {
+    transform: translate(-2px, -3px);
+  }
+  75% {
+    transform: translate(3px, -1px);
+  }
+  90% {
+    transform: translate(-1px, 2px);
+  }
+}
+
+@keyframes shake4 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  16% {
+    transform: translate(2px, -2px);
+  }
+  33% {
+    transform: translate(-3px, 1px);
+  }
+  50% {
+    transform: translate(1px, -3px);
+  }
+  66% {
+    transform: translate(-2px, 2px);
+  }
+  83% {
+    transform: translate(3px, -1px);
+  }
+}
+
+@keyframes shake5 {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  22% {
+    transform: translate(-2px, -2px);
+  }
+  45% {
+    transform: translate(3px, 1px);
+  }
+  67% {
+    transform: translate(-1px, -3px);
+  }
+  89% {
+    transform: translate(2px, 2px);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }

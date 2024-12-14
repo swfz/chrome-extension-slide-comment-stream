@@ -1,7 +1,7 @@
+import CssFilterConverter from "css-filter-converter"
 import { ChangeEvent, useEffect, useState } from "react"
 
 import { Storage } from "@plasmohq/storage"
-import CssFilterConverter from 'css-filter-converter';
 
 import "./style.css"
 
@@ -37,14 +37,6 @@ function OptionsPage() {
     area: "local"
   })
 
-  const clapFilters = {
-    black:
-      "brightness(0) saturate(100%) invert(0%) sepia(0%) saturate(26%) hue-rotate(88deg) brightness(87%) contrast(105%)",
-    white:
-      "brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%)",
-    pink: "brightness(0) saturate(100%) invert(29%) sepia(69%) saturate(6456%) hue-rotate(316deg) brightness(103%) contrast(107%)"
-  }
-
   const platforms: Config["platform"][] = ["zoom", "slack", "meet"]
   const fonts = [
     "メイリオ",
@@ -53,8 +45,6 @@ function OptionsPage() {
     "HGS行書体",
     "HGP創英角ﾎﾟｯﾌﾟ体"
   ]
-
-  const claps = ["black", "white", "pink"]
 
   const handleNumberChange = (key: keyof Config) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
@@ -222,11 +212,11 @@ function OptionsPage() {
                 The color of the clap effect when a clap comment is posted
               </p>
               <input
-                  id="clapColor"
-                  type="color"
-                  className="w-16 h-8 p-0 border border-gray-300 rounded"
-                  onChange={handleColorChange("clapColor")}
-                  value={config.clapColor}></input>
+                id="clapColor"
+                type="color"
+                className="w-16 h-8 p-0 border border-gray-300 rounded"
+                onChange={handleColorChange("clapColor")}
+                value={config.clapColor}></input>
             </div>
 
             <div className="space-y-2">
@@ -303,7 +293,10 @@ function OptionsPage() {
               Preview
             </div>
             <div className="grow"></div>
-            <div style={{ filter: CssFilterConverter.hexToFilter(config.clapColor).color }}>
+            <div
+              style={{
+                filter: CssFilterConverter.hexToFilter(config.clapColor).color
+              }}>
               <img
                 src="assets/sign_language_black_24dp.svg"
                 alt="clap effect"

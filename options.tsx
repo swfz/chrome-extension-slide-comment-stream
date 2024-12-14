@@ -30,6 +30,8 @@ const defaultConfig = {
 
 function OptionsPage() {
   const [config, setConfig] = useState<Config>(defaultConfig)
+  const [previewBackground, setPreviewBackground] = useState<string>("#000000")
+
   const storage = new Storage({
     area: "local"
   })
@@ -80,23 +82,6 @@ function OptionsPage() {
     await storage.set("config", config)
   }
 
-  const sampleComments = async () => {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-
-    if (tab.id === undefined) {
-      return
-    }
-
-    const comments = [`${Date.now()} サンプルコメント8888`]
-    chrome.tabs.sendMessage(
-      tab.id,
-      { command: "SendSubscribedComments", comments },
-      (res) => {
-        console.log(res)
-      }
-    )
-  }
-
   useEffect(() => {
     ;(async () => {
       const config = await storage.get<Config>("config")
@@ -107,16 +92,24 @@ function OptionsPage() {
   }, [])
 
   return (
-    <div className="">
-      <h2>GoogleSlide Comment Stream</h2>
-      <form>
-        <div className="flex flex-col divide-y divide-gray-300">
-          <div className="flex flex-row p-4">
-            <label htmlFor="platform" className="">
-              Subscribe Platform:{" "}
-            </label>
-            <div className="border">
-              <select value={config.platform} onChange={handlePlatformChange}>
+    <div className="bg-gray-100 min-h-screen">
+      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md flex flex-col divide-y divide-gray-300">
+        <h2 className="p-6 text-2xl font-bold text-gray-900">
+          Slide Comment Stream
+        </h2>
+
+        <form>
+          <div className="flex flex-col p-6 space-y-6">
+            <div className="space-y-2">
+              <label
+                htmlFor="platform"
+                className="block text-sm font-medium text-gray-700">
+                Subscribe Platform:
+              </label>
+              <select
+                value={config.platform}
+                onChange={handlePlatformChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 {platforms.map((platform) => {
                   return (
                     <option key={platform} value={platform}>
@@ -126,27 +119,33 @@ function OptionsPage() {
                 })}
               </select>
             </div>
-          </div>
 
-          <div className="flex flex-row p-4">
-            <label htmlFor="color" className="">
-              Comment Color:{" "}
-            </label>
-            <div className="">
-              <input
-                id="color"
-                type="color"
-                onChange={handleColorChange}
-                value={config.color}></input>
+            <div className="space-y-2">
+              <label
+                htmlFor="color"
+                className="block text-sm font-medium text-gray-700">
+                Comment Color:
+              </label>
+              <div className="flex items-center gap-4">
+                <input
+                  id="color"
+                  type="color"
+                  className="w-16 h-8 p-0 border border-gray-300 rounded"
+                  onChange={handleColorChange}
+                  value={config.color}></input>
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-row p-4">
-            <label htmlFor="font" className="">
-              Comment Font:{" "}
-            </label>
-            <div className="border">
-              <select value={config.font} onChange={handleFontChange}>
+            <div className="space-y-2">
+              <label
+                htmlFor="font"
+                className="block text-sm font-medium text-gray-700">
+                Comment Font:
+              </label>
+              <select
+                value={config.font}
+                onChange={handleFontChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 {fonts.map((font) => {
                   return (
                     <option key={font} value={font}>
@@ -156,53 +155,68 @@ function OptionsPage() {
                 })}
               </select>
             </div>
-          </div>
 
-          <div className="flex flex-row p-4">
-            <label htmlFor="duration" className="">
-              Duration(seconds):{" "}
-            </label>
-            <div className="border">
+            <div className="space-y-2">
+              <label
+                htmlFor="duration"
+                className="block text-sm font-medium text-gray-700">
+                Duration(seconds):{" "}
+              </label>
+              <p className="text-sm text-gray-500">
+                The number of seconds until the comment scrolls away
+              </p>
               <input
                 id="duration"
                 type="number"
                 onChange={handleDurationChange}
+                className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={config.duration}></input>
             </div>
-          </div>
 
-          <div className="flex flex-row p-4">
-            <label htmlFor="speed" className="">
-              Speed(px/frame):{" "}
-            </label>
-            <div className="border">
+            <div className="space-y-2">
+              <label
+                htmlFor="speed"
+                className="block text-sm font-medium text-gray-700">
+                Speed(px/frame):{" "}
+              </label>
               <input
                 id="speed"
                 type="number"
                 onChange={handleSpeedPxChange}
+                className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={config.speedPx}></input>
             </div>
-          </div>
 
-          <div className="flex flex-row p-4">
-            <label htmlFor="size" className="">
-              Size(px):{" "}
-            </label>
-            <div className="border">
+            <div className="space-y-2">
+              <label
+                htmlFor="size"
+                className="block text-sm font-medium text-gray-700">
+                Size(px):{" "}
+              </label>
+              <p className="text-sm text-gray-500">
+                The size of the comment in pixels
+              </p>
               <input
                 id="size"
                 type="number"
                 onChange={handleSizePxChange}
+                className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={config.sizePx}></input>
             </div>
-          </div>
 
-          <div className="flex flex-row p-4">
-            <label htmlFor="clap" className="">
-              Clap(color):{" "}
-            </label>
-            <div className="border">
-              <select value={config.clap} onChange={handleClapChange}>
+            <div className="space-y-2">
+              <label
+                htmlFor="clap"
+                className="block text-sm font-medium text-gray-700">
+                Clap(color):
+              </label>
+              <p className="text-sm text-gray-500">
+                The color of the clap effect when a clap comment is posted
+              </p>
+              <select
+                value={config.clap}
+                onChange={handleClapChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 {claps.map((value) => {
                   return (
                     <option key={value} value={value}>
@@ -212,13 +226,17 @@ function OptionsPage() {
                 })}
               </select>
             </div>
-          </div>
 
-          <div className="flex flex-row p-4">
-            <label htmlFor="plant" className="">
-              Use Plant(require option configuration):{" "}
-            </label>
-            <div className="">
+            <div className="space-y-2">
+              <label
+                htmlFor="plant"
+                className="block text-sm font-medium text-gray-700">
+                Use Plant:
+              </label>
+              <p className="text-sm text-gray-500">
+                A feature to comment on your own presentation in real-time. You
+                need to predefine the content of the comment and its timing.
+              </p>
               <input
                 id="plant"
                 type="checkbox"
@@ -226,28 +244,42 @@ function OptionsPage() {
                 checked={config.plant}></input>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
 
-      <h2>Preview</h2>
-      <div className="bg-black">
-        <div
-          style={{
-            verticalAlign: "bottom",
-            color: config.color,
-            fontSize: config.sizePx,
-            fontFamily: config.font
-          }}>
-          Preview
+        <div className="p-4 w-full">
+          <button
+            className="p-2 w-full rounded border border-gray-400 bg-white hover:bg-gray-100"
+            onClick={handleSubmit}>
+            Save
+          </button>
+        </div>
+
+        <div className="flex flex-col p-6 space-y-6">
+          <h2 className="text-xl font-bold text-gray-90">Preview</h2>
+          <div className="text-sm font-medium text-gray-700">
+            Preview Background Color:
+            <input
+              type="color"
+              className="w-16 h-8 p-0 border border-gray-300 rounded"
+              onChange={(e) => setPreviewBackground(e.target.value)}></input>
+          </div>
+
+          <div
+            style={{
+              backgroundColor: previewBackground
+            }}>
+            <div
+              style={{
+                verticalAlign: "bottom",
+                color: config.color,
+                fontSize: config.sizePx,
+                fontFamily: config.font
+              }}>
+              Preview
+            </div>
+          </div>
         </div>
       </div>
-
-      <br />
-      <button
-        className="p-2 rounded border border-gray-400 bg-white hover:bg-gray-100"
-        onClick={handleSubmit}>
-        Submit
-      </button>
     </div>
   )
 }

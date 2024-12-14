@@ -5,17 +5,7 @@ import { Storage } from "@plasmohq/storage"
 
 import "./style.css"
 
-type Config = {
-  platform: string
-  color: string
-  font: string
-  speedPx: number
-  duration: number
-  sizePx: number
-  clapColor: string
-  clapSize: number
-  plant: boolean
-}
+import { Config } from "~types/types"
 
 const defaultConfig = {
   platform: "slack",

@@ -23,3 +23,15 @@ export interface CommentExtractor {
 export interface SlideExtractor {
   boxElementFn: () => HTMLElement | null | undefined
 }
+
+export type Config = {
+  platform: string
+  color: string
+  font: string
+  speedPx: number
+  duration: number
+  sizePx: number
+  clapColor: string
+  clapSize: number
+  plant: boolean
+}

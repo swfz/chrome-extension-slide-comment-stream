@@ -1,16 +1,17 @@
-import clapImage from "data-base64:~assets/sign_language_black_24dp.svg"
 import type { PlasmoCSConfig } from "plasmo"
 
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 import { Storage } from "@plasmohq/storage"
 
+import { googleslideExtractor } from "~lib/extractor/googleslide"
 import { initialize } from "~lib/initializer"
-import { addComment, clapElementStyle, renderClaps } from "~lib/streamer"
+import { render } from "~lib/streamer"
 import { Roles } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],
+  css: ["content.css"],
   all_frames: true
 }
 
@@ -29,14 +30,21 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   }
 
   if (req.action === "Subscribe") {
+    const boxElement = googleslideExtractor.boxElementFn()
+
+    // TODO: iframe内にコンテンツを差し込んでいるためkeyframesの記述を設定したCSSもIframeから読めないとanimationが動作しない
+    // しかし、現状の設定ではiframe内からCSSが読めないため、直接入れ込んでいる
+    // 今後切り出すなり別の手法を模索するなり検討が必要
     const iframeElement: HTMLIFrameElement | null = document.querySelector(
       ".punch-present-iframe"
     )
-    const boxElement = iframeElement?.contentWindow?.document.querySelector(
-      ".punch-viewer-content"
-    )
+    const link = document.createElement("link")
+    link.rel = "stylesheet"
+    link.href = chrome.runtime.getURL("contents/content.css")
+    iframeElement?.contentWindow?.document.head.appendChild(link)
+    // ---------------------------------------
 
-    if (boxElement === null) {
+    if (boxElement === null || boxElement === undefined) {
       res.send({
         screenType: "slide",
         message: "Error: Not found slide element..."
@@ -44,58 +52,11 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
       return
     }
 
-    const clapElement = document.createElement("div")
-
-    const beltPerContainer = 0.12
-    const containerHeight = boxElement.clientHeight * (1 - beltPerContainer)
-    const containerWidth = boxElement.clientWidth
-
-    // 右1割、下1割
-    const clapElementBottom = boxElement.clientHeight * 0.1
-    const clapElementRight = containerWidth * 0.1
-
-    const p = document.createElement("p")
-    p.style.margin = "0"
-
-    const img = document.createElement("img")
-    img.src = clapImage
-
-    clapElement.appendChild(p)
-    clapElement.appendChild(img)
-    boxElement.appendChild(clapElement)
-
-    const clapElementStyles = clapElementStyle(
-      clapElementBottom,
-      clapElementRight
-    )
-    Object.entries(clapElementStyles).forEach(
-      ([k, v]) => (clapElement.style[k] = v)
-    )
-
     const storage = new Storage({ area: "local" })
     const config = await storage.get("config")
 
-    const claps = req.comments.reduce(
-      (n, comment) => n + comment.match(/[8８]/g)?.length,
-      0
-    )
-    const comments = req.comments.filter(
-      (comment) => !comment.match(/^[8８]+$/)
-    )
-
-    if (claps > 0) {
-      renderClaps(
-        claps,
-        p,
-        clapElement,
-        clapElementBottom,
-        clapElementRight,
-        config
-      )
-    }
-    comments.forEach((comment) =>
-      addComment(comment, boxElement, containerHeight, config)
-    )
+    render(boxElement, config, req.comments)
+    res.send({ message: "comments rendered" })
   }
 }
 

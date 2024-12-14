@@ -5,8 +5,8 @@ import { listen } from "@plasmohq/messaging/message"
 import { Storage } from "@plasmohq/storage"
 
 import { initialize } from "~lib/initializer"
-import { Roles } from "~types/types"
 import { addComment, clapElementStyle, renderClaps } from "~lib/streamer"
+import { Roles } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],
@@ -28,48 +28,76 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   }
 
   if (req.action === "Subscribe") {
-    const iframeElement: HTMLIFrameElement | null = document.querySelector('.punch-present-iframe');
-    const boxElement = iframeElement?.contentWindow?.document.querySelector('.punch-viewer-content');
+    const iframeElement: HTMLIFrameElement | null = document.querySelector(
+      ".punch-present-iframe"
+    )
+    const boxElement = iframeElement?.contentWindow?.document.querySelector(
+      ".punch-viewer-content"
+    )
 
     if (boxElement === null) {
-      res.send({ screenType: 'slide', message: 'Error: Not found slide element...' });
-      return;
+      res.send({
+        screenType: "slide",
+        message: "Error: Not found slide element..."
+      })
+      return
     }
 
-    const clapElement = document.createElement('div');
+    const clapElement = document.createElement("div")
 
-    const beltPerContainer = 0.12;
-    const containerHeight = boxElement.clientHeight * (1 - beltPerContainer);
-    const containerWidth = boxElement.clientWidth;
+    const beltPerContainer = 0.12
+    const containerHeight = boxElement.clientHeight * (1 - beltPerContainer)
+    const containerWidth = boxElement.clientWidth
 
     // 右1割、下1割
-    const clapElementBottom = boxElement.clientHeight * 0.1;
-    const clapElementRight = containerWidth * 0.1;
+    const clapElementBottom = boxElement.clientHeight * 0.1
+    const clapElementRight = containerWidth * 0.1
 
-    const p = document.createElement('p');
-    p.style.margin = '0';
+    const p = document.createElement("p")
+    p.style.margin = "0"
 
-    const img = document.createElement('img');
-    const imageUrl = chrome.runtime.getURL('images/sign_language_black_24dp.svg');
-    img.src = imageUrl;
+    const img = document.createElement("img")
+    const imageUrl = chrome.runtime.getURL(
+      "images/sign_language_black_24dp.svg"
+    )
+    img.src = imageUrl
 
-    clapElement.appendChild(p);
-    clapElement.appendChild(img);
-    boxElement.appendChild(clapElement);
+    clapElement.appendChild(p)
+    clapElement.appendChild(img)
+    boxElement.appendChild(clapElement)
 
-    const clapElementStyles = clapElementStyle(clapElementBottom, clapElementRight);
-    Object.entries(clapElementStyles).forEach(([k, v]) => (clapElement.style[k] = v));
+    const clapElementStyles = clapElementStyle(
+      clapElementBottom,
+      clapElementRight
+    )
+    Object.entries(clapElementStyles).forEach(
+      ([k, v]) => (clapElement.style[k] = v)
+    )
 
-    const storage = new Storage({area: "local"})
-    const config = await storage.get('config')
+    const storage = new Storage({ area: "local" })
+    const config = await storage.get("config")
 
-    const claps = req.comments.reduce((n, comment) => n + comment.match(/[8８]/g)?.length, 0);
-    const comments = req.comments.filter((comment) => !comment.match(/^[8８]+$/));
+    const claps = req.comments.reduce(
+      (n, comment) => n + comment.match(/[8８]/g)?.length,
+      0
+    )
+    const comments = req.comments.filter(
+      (comment) => !comment.match(/^[8８]+$/)
+    )
 
     if (claps > 0) {
-      renderClaps(claps, p, clapElement, clapElementBottom, clapElementRight, config);
+      renderClaps(
+        claps,
+        p,
+        clapElement,
+        clapElementBottom,
+        clapElementRight,
+        config
+      )
     }
-    comments.forEach((comment) => addComment(comment, boxElement, containerHeight, config));
+    comments.forEach((comment) =>
+      addComment(comment, boxElement, containerHeight, config)
+    )
   }
 }
 

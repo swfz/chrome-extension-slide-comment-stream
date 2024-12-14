@@ -29,16 +29,16 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
 
   if (req.action === "Subscribe") {
     const boxElement = document.querySelector<HTMLDivElement>("div")
-    const storage = new Storage({area: "local"})
-    const config = await storage.get('config')
+    const storage = new Storage({ area: "local" })
+    const config = await storage.get("config")
 
     const addComment = (comment: string) => {
       console.log("add comment")
 
-      const minMs = (config.duration * 1000) - 1000;
-      const maxMs = (config.duration * 1000) + 1000;
-      const verticalPosition = Math.floor(Math.random() * 80 + 10);
-      const animationDuration = Math.floor(Math.random() * minMs + maxMs);
+      const minMs = config.duration * 1000 - 1000
+      const maxMs = config.duration * 1000 + 1000
+      const verticalPosition = Math.floor(Math.random() * 80 + 10)
+      const animationDuration = Math.floor(Math.random() * minMs + maxMs)
 
       const commentStyle = {
         top: `${verticalPosition}%`,
@@ -54,12 +54,12 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
       const element = document.createElement("p")
       element.innerText = comment
       element.onanimationend = (e) => {
-        const commentElement = e.target;
-        if(commentElement) {
+        const commentElement = e.target
+        if (commentElement) {
           commentElement.style.display = `none`
         }
       }
-      Object.entries(commentStyle).forEach(([k,v])=> (element.style[k] = v));
+      Object.entries(commentStyle).forEach(([k, v]) => (element.style[k] = v))
 
       boxElement.appendChild(element)
     }

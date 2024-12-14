@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react"
 
 import { Storage } from "@plasmohq/storage"
+import CssFilterConverter from 'css-filter-converter';
 
 import "./style.css"
 
@@ -11,19 +12,19 @@ type Config = {
   speedPx: number
   duration: number
   sizePx: number
-  clap: string
+  clapColor: string
   clapSize: number
   plant: boolean
 }
 
 const defaultConfig = {
   platform: "slack",
-  color: "#FFFFFF",
+  color: "#000000",
   font: "",
   speedPx: 5,
   duration: 4,
   sizePx: 50,
-  clap: "black",
+  clapColor: "#000000",
   clapSize: 80,
   plant: false
 }
@@ -106,7 +107,7 @@ function OptionsPage() {
         </h2>
 
         <form>
-          <div className="flex flex-col p-6 space-y-6">
+          <div className="flex flex-col p-6 space-y-2">
             <div className="space-y-2">
               <label
                 htmlFor="platform"
@@ -213,25 +214,19 @@ function OptionsPage() {
 
             <div className="space-y-2">
               <label
-                htmlFor="clap"
+                htmlFor="clapColor"
                 className="block text-sm font-medium text-gray-700">
                 Clap(color):
               </label>
               <p className="text-sm text-gray-500">
                 The color of the clap effect when a clap comment is posted
               </p>
-              <select
-                value={config.clap}
-                onChange={handleSelectChange("clap")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                {claps.map((value) => {
-                  return (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  )
-                })}
-              </select>
+              <input
+                  id="clapColor"
+                  type="color"
+                  className="w-16 h-8 p-0 border border-gray-300 rounded"
+                  onChange={handleColorChange("clapColor")}
+                  value={config.clapColor}></input>
             </div>
 
             <div className="space-y-2">
@@ -308,7 +303,7 @@ function OptionsPage() {
               Preview
             </div>
             <div className="grow"></div>
-            <div style={{ filter: clapFilters[config.clap] }}>
+            <div style={{ filter: CssFilterConverter.hexToFilter(config.clapColor).color }}>
               <img
                 src="assets/sign_language_black_24dp.svg"
                 alt="clap effect"

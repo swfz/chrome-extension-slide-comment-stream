@@ -9,6 +9,7 @@ type Config = {
   color: string
   font: string
   speedPx: number
+  duration: number
   sizePx: number
   clap: string
   plant: boolean
@@ -19,6 +20,7 @@ const defaultConfig = {
   color: "#000000",
   font: "",
   speedPx: 5,
+  duration: 4,
   sizePx: 50,
   clap: "none",
   plant: false
@@ -51,6 +53,9 @@ function OptionsPage() {
   }
   const handleFontChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setConfig((prev) => ({ ...prev, font: event.target.value }))
+  }
+  const handleDurationChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setConfig((prev) => ({ ...prev, duration: parseInt(event.target.value) }))
   }
   const handleSpeedPxChange = (event: ChangeEvent<HTMLInputElement>) => {
     setConfig((prev) => ({ ...prev, speedPx: parseInt(event.target.value) }))
@@ -150,6 +155,19 @@ function OptionsPage() {
                   )
                 })}
               </select>
+            </div>
+          </div>
+
+          <div className="flex flex-row p-4">
+            <label htmlFor="duration" className="">
+              Duration(seconds):{" "}
+            </label>
+            <div className="border">
+              <input
+                id="duration"
+                type="number"
+                onChange={handleDurationChange}
+                value={config.duration}></input>
             </div>
           </div>
 

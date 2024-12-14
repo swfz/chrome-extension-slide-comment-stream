@@ -2,6 +2,7 @@ import type { PlasmoCSConfig } from "plasmo"
 
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
+import { Storage } from "@plasmohq/storage"
 
 import { initialize } from "~lib/initializer"
 import { Roles } from "~types/types"
@@ -28,18 +29,26 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
 
   if (req.action === "Subscribe") {
     const boxElement = document.querySelector<HTMLDivElement>("div")
+    const storage = new Storage({area: "local"})
+    const config = await storage.get('config')
 
     const addComment = (comment: string) => {
       console.log("add comment")
 
+      const minMs = (config.duration * 1000) - 1000;
+      const maxMs = (config.duration * 1000) + 1000;
       const verticalPosition = Math.floor(Math.random() * 80 + 10);
-      const animationDuration = Math.floor(Math.random() * 2000 + 4000);
+      const animationDuration = Math.floor(Math.random() * minMs + maxMs);
 
       const commentStyle = {
         top: `${verticalPosition}%`,
         position: `absolute`,
         right: `-30%`,
         animation: `slideLeft ${animationDuration}ms linear`,
+        color: config.color,
+        fontFamily: config.font,
+        fontSize: `${config.sizePx}px`,
+        whiteSpace: `nowrap`
       }
 
       const element = document.createElement("p")

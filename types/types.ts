@@ -28,7 +28,6 @@ export type Config = {
   platform: string
   color: string
   font: string
-  speedPx: number
   duration: number
   sizePx: number
   clapColor: string

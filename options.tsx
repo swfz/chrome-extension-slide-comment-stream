@@ -11,7 +11,6 @@ const defaultConfig = {
   platform: "slack",
   color: "#000000",
   font: "",
-  speedPx: 5,
   duration: 4,
   sizePx: 50,
   clapColor: "#000000",
@@ -159,20 +158,6 @@ function OptionsPage() {
                 onChange={handleNumberChange("duration")}
                 className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={config.duration}></input>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="speed"
-                className="block text-sm font-medium text-gray-700">
-                Speed(px/frame):
-              </label>
-              <input
-                id="speed"
-                type="number"
-                onChange={handleNumberChange("speedPx")}
-                className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={config.speedPx}></input>
             </div>
 
             <div className="space-y-2">

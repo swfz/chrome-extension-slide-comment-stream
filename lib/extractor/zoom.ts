@@ -2,16 +2,7 @@ import { CommentExtractor } from "~types/types"
 
 export const zoomExtractor: CommentExtractor = {
   listNodeExtractFn: () => {
-    const iframeElement = document.querySelector<HTMLIFrameElement>(
-      ".pwa-webclient__iframe"
-    )
-    if (iframeElement === null) {
-      return null
-    }
-
-    return iframeElement.contentWindow?.document.querySelector(
-      ".chat-container__chat-list"
-    )
+    return document.querySelector(".chat-container__chat-list")
   },
   isTargetElement: (el) => {
     return [

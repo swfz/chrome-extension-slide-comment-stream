@@ -7,7 +7,7 @@ import { Storage } from "@plasmohq/storage"
 import { googleslideExtractor } from "~lib/extractor/googleslide"
 import { initialize } from "~lib/initializer"
 import { render } from "~lib/streamer"
-import { Roles } from "~types/types"
+import { Role } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],
@@ -15,18 +15,25 @@ export const config: PlasmoCSConfig = {
   all_frames: true
 }
 
-const ROLE: Roles = "streamer"
+const ROLE: Role = "streamer"
 
 initialize(ROLE)
 
 const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   console.warn("req", req)
   if (req.action === "Load") {
-    const response = await sendToBackground({
-      name: "connector",
-      body: { role: ROLE, action: "connect", tabId: req.tabId }
-    })
-    res.send(response.message)
+    const boxElement = googleslideExtractor.boxElementFn()
+    console.log(boxElement)
+
+    if (boxElement === null || boxElement === undefined) {
+      res.send({ error: "Please start in presentation mode." })
+    } else {
+      const response = await sendToBackground({
+        name: "connector",
+        body: { role: ROLE, action: "connect", tabId: req.tabId }
+      })
+      res.send({ message: response.message })
+    }
   }
 
   if (req.action === "Subscribe") {
@@ -45,10 +52,7 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
     // ---------------------------------------
 
     if (boxElement === null || boxElement === undefined) {
-      res.send({
-        screenType: "slide",
-        message: "Error: Not found slide element..."
-      })
+      res.send({ error: "Not found slide element..." })
       return
     }
 
@@ -60,6 +64,10 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   }
 }
 
-listen(initialHandler)
+// NOTE: 2重でイベントリスナが登録されるのを防ぐための分岐
+// iframe利用の親側のコンテンツかどうかの判断
+if (document.body.role === "application") {
+  listen(initialHandler)
+}
 
 console.log("loaded. streamer content script.")

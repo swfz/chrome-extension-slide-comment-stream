@@ -55,8 +55,8 @@ importers:
         specifier: ^3.4.16
         version: 3.4.16
       typescript:
-        specifier: 5.3.3
-        version: 5.3.3
+        specifier: 5.7.2
+        version: 5.7.2
 
 packages:
 
@@ -3094,8 +3094,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typescript@5.3.3:
-    resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
+  typescript@5.7.2:
+    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -6594,7 +6594,7 @@ snapshots:
 
   typescript@5.2.2: {}
 
-  typescript@5.3.3: {}
+  typescript@5.7.2: {}
 
   undici-types@5.26.5: {}
 

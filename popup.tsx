@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { sendToBackground, sendToContentScript } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
@@ -6,8 +6,29 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import "./style.css"
 
+import { detectService, serviceToRole } from "~lib/service"
+import { Role, Service } from "~types/types"
+
+interface Alert {
+  error: boolean
+  text: string
+}
+
+const Alert = ({ children, error }) => {
+  return (
+    <div
+      className={`m-1 p-2 rounded-md ${error ? "bg-red-200 text-red-800" : "bg-blue-200 text-blue-800"}`}>
+      <p className="font-bold">{error ? "Error:" : "Info:"}</p>
+      <p className="">{children}</p>
+    </div>
+  )
+}
+
 function IndexPopup() {
   const [sampleComment, setSampleComment] = useState<string>("")
+  const [role, setRole] = useState<Role | null>(null)
+  const [alert, setAlert] = useState<Alert | null>(null)
+
   const [connectionStatus] = useStorage({
     key: "state",
     instance: new Storage({
@@ -21,7 +42,13 @@ function IndexPopup() {
       action: "Load",
       tabId: tab.id
     })
+
     console.warn(res)
+    if (res.error) {
+      setAlert({ error: true, text: res.error })
+    } else {
+      setAlert({ error: false, text: res.message })
+    }
   }
 
   const handleSampleComment = async () => {
@@ -31,6 +58,25 @@ function IndexPopup() {
     })
   }
 
+  useEffect(() => {
+    ;(async () => {
+      const [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
+      })
+      const url = tab?.url
+      console.log("url", url)
+
+      if (url === undefined) return
+
+      const service = detectService(url)
+
+      console.log("service", service)
+      if (service === null) return
+      setRole(serviceToRole(service))
+    })()
+  }, [])
+
   // TODO: コメントリストのDL機能
   // TODO: sakura機能
 
@@ -39,7 +85,7 @@ function IndexPopup() {
       <p>Click "Start" on both the slide side and the comment list side</p>
 
       <div className="flex flex-row bg-gray-100 m-1">
-        <p>This Page is [streamer , subscriber]</p>
+        <p>This Page is {role}</p>
         <button
           className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100"
           onClick={() => chrome.runtime.openOptionsPage()}>
@@ -68,6 +114,8 @@ function IndexPopup() {
         onClick={handleStart}>
         Start!
       </button>
+
+      {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
 
       <div className="m-1 p-1 bg-gray-100">
         <p className="text-xl">Status</p>

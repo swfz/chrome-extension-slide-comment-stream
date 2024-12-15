@@ -7,7 +7,7 @@ import { Storage } from "@plasmohq/storage"
 import { exampleExtractor } from "~lib/extractor/example"
 import { initialize } from "~lib/initializer"
 import { render } from "~lib/streamer"
-import { Roles } from "~types/types"
+import { Role } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://example.com/"],
@@ -15,7 +15,7 @@ export const config: PlasmoCSConfig = {
   all_frames: true
 }
 
-const ROLE: Roles = "streamer"
+const ROLE: Role = "streamer"
 
 initialize(ROLE)
 
@@ -26,7 +26,7 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
       name: "connector",
       body: { role: ROLE, action: "connect", tabId: req.tabId }
     })
-    res.send(response.message)
+    res.send({ message: response.message })
   }
 
   if (req.action === "Subscribe") {

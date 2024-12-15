@@ -5,9 +5,9 @@ import { listen } from "@plasmohq/messaging/message"
 
 import { initialize } from "~lib/initializer"
 import { extractors, subscribeComments } from "~lib/subscriber"
-import { Roles } from "~types/types"
+import { Role } from "~types/types"
 
-const ROLE: Roles = "subscriber"
+const ROLE: Role = "subscriber"
 let observer = { disconnect: () => {} }
 
 export const config: PlasmoCSConfig = {

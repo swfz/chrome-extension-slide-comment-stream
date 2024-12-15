@@ -1,19 +1,22 @@
-export type Roles = "subscriber" | "streamer" | "poster"
+export type Role = "subscriber" | "streamer" | "poster"
 export type ConnectedTabs = {
-  [Role in Roles]: number | null
+  [R in Role]: number | null
 }
 
 // toBackgroundArgs
 // toContentArgs
 
 export type MessageArgs = {
-  role: Roles
+  role: Role
   action: "Load" | "Subscribe"
   tabId: number | null
   comments?: string[]
 }
 
-export type Platform = "googleslide" | "zoom" | "slack"
+export type Subscriber = "zoom" | "slack"
+export type Streamer = "example" | "googleslide"
+export type Service = Subscriber | Streamer
+
 export interface CommentExtractor {
   listNodeExtractFn: () => HTMLElement | null | undefined
   isTargetElement: (el: HTMLElement) => boolean

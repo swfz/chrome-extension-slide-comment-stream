@@ -7,7 +7,7 @@ import { useStorage } from "@plasmohq/storage/hook"
 import "./style.css"
 
 import { detectService, serviceToRole } from "~lib/service"
-import { Role, Service } from "~types/types"
+import { Role } from "~types/types"
 
 interface Alert {
   error: boolean
@@ -58,6 +58,12 @@ function IndexPopup() {
     })
   }
 
+  const handleSampleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSampleComment()
+    }
+  }
+
   useEffect(() => {
     ;(async () => {
       const [tab] = await chrome.tabs.query({
@@ -100,6 +106,7 @@ function IndexPopup() {
             type="text"
             value={sampleComment}
             onChange={(e) => setSampleComment(e.target.value)}
+            onKeyDown={handleSampleKeyDown}
             className="border rounded w-full"></input>
           <button
             className="my-1 w-full p-2 rounded border border-gray-400 bg-white hover:bg-gray-100"

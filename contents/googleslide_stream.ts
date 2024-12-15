@@ -17,13 +17,10 @@ export const config: PlasmoCSConfig = {
 
 const ROLE: Role = "streamer"
 
-initialize(ROLE)
-
 const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   console.warn("req", req)
   if (req.action === "Load") {
     const boxElement = googleslideExtractor.boxElementFn()
-    console.log(boxElement)
 
     if (boxElement === null || boxElement === undefined) {
       res.send({ error: "Please start in presentation mode." })

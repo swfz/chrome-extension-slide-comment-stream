@@ -64,6 +64,7 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
 // NOTE: 2重でイベントリスナが登録されるのを防ぐための分岐
 // iframe利用の親側のコンテンツかどうかの判断
 if (document.body.role === "application") {
+  initialize(ROLE)
   listen(initialHandler)
 }
 

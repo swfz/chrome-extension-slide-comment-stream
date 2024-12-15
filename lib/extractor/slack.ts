@@ -7,11 +7,12 @@ export const slackExtractor: CommentExtractor = {
     )
   },
   isTargetElement: (el) => {
-    return el["data-item-key"] != "input"
+    return (
+      el["data-item-key"] != "input" &&
+      !el.querySelector(".c-message_kit__resend")
+    )
   },
   commentExtractFn: (el) => {
-    console.warn(el)
-
-    return el?.innerText
+    return el?.querySelector(".p-rich_text_block")?.innerText
   }
 }

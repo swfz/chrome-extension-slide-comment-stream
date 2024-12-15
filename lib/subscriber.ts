@@ -20,18 +20,31 @@ const subscribeComments = (platform, observeElement, sendResponse) => {
       })
       .map((record) => record.addedNodes[0])
 
-    const comments = Array.from(nodes).map((node) =>
-      extractors[platform].commentExtractFn(node)
-    )
-    console.warn(comments)
+    const comments = Array.from(nodes)
+      .map((node) => extractors[platform].commentExtractFn(node))
+      .filter((c) => c !== undefined)
     return comments
   }
 
-  const observer = new MutationObserver(async function (records) {
-    await sendToBackground({
-      name: "forwarder",
-      body: { action: "Subscribe", comments: extractComment(records) }
-    })
+  const observer = new MutationObserver(async function (
+    records: MutationRecord[],
+    observer: MutationObserver
+  ) {
+    const comments = extractComment(records)
+    console.log("extracted comments", comments)
+    console.log("observe connect", observeElement.isConnected)
+
+    if (observeElement.isConnected) {
+      await sendToBackground({
+        name: "forwarder",
+        body: { action: "Subscribe", comments }
+      })
+    } else {
+      await sendToBackground({
+        name: "disconnect",
+        body: { role: "subscriber", action: "disconnect" }
+      })
+    }
   })
 
   observer.observe(observeElement, { subtree: true, childList: true })

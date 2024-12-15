@@ -23,8 +23,6 @@ const initialHandler: PlasmoMessaging.MessageHandler = async (req, res) => {
 
   const observeElement = extractors["slack"].listNodeExtractFn()
 
-  console.warn(observeElement)
-
   observer.disconnect()
   observer = subscribeComments("slack", observeElement, res.send)
 

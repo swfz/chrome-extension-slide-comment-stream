@@ -3,8 +3,9 @@ import type { PlasmoCSConfig } from "plasmo"
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 
+import { zoomExtractor } from "~lib/extractor/zoom"
 import { initialize } from "~lib/initializer"
-import { extractors, subscribeComments } from "~lib/subscriber"
+import { subscribeComments } from "~lib/subscriber"
 import { Role } from "~types/types"
 
 const ROLE: Role = "subscriber"
@@ -19,7 +20,7 @@ const initialHandler: PlasmoMessaging.MessageHandler = async (req, res) => {
   console.warn("req", req)
   console.warn("res", res)
 
-  const observeElement = extractors["zoom"].listNodeExtractFn()
+  const observeElement = zoomExtractor.listNodeExtractFn()
 
   if (observeElement === null || observeElement === undefined) {
     res.send({ error: "Subscribe node not found. please open chat list" })

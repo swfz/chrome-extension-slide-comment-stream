@@ -1,3 +1,6 @@
+import { Storage } from "@plasmohq/storage"
+
+import { waitForIframeChildSelector, waitForSelector } from "~lib/poster"
 import { CommentExtractor } from "~types/types"
 
 export const zoomExtractor: CommentExtractor = {
@@ -25,23 +28,7 @@ export const zoomExtractor: CommentExtractor = {
 }
 
 export const zoomSelfPost = async (comment, send) => {
-  const storage = new Storage({ area: "local" })
-  const config = await storage.get("config")
-
-  if (!config.selfpost) return
-
-  const iframeElement = document.querySelector<HTMLIFrameElement>(
-    ".pwa-webclient__iframe"
-  )
-  if (iframeElement === null) {
-    send({ error: "Error: not found irfame..." })
-    return
-  }
-
-  const p =
-    iframeElement?.contentWindow?.document.querySelector<HTMLElement>(
-      ".ProseMirror p"
-    )
+  const p = document.querySelector<HTMLParagraphElement>(".ProseMirror p")
 
   if (p === null || p === undefined) {
     send({ error: "Error: not found p..." })
@@ -50,10 +37,9 @@ export const zoomSelfPost = async (comment, send) => {
 
   p.innerText = comment
 
-  const sendButton =
-    iframeElement?.contentWindow?.document.querySelector<HTMLButtonElement>(
-      ".chat-rtf-box__send"
-    )
+  const sendButton = await waitForSelector(
+    "button.chat-rtf-box__send:not([disabled])"
+  )
   sendButton?.click()
 
   send({ message: "Success Sakura Post" })

@@ -49,7 +49,7 @@ const subscribeComments = (platform, observeElement, sendResponse) => {
 
   observer.observe(observeElement, { subtree: true, childList: true })
 
-  sendResponse({ message: "A listener has been added to the Comment side." })
+  sendResponse({ message: "Subscribed comment list in chat." })
 
   return observer
 }

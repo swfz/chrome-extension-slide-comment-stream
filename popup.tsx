@@ -6,8 +6,8 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import "./style.css"
 
-import { detectService, serviceToRole } from "~lib/service"
-import { Role } from "~types/types"
+import { detectService, serviceToHandlerFeature } from "~lib/service"
+import { Feature } from "~types/types"
 
 interface Alert {
   error: boolean
@@ -26,11 +26,18 @@ const Alert = ({ children, error }) => {
 
 function IndexPopup() {
   const [sampleComment, setSampleComment] = useState<string>("")
-  const [role, setRole] = useState<Role | null>(null)
+  const [feature, setFeature] = useState<Feature | null>(null)
   const [alert, setAlert] = useState<Alert | null>(null)
 
   const [connectionStatus] = useStorage({
-    key: "state",
+    key: "status",
+    instance: new Storage({
+      area: "local"
+    })
+  })
+
+  const [config] = useStorage({
+    key: "config",
     instance: new Storage({
       area: "local"
     })
@@ -66,10 +73,10 @@ function IndexPopup() {
   }
 
   const handleSampleComment = () => {
-    if (role === "subscriber") {
+    if (feature === "selfpost") {
       sakuraComment()
     }
-    if (role === "streamer") {
+    if (feature === "comment") {
       streamComment()
     }
   }
@@ -95,60 +102,92 @@ function IndexPopup() {
 
       console.log("service", service)
       if (service === null) return
-      setRole(serviceToRole(service))
+      setFeature(serviceToHandlerFeature(service))
     })()
   }, [])
 
   // TODO: コメントリストのDL機能
-  // TODO: sakura機能
 
   return (
-    <div className="w-64 m-1 flex flex-col">
-      <p>Click "Start" on both the slide side and the comment list side</p>
+    <>
+      {config ? (
+        <div className="w-64 m-1 flex flex-col">
+          <p>Click "Start" on both the slide side and the comment list side</p>
 
-      <div className="flex flex-row bg-gray-100 m-1">
-        <p>This Page is {role}</p>
-        <button
-          className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100"
-          onClick={() => chrome.runtime.openOptionsPage()}>
-          ⚙ Option
-        </button>
-      </div>
+          <div className="flex flex-row bg-gray-100 m-1">
+            <p>This Page available {feature} feature</p>
+            <button
+              className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100"
+              onClick={() => chrome.runtime.openOptionsPage()}>
+              ⚙ Option
+            </button>
+          </div>
 
-      <div className="m-1 p-1 bg-gray-100">
-        <details className="">
-          <summary className="">Check Sample Comment</summary>
-          <input
-            type="text"
-            value={sampleComment}
-            onChange={(e) => setSampleComment(e.target.value)}
-            onKeyDown={handleEnterKey}
-            className="border rounded w-full"></input>
+          <div className="m-1 p-1 bg-gray-100">
+            <details className="">
+              <summary className="">Check Sample Comment</summary>
+              <input
+                type="text"
+                value={sampleComment}
+                onChange={(e) => setSampleComment(e.target.value)}
+                onKeyDown={handleEnterKey}
+                className="border rounded w-full"></input>
+              <button
+                className="my-1 w-full p-2 rounded border border-gray-400 bg-white hover:bg-gray-100"
+                onClick={handleSampleComment}>
+                Sample
+              </button>
+            </details>
+          </div>
+
           <button
-            className="my-1 w-full p-2 rounded border border-gray-400 bg-white hover:bg-gray-100"
-            onClick={handleSampleComment}>
-            Sample(run only {role} page)
+            className="m-1 p-2 font-medium rounded border border-gray-400 bg-white hover:bg-gray-100"
+            onClick={handleStart}>
+            Start!
           </button>
-        </details>
-      </div>
 
-      <button
-        className="m-1 p-2 font-medium rounded border border-gray-400 bg-white hover:bg-gray-100"
-        onClick={handleStart}>
-        Start!
-      </button>
+          {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
 
-      {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
-
-      <div className="m-1 p-1 bg-gray-100">
-        <p className="text-xl">Status</p>
-        <div>Slide ready: {connectionStatus?.streamer ? "✅" : "❌"}</div>
-        <div>
-          Comment Subscribe ready: {connectionStatus?.subscriber ? "✅" : "❌"}
+          <div className="m-1 p-1 bg-gray-100">
+            <p className="text-xl">Status</p>
+            <div>⬜: Not use, ✅: Ready, ❌: Not Ready</div>
+            <div>
+              Comment handler: {connectionStatus?.comment_handler ? "✅" : "❌"}
+            </div>
+            <div>
+              Comment subscriber:{" "}
+              {connectionStatus?.comment_subscriber ? "✅" : "❌"}
+            </div>
+            <div>
+              Sakura handler:{" "}
+              {config?.selfpost
+                ? connectionStatus?.selfpost_handler
+                  ? "✅"
+                  : "❌"
+                : "⬜"}
+            </div>
+            <div>
+              Sakura subscriber:{" "}
+              {config?.selfpost
+                ? connectionStatus?.selfpost_subscriber
+                  ? "✅"
+                  : "❌"
+                : "⬜"}
+            </div>
+          </div>
         </div>
-        <div>Sakura ready: {connectionStatus?.poster ? "✅" : "❌"}</div>
-      </div>
-    </div>
+      ) : (
+        <div className="w-64 -m-1 flex flex-row bg-gray-10 m-1 p-2 rounded-md bg-yellow-200 text-yellow-800">
+          <p className="font-bold">Warn:</p>
+          <p className="grow">Please set configuration</p>
+          <button
+            className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100"
+            onClick={() => chrome.runtime.openOptionsPage()}>
+            ⚙ Option
+          </button>
+        </div>
+      )}
+    </>
   )
 }
 

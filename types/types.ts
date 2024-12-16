@@ -1,6 +1,14 @@
-export type Role = "subscriber" | "streamer" | "poster"
-// export type Role = "subscriber" | "publisher"
+export type Role = "subscriber" | "handler"
 export type Feature = "comment" | "selfpost"
+
+// self_poster
+// page_subscriber
+// comment_streamer
+// comment_subscriber
+
+// google comment_publisher, selfpost_subscriber
+// slack comment_subscriber, selfpost_publisher
+//
 
 export type State = {
   service: Service
@@ -10,7 +18,7 @@ export type State = {
 }
 
 export type ConnectionIdentifier = `${Feature}_${Role}`
-export type ConnectedStatus = { [K in `${Feature}_${Role}`]: State | null }
+export type ConnectedStatus = { [K in ConnectionIdentifier]: State | null }
 
 export type ConnectedTabs = {
   [R in Role]: number | null
@@ -21,14 +29,12 @@ export type ConnectedTabs = {
 
 export type MessageArgs = {
   role: Role
-  action: "Load" | "Subscribe"
+  action: "Load" | "Subscribe" | "SakuraComment"
   tabId: number | null
   comments?: string[]
 }
 
-export type Subscriber = "zoom" | "slack"
-export type Streamer = "example" | "googleslide"
-export type Service = Subscriber | Streamer
+export type Service = "zoom" | "slack" | "example" | "googleslide"
 
 export interface CommentExtractor {
   listNodeExtractFn: () => HTMLElement | null | undefined
@@ -49,5 +55,5 @@ export type Config = {
   sizePx: number
   clapColor: string
   clapSize: number
-  plant: boolean
+  selfpost: boolean
 }

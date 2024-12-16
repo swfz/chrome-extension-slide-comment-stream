@@ -6,9 +6,7 @@ import { listen } from "@plasmohq/messaging/message"
 import { slackSelfPost } from "~lib/extractor/slack"
 import { initialize } from "~lib/initializer"
 import { extractors, subscribeComments } from "~lib/subscriber"
-import { Role } from "~types/types"
 
-const ROLE: Role = "subscriber"
 let observer = { disconnect: () => {} }
 
 export const config: PlasmoCSConfig = {
@@ -16,24 +14,35 @@ export const config: PlasmoCSConfig = {
   all_frames: true
 }
 
-initialize(ROLE)
-initialize("poster")
-
 const initialHandler: PlasmoMessaging.MessageHandler = async (req, res) => {
   console.warn("req", req)
   console.warn("res", res)
   if (req.action === "Load") {
     const observeElement = extractors["slack"].listNodeExtractFn()
 
-    observer.disconnect()
-    observer = subscribeComments("slack", observeElement, res.send)
-
-    const response = await sendToBackground({
+    await sendToBackground({
       name: "connector",
-      body: { role: ROLE, action: "connect", tabId: req.tabId }
+      body: {
+        feature: "comment",
+        role: "subscriber",
+        action: "connect",
+        tabId: req.tabId,
+        service: "slack"
+      }
+    })
+    await sendToBackground({
+      name: "connector",
+      body: {
+        feature: "selfpost",
+        role: "handler",
+        action: "connect",
+        tabId: req.tabId,
+        service: "slack"
+      }
     })
 
-    res.send(response.message)
+    observer.disconnect()
+    observer = subscribeComments("slack", observeElement, res.send)
   }
 
   if (req.action === "SakuraComment") {
@@ -41,6 +50,8 @@ const initialHandler: PlasmoMessaging.MessageHandler = async (req, res) => {
   }
 }
 
+initialize("comment", "subscriber")
+initialize("selfpost", "handler")
 listen(initialHandler)
 
 console.log("loaded. subscriber content script.")

@@ -28,7 +28,7 @@ export const zoomSelfPost = async (comment, send) => {
   const storage = new Storage({ area: "local" })
   const config = await storage.get("config")
 
-  if (!config.plant) return
+  if (!config.selfpost) return
 
   const iframeElement = document.querySelector<HTMLIFrameElement>(
     ".pwa-webclient__iframe"

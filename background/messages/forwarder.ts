@@ -3,12 +3,13 @@ import { Storage } from "@plasmohq/storage"
 
 const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
   const storage = new Storage({ area: "local" })
-  const status = await storage.get("state")
+  const status = await storage.get("status")
+  console.log(status)
 
   if (req.body.action === "Subscribe") {
     await sendToContentScript({
       action: "Subscribe",
-      tabId: status?.streamer,
+      tabId: status?.comment_handler.tabId,
       comments: req.body.comments
     })
   }
@@ -17,7 +18,7 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
 
     await sendToContentScript({
       action: "SakuraComment",
-      tabId: status?.poster,
+      tabId: status?.selfpost_handler.tabId,
       comment: req.body.comment
     })
   }

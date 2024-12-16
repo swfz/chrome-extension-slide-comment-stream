@@ -37,7 +37,8 @@ const initialHandler: PlasmoMessaging.MessageHandler = async (req, res) => {
 
 // NOTE: 2重でイベントリスナが登録されるのを防ぐための分岐 子要素に対して処理する
 if (window.self !== window.top) {
-  initialize(ROLE)
+  initialize("comment", "subscriber")
+  initialize("selfpost", "handler")
   listen(initialHandler)
 }
 

@@ -7,7 +7,7 @@ import "./style.css"
 
 import { Config } from "~types/types"
 
-const defaultConfig = {
+export const defaultConfig = {
   platform: "slack",
   color: "#000000",
   font: "",
@@ -15,7 +15,7 @@ const defaultConfig = {
   sizePx: 50,
   clapColor: "#000000",
   clapSize: 80,
-  plant: false
+  selfpost: false
 }
 
 function OptionsPage() {
@@ -214,19 +214,19 @@ function OptionsPage() {
 
             <div className="space-y-2">
               <label
-                htmlFor="plant"
+                htmlFor="selfpost"
                 className="block text-sm font-medium text-gray-700">
-                Use Plant:
+                Use Selfpost(sakura):
               </label>
               <p className="text-sm text-gray-500">
                 A feature to comment on your own presentation in real-time. You
                 need to predefine the content of the comment and its timing.
               </p>
               <input
-                id="plant"
+                id="selfpost"
                 type="checkbox"
-                onChange={handleBoolChange("plant")}
-                checked={config.plant}></input>
+                onChange={handleBoolChange("selfpost")}
+                checked={config.selfpost}></input>
             </div>
           </div>
         </form>

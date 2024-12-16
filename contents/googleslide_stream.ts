@@ -8,7 +8,8 @@ import { googleslideExtractor } from "~lib/extractor/googleslide"
 import { initialize } from "~lib/initializer"
 import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
-import { Role } from "~types/types"
+import { defaultConfig } from "~options"
+import { Config } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],
@@ -16,14 +17,13 @@ export const config: PlasmoCSConfig = {
   all_frames: true
 }
 
-const ROLE: Role = "streamer"
 let observer = { disconnect: () => {} }
 
 const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   console.warn("req", req)
 
   const storage = new Storage({ area: "local" })
-  const config = await storage.get("config")
+  const config = (await storage.get<Config>("config")) || defaultConfig
 
   if (req.action === "Load") {
     const boxElement = googleslideExtractor.boxElementFn()
@@ -33,15 +33,18 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
       return
     }
 
-    const streamerResponse = await sendToBackground({
+    await sendToBackground({
       name: "connector",
-      body: { role: ROLE, action: "connect", tabId: req.tabId }
+      body: {
+        feature: "comment",
+        role: "handler",
+        action: "connect",
+        tabId: req.tabId,
+        service: "googleslide"
+      }
     })
-    const posterResponse = await sendToBackground({
-      name: "connector",
-      body: { role: "poster", action: "connect", tabId: req.tabId }
-    })
-    if (config?.plant) {
+
+    if (config.selfpost) {
       const observeElement = googleslideExtractor.pageNumberElementFn()
 
       if (observeElement === null || observeElement === undefined) {
@@ -51,9 +54,18 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
 
       observer.disconnect()
       observer = subscribePageNumber("googleslide", observeElement, res.send)
-    }
 
-    // res.send({ message: response.message })
+      await sendToBackground({
+        name: "connector",
+        body: {
+          feature: "selfpost",
+          role: "subscriber",
+          action: "connect",
+          tabId: req.tabId,
+          service: "googleslide"
+        }
+      })
+    }
   }
 
   if (req.action === "Subscribe") {
@@ -84,7 +96,8 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
 // NOTE: 2重でイベントリスナが登録されるのを防ぐための分岐
 // iframe利用の親側のコンテンツかどうかの判断
 if (document.body.role === "application") {
-  initialize(ROLE)
+  initialize("comment", "handler")
+  initialize("selfpost", "subscriber")
   listen(initialHandler)
 }
 

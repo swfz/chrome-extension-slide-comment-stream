@@ -1,4 +1,4 @@
-import { Role, Service } from "~types/types"
+import { Feature, Service } from "~types/types"
 
 const detectService = (url: string): Service | null => {
   if (url.match(/docs.google.com\/presentation/)) {
@@ -17,17 +17,17 @@ const detectService = (url: string): Service | null => {
   return null
 }
 
-const serviceToRole = (service: Service | null): Role | null => {
+const serviceToHandlerFeature = (service: Service | null): Feature | null => {
   if (service === null) return null
 
   const serviceMap = {
-    googleslide: "streamer",
-    example: "streamer",
-    slack: "subscriber",
-    zoom: "subscriber"
+    googleslide: "comment",
+    example: "comment",
+    slack: "selfpost",
+    zoom: "selfpost"
   } as const
 
   return serviceMap[service]
 }
 
-export { detectService, serviceToRole }
+export { detectService, serviceToHandlerFeature }

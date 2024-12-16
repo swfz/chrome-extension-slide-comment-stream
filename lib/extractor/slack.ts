@@ -1,3 +1,4 @@
+import { waitForSelector } from "~lib/poster"
 import { CommentExtractor } from "~types/types"
 
 export const slackExtractor: CommentExtractor = {
@@ -14,5 +15,19 @@ export const slackExtractor: CommentExtractor = {
   },
   commentExtractFn: (el) => {
     return el?.querySelector(".p-rich_text_block")?.innerText
+  }
+}
+
+export const slackSelfPost = async (comment, send) => {
+  const textInput = document.querySelector<HTMLParagraphElement>(
+    ".p-threads_footer__input .ql-editor p"
+  )
+  if (textInput !== null) {
+    textInput.innerText = comment
+    const submitSelector =
+      '.p-threads_footer__input button[data-qa="texty_send_button"]'
+
+    const submitButton = await waitForSelector(submitSelector)
+    submitButton?.click()
   }
 }

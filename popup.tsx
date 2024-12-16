@@ -51,14 +51,30 @@ function IndexPopup() {
     }
   }
 
-  const handleSampleComment = async () => {
+  const streamComment = async () => {
     await sendToBackground({
       name: "forwarder",
       body: { action: "Subscribe", comments: [sampleComment] }
     })
   }
 
-  const handleSampleKeyDown = (e) => {
+  const sakuraComment = async () => {
+    await sendToBackground({
+      name: "forwarder",
+      body: { action: "SakuraComment", comment: sampleComment }
+    })
+  }
+
+  const handleSampleComment = () => {
+    if (role === "subscriber") {
+      sakuraComment()
+    }
+    if (role === "streamer") {
+      streamComment()
+    }
+  }
+
+  const handleEnterKey = (e) => {
     if (e.key === "Enter") {
       handleSampleComment()
     }
@@ -106,12 +122,12 @@ function IndexPopup() {
             type="text"
             value={sampleComment}
             onChange={(e) => setSampleComment(e.target.value)}
-            onKeyDown={handleSampleKeyDown}
+            onKeyDown={handleEnterKey}
             className="border rounded w-full"></input>
           <button
             className="my-1 w-full p-2 rounded border border-gray-400 bg-white hover:bg-gray-100"
             onClick={handleSampleComment}>
-            Sample(run only slidepage)
+            Sample(run only {role} page)
           </button>
         </details>
       </div>

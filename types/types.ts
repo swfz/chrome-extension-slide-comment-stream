@@ -25,6 +25,7 @@ export interface CommentExtractor {
 
 export interface SlideExtractor {
   boxElementFn: () => HTMLElement | null | undefined
+  pageNumberElementFn: () => HTMLElement | null | undefined
 }
 
 export type Config = {

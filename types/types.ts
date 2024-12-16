@@ -34,7 +34,8 @@ export type MessageArgs = {
   comments?: string[]
 }
 
-export type Service = "zoom" | "slack" | "example" | "googleslide"
+export type CommentSubscriber = "zoom" | "slack"
+export type Service = CommentSubscriber | "example" | "googleslide"
 
 export interface CommentExtractor {
   listNodeExtractFn: () => HTMLElement | null | undefined
@@ -48,7 +49,6 @@ export interface SlideExtractor {
 }
 
 export type Config = {
-  platform: string
   color: string
   font: string
   duration: number

@@ -8,7 +8,6 @@ import "./style.css"
 import { Config } from "~types/types"
 
 export const defaultConfig = {
-  platform: "slack",
   color: "#000000",
   font: "",
   duration: 4,
@@ -18,15 +17,25 @@ export const defaultConfig = {
   selfpost: false
 }
 
+const sampleSelfPostConfig = {
+  "2": [
+    { seconds: 0.5, comment: "looks good" },
+    { seconds: 3, comment: "cooooooooooool!!!!" }
+  ],
+  "4": [{ seconds: 2, comment: "wow" }]
+}
+
 function OptionsPage() {
   const [config, setConfig] = useState<Config>(defaultConfig)
+  const [selfpostConfig, setSelfpostConfig] = useState()
+  const [selfpostConfigText, setSelfpostConfigText] = useState<string>()
   const [previewBackground, setPreviewBackground] = useState<string>("#FFFFFF")
+  const [error, setError] = useState("")
 
   const storage = new Storage({
     area: "local"
   })
 
-  const platforms: Config["platform"][] = ["zoom", "slack", "meet"]
   const fonts = [
     "メイリオ",
     "ＭＳ ゴシック",
@@ -59,6 +68,35 @@ function OptionsPage() {
     }
   }
 
+  const validateJSON = (text) => {
+    try {
+      if (!text.trim()) {
+        setError("")
+        return
+      }
+
+      JSON.parse(text)
+      setError("")
+    } catch (e) {
+      setError("Invalid JSON: " + e.message)
+    }
+  }
+
+  const handleSelfhostConfigChange = (
+    event: ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setSelfpostConfigText(event.target.value)
+    validateJSON(event.target.value)
+  }
+
+  const handlePaste = (e) => {
+    setTimeout(() => {
+      validateJSON(e.target.value)
+    }, 0)
+  }
+
+  const isError = () => error !== ""
+
   const handleSubmit = async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
 
@@ -67,14 +105,16 @@ function OptionsPage() {
     }
 
     await storage.set("config", config)
+    await storage.set("selfpost", JSON.parse(selfpostConfigText))
   }
 
   useEffect(() => {
     ;(async () => {
       const config = await storage.get<Config>("config")
-      console.log(config)
-
       setConfig(config || defaultConfig)
+
+      const selfpostConfig = await storage.get("selfpost")
+      setSelfpostConfig(selfpostConfig || {})
     })()
   }, [])
 
@@ -87,26 +127,6 @@ function OptionsPage() {
 
         <form>
           <div className="flex flex-col p-6 space-y-2">
-            <div className="space-y-2">
-              <label
-                htmlFor="platform"
-                className="block text-sm font-medium text-gray-700">
-                Subscribe Platform:
-              </label>
-              <select
-                value={config.platform}
-                onChange={handleSelectChange("platform")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                {platforms.map((platform) => {
-                  return (
-                    <option key={platform} value={platform}>
-                      {platform}
-                    </option>
-                  )
-                })}
-              </select>
-            </div>
-
             <div className="space-y-2">
               <label
                 htmlFor="color"
@@ -218,21 +238,62 @@ function OptionsPage() {
                 className="block text-sm font-medium text-gray-700">
                 Use Selfpost(sakura):
               </label>
-              <p className="text-sm text-gray-500">
-                A feature to comment on your own presentation in real-time. You
-                need to predefine the content of the comment and its timing.
-              </p>
               <input
                 id="selfpost"
                 type="checkbox"
                 onChange={handleBoolChange("selfpost")}
                 checked={config.selfpost}></input>
+              <div className="m-1 p-1">
+                <p className="text-sm text-gray-500">
+                  A feature to comment on your own presentation in real-time.
+                  You need to predefine the content of the comment and its
+                  timing.
+                </p>
+
+                {config.selfpost ? (
+                  <div>
+                    <p>
+                      This function is used to play a predefined comment at a
+                      predetermined timing.
+                    </p>
+                    <p>The key is the slide number</p>
+                    <p>
+                      When you transition to the target slide number, a
+                      `comment` message is automatically posted after `seconds`
+                      seconds of each line
+                    </p>
+                    <p className="font-bold">For example</p>
+                    <pre className="bg-gray-100 text-gray-800 text-xs p-4 rounded-md overflow-x-auto">
+                      <code>
+                        {JSON.stringify(sampleSelfPostConfig, null, 2)}
+                      </code>
+                    </pre>
+                    <label htmlFor="selfpost">Configuration</label>
+                    <textarea
+                      defaultValue={JSON.stringify(selfpostConfig, null, 2)}
+                      onChange={handleSelfhostConfigChange}
+                      onPaste={handlePaste}
+                      className="w-full rounded-md border border-gray-600"
+                      id="selfpost"
+                      rows={20}></textarea>
+
+                    {error && (
+                      <div className="p-3 bg-red-100 border border-red-400 rounded-md">
+                        <p className="text-red-700 text-sm">{error}</p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
             </div>
           </div>
         </form>
 
         <div className="p-4 w-full">
           <button
+            disabled={isError()}
             className="p-2 w-full rounded border border-gray-400 bg-white hover:bg-gray-100"
             onClick={handleSubmit}>
             Save

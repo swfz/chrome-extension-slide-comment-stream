@@ -15,7 +15,7 @@ const subscribePageNumber = (service, observeElement, send) => {
     }
 
     const storage = new Storage({ area: "local" })
-    const sakura = await storage.get("sakura")
+    const sakura = await storage.get("selfpost")
 
     const added = records.at(-1)?.addedNodes[0]?.textContent
     const removed = records[0]?.removedNodes[0]?.textContent

@@ -1,27 +1,31 @@
 import { sendToBackground } from "@plasmohq/messaging"
 
-import { CommentExtractor, Subscriber } from "~types/types"
+import { CommentExtractor, CommentSubscriber } from "~types/types"
 
 import { slackExtractor } from "./extractor/slack"
 import { zoomExtractor } from "./extractor/zoom"
 
-const extractors: { [P in Subscriber]: CommentExtractor } = {
+const extractors: { [P in CommentSubscriber]: CommentExtractor } = {
   slack: slackExtractor,
   zoom: zoomExtractor
 }
 
-const subscribeComments = (platform, observeElement, sendResponse) => {
+const subscribeComments = (
+  service: CommentSubscriber,
+  observeElement,
+  sendResponse
+) => {
   const extractComment = (mutationRecords: MutationRecord[]): string[] => {
     const nodes = mutationRecords
       .filter((record) => {
         const element = record.target as Element
 
-        return extractors[platform].isTargetElement(element)
+        return extractors[service].isTargetElement(element)
       })
       .map((record) => record.addedNodes[0])
 
     const comments = Array.from(nodes)
-      .map((node) => extractors[platform].commentExtractFn(node))
+      .map((node) => extractors[service].commentExtractFn(node))
       .filter((c) => c !== undefined)
     return comments
   }

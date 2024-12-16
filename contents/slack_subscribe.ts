@@ -32,10 +32,7 @@ const initialHandler: PlasmoMessaging.MessageHandler = async (req, res) => {
       name: "connector",
       body: { role: ROLE, action: "connect", tabId: req.tabId }
     })
-    await sendToBackground({
-      name: "connector",
-      body: { role: "poster", action: "connect", tabId: req.tabId }
-    })
+
     res.send(response.message)
   }
 

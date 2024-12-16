@@ -10,5 +10,14 @@ export const googleslideExtractor: SlideExtractor = {
     )
 
     return boxElement
+  },
+
+  pageNumberElementFn: () => {
+    const iframeElement: HTMLIFrameElement | null = document.querySelector(
+      ".punch-present-iframe"
+    )
+    return iframeElement?.contentWindow?.document.querySelector<HTMLDivElement>(
+      ".docs-material-menu-button-flat-default-caption"
+    )
   }
 }

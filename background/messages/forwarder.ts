@@ -13,6 +13,8 @@ const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
     })
   }
   if (req.body.action === "SakuraComment") {
+    console.warn("sakura", req)
+
     await sendToContentScript({
       action: "SakuraComment",
       tabId: status?.poster,

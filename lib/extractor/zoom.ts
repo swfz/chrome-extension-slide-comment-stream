@@ -23,3 +23,38 @@ export const zoomExtractor: CommentExtractor = {
     return commentContainer.getAttribute("aria-label")?.split(", ").at(-1)
   }
 }
+
+export const zoomSelfPost = async (comment, send) => {
+  const storage = new Storage({ area: "local" })
+  const config = await storage.get("config")
+
+  if (!config.plant) return
+
+  const iframeElement = document.querySelector<HTMLIFrameElement>(
+    ".pwa-webclient__iframe"
+  )
+  if (iframeElement === null) {
+    send({ error: "Error: not found irfame..." })
+    return
+  }
+
+  const p =
+    iframeElement?.contentWindow?.document.querySelector<HTMLElement>(
+      ".ProseMirror p"
+    )
+
+  if (p === null || p === undefined) {
+    send({ error: "Error: not found p..." })
+    return
+  }
+
+  p.innerText = comment
+
+  const sendButton =
+    iframeElement?.contentWindow?.document.querySelector<HTMLButtonElement>(
+      ".chat-rtf-box__send"
+    )
+  sendButton?.click()
+
+  send({ message: "Success Sakura Post" })
+}

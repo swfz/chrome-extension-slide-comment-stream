@@ -1,4 +1,17 @@
 export type Role = "subscriber" | "streamer" | "poster"
+// export type Role = "subscriber" | "publisher"
+export type Feature = "comment" | "selfpost"
+
+export type State = {
+  service: Service
+  tabId: number
+  role: Role
+  feature: Feature
+}
+
+export type ConnectionIdentifier = `${Feature}_${Role}`
+export type ConnectedStatus = { [K in `${Feature}_${Role}`]: State | null }
+
 export type ConnectedTabs = {
   [R in Role]: number | null
 }

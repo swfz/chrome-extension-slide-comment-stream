@@ -1,4 +1,5 @@
 import { sendToBackground } from "@plasmohq/messaging"
+import { Storage } from "@plasmohq/storage"
 
 const subscribePageNumber = (service, observeElement, send) => {
   const observer = new MutationObserver(async function (

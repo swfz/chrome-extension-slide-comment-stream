@@ -6,6 +6,7 @@ import { Storage } from "@plasmohq/storage"
 
 import { googleslideExtractor } from "~lib/extractor/googleslide"
 import { initialize } from "~lib/initializer"
+import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
 import { Role } from "~types/types"
 
@@ -16,21 +17,43 @@ export const config: PlasmoCSConfig = {
 }
 
 const ROLE: Role = "streamer"
+let observer = { disconnect: () => {} }
 
 const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
   console.warn("req", req)
+
+  const storage = new Storage({ area: "local" })
+  const config = await storage.get("config")
+
   if (req.action === "Load") {
     const boxElement = googleslideExtractor.boxElementFn()
 
     if (boxElement === null || boxElement === undefined) {
       res.send({ error: "Please start in presentation mode." })
-    } else {
-      const response = await sendToBackground({
-        name: "connector",
-        body: { role: ROLE, action: "connect", tabId: req.tabId }
-      })
-      res.send({ message: response.message })
+      return
     }
+
+    const streamerResponse = await sendToBackground({
+      name: "connector",
+      body: { role: ROLE, action: "connect", tabId: req.tabId }
+    })
+    const posterResponse = await sendToBackground({
+      name: "connector",
+      body: { role: "poster", action: "connect", tabId: req.tabId }
+    })
+    if (config?.plant) {
+      const observeElement = googleslideExtractor.pageNumberElementFn()
+
+      if (observeElement === null || observeElement === undefined) {
+        console.warn("not exist page number element")
+        return
+      }
+
+      observer.disconnect()
+      observer = subscribePageNumber("googleslide", observeElement, res.send)
+    }
+
+    // res.send({ message: response.message })
   }
 
   if (req.action === "Subscribe") {
@@ -52,9 +75,6 @@ const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
       res.send({ error: "Not found slide element..." })
       return
     }
-
-    const storage = new Storage({ area: "local" })
-    const config = await storage.get("config")
 
     render(boxElement, config, req.comments)
     res.send({ message: "comments rendered" })

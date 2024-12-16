@@ -152,17 +152,22 @@ function IndexPopup() {
             <p className="text-xl">Status</p>
             <div>⬜: Not use, ✅: Ready, ❌: Not Ready</div>
             <div>
-              Comment handler: {connectionStatus?.comment_handler ? "✅" : "❌"}
+              Comment handler:{" "}
+              {connectionStatus?.comment_handler
+                ? `✅ (${connectionStatus.comment_handler.service})`
+                : "❌"}
             </div>
             <div>
               Comment subscriber:{" "}
-              {connectionStatus?.comment_subscriber ? "✅" : "❌"}
+              {connectionStatus?.comment_subscriber
+                ? `✅ (${connectionStatus.comment_subscriber.service})`
+                : "❌"}
             </div>
             <div>
               Sakura handler:{" "}
               {config?.selfpost
                 ? connectionStatus?.selfpost_handler
-                  ? "✅"
+                  ? `✅ (${connectionStatus.selfpost_handler.service})`
                   : "❌"
                 : "⬜"}
             </div>
@@ -170,7 +175,7 @@ function IndexPopup() {
               Sakura subscriber:{" "}
               {config?.selfpost
                 ? connectionStatus?.selfpost_subscriber
-                  ? "✅"
+                  ? `✅ (${connectionStatus.selfpost_subscriber.service})`
                   : "❌"
                 : "⬜"}
             </div>

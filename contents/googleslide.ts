@@ -9,7 +9,7 @@ import { initialize } from "~lib/initializer"
 import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
 import { defaultConfig } from "~options"
-import { Config } from "~types/types"
+import { Config, RequestBody, ResponseBody } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],
@@ -19,7 +19,11 @@ export const config: PlasmoCSConfig = {
 
 let observer = { disconnect: () => {} }
 
-const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
+const initialHandler: PlasmoMessaging.Handler<
+  string,
+  RequestBody,
+  ResponseBody
+> = async (req, res) => {
   console.warn("req", req)
 
   const storage = new Storage({ area: "local" })

@@ -27,11 +27,21 @@ export type ConnectedTabs = {
 // toBackgroundArgs
 // toContentArgs
 
-export type MessageArgs = {
+export interface RequestBody {
+  feature: Feature
   role: Role
   action: "Load" | "Subscribe" | "SakuraComment"
   tabId: number | null
+  service: Service
   comments?: string[]
+  comment?: string
+}
+
+export type BackgroundWorker = "connector" | "forwarder"
+
+export interface ResponseBody {
+  error?: string
+  message?: string
 }
 
 export type CommentSubscriber = "zoom" | "slack"

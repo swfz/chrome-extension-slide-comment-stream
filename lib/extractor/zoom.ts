@@ -1,6 +1,4 @@
-import { Storage } from "@plasmohq/storage"
-
-import { waitForIframeChildSelector, waitForSelector } from "~lib/poster"
+import { waitForSelector } from "~lib/poster"
 import { CommentExtractor } from "~types/types"
 
 export const zoomExtractor: CommentExtractor = {

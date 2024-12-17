@@ -8,6 +8,7 @@ import { exampleExtractor } from "~lib/extractor/example"
 import { initialize } from "~lib/initializer"
 import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
+import { RequestBody, ResponseBody } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://tools.swfz.io/document-pinp-react-portal"],
@@ -17,7 +18,11 @@ export const config: PlasmoCSConfig = {
 
 let observer = { disconnect: () => {} }
 
-const initialHandler: PlasmoMessaging.Handler = async (req, res) => {
+const initialHandler: PlasmoMessaging.Handler<
+  string,
+  RequestBody,
+  ResponseBody
+> = async (req, res) => {
   console.warn("req", req)
   const storage = new Storage({ area: "local" })
   const config = await storage.get("config")

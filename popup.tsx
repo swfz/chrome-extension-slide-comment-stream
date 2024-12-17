@@ -29,7 +29,7 @@ function IndexPopup() {
   const [feature, setFeature] = useState<Feature | null>(null)
   const [alert, setAlert] = useState<Alert | null>(null)
 
-  const [connectionStatus] = useStorage({
+  const [connectionStatus, setConnectionStatus] = useStorage({
     key: "status",
     instance: new Storage({
       area: "local"
@@ -85,6 +85,10 @@ function IndexPopup() {
     if (e.key === "Enter") {
       handleSampleComment()
     }
+  }
+
+  const handleResetConnection = () => {
+    setConnectionStatus({})
   }
 
   useEffect(() => {
@@ -150,6 +154,11 @@ function IndexPopup() {
 
           <div className="m-1 p-1 bg-gray-100">
             <p className="text-xl">Status</p>
+            <button
+              onClick={handleResetConnection}
+              className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100">
+              Reset Connection
+            </button>
             <div>⬜: Not use, ✅: Ready, ❌: Not Ready</div>
             <div>
               Comment handler:{" "}

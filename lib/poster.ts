@@ -8,8 +8,8 @@ const subscribePageNumber = (service, observeElement, send) => {
   ) {
     if (!observeElement.isConnected) {
       await sendToBackground({
-        name: "disconnect",
-        body: { role: "poster", action: "disconnect" }
+        name: "connector",
+        body: { feature: "selfpost", role: "subscriber", action: "disconnect" }
       })
       return
     }

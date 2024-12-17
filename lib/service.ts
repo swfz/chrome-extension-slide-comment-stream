@@ -7,7 +7,7 @@ const detectService = (url: string): Service | null => {
   if (url.match(/app.slack.com\/client/)) {
     return "slack"
   }
-  if (url.match(/example.com/)) {
+  if (url.match(/tools.swfz.io/)) {
     return "example"
   }
   if (url.match(/app.zoom.us\/wc/)) {

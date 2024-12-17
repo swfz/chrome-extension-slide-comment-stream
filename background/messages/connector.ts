@@ -1,13 +1,13 @@
 import { PlasmoMessaging } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
-import { Feature, Role, Service } from "~types/types"
+import { ConnectedStatus, Feature, RequestBody, ResponseBody, Role, Service } from "~types/types"
 
 const STORAGE_KEY = "status"
 
-const disconnect = async (feature: Feature, role: Role, send) => {
+const disconnect = async (feature: Feature, role: Role, send: PlasmoMessaging.Response<ResponseBody>['send']) => {
   const storage = new Storage({ area: "local" })
-  const state = (await storage.get(STORAGE_KEY)) || {}
+  const state = (await storage.get<ConnectedStatus>(STORAGE_KEY)) || {}
   const identifier = `${feature}_${role}`
 
   await storage.set("status", { ...state, [identifier]: null })
@@ -19,10 +19,10 @@ const connect = async (
   role: Role,
   service: Service,
   tabId: number,
-  send
+  send: PlasmoMessaging.Response<ResponseBody>['send']
 ) => {
   const storage = new Storage({ area: "local" })
-  const state = (await storage.get(STORAGE_KEY)) || {}
+  const state = (await storage.get<ConnectedStatus>(STORAGE_KEY)) || {}
   const identifier = `${feature}_${role}`
 
   console.log(identifier, tabId)
@@ -33,16 +33,17 @@ const connect = async (
     feature
   }
   await storage.set(STORAGE_KEY, { ...state, [identifier]: row })
+  
   send({ message: `connected ${identifier}(${tabId})` })
 }
 
-const status = async (send) => {
+const status = async (send: PlasmoMessaging.Response<ConnectedStatus|{}>['send']) => {
   const storage = new Storage({ area: "local" })
 
-  send(await storage.get(STORAGE_KEY))
+  send(await storage.get<ConnectedStatus>(STORAGE_KEY)||{})
 }
 
-const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
+const handler: PlasmoMessaging.MessageHandler<RequestBody, ResponseBody> = async (req, res) => {
   console.log("connector", req)
 
   const { action, feature, role, service, tabId } = req.body

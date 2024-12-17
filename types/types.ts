@@ -24,20 +24,59 @@ export type ConnectedTabs = {
   [R in Role]: number | null
 }
 
-// toBackgroundArgs
-// toContentArgs
+// Args
+// popup to Background
+// popup to Content
+// content to background
+// background to content
+
+// name, body
+export type PopupToBackgroundBody = {
+  action: 'Subscribe'|'SakuraComment'
+  comments?: string[]
+  comment: string
+}
+
+// only {}
+export type PopupToContentBody = {
+  action: "Load"
+  tabId: number
+}
+
+// name, body
+export type ContentToBackgroundBody = {
+  feature: Feature
+  role: Role
+  action: 'connect'|'disconnect'
+  tabId: number
+  service: Service
+}
+
+// forwarder name, body
+export type ForwarderRequestBody = {
+  action: "SakuraComment"|"Subscribe"
+  comment?: string
+  comments?: string[]
+}
+
+export type ConnectorRequestBody = {
+
+}
+
 
 export interface RequestBody {
   feature: Feature
   role: Role
   action: "Load" | "Subscribe" | "SakuraComment"
   tabId: number | null
-  service: Service
+  service?: Service
   comments?: string[]
   comment?: string
 }
 
 export type BackgroundWorker = "connector" | "forwarder"
+
+
 
 export interface ResponseBody {
   error?: string

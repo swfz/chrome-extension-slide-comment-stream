@@ -83,4 +83,5 @@ initialize("comment", "handler")
 initialize("selfpost", "subscriber")
 listen(initialHandler)
 
-console.log("loaded. streamer content script.")
+console.log('lasterror',chrome.runtime.lastError);
+console.log("loaded. content script.")

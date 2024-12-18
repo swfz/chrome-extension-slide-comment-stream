@@ -40,7 +40,7 @@ const subscribeComments = (
     } else {
       await sendToBackground({
         name: "connector",
-        body: { feature: 'comment', role: "subscriber", action: "disconnect" }
+        body: { feature: "comment", role: "subscriber", action: "disconnect" }
       })
     }
   })

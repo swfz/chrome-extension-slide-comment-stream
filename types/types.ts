@@ -32,7 +32,7 @@ export type ConnectedTabs = {
 
 // name, body
 export type PopupToBackgroundBody = {
-  action: 'Subscribe'|'SakuraComment'
+  action: "Subscribe" | "SakuraComment"
   comments?: string[]
   comment: string
 }
@@ -47,22 +47,19 @@ export type PopupToContentBody = {
 export type ContentToBackgroundBody = {
   feature: Feature
   role: Role
-  action: 'connect'|'disconnect'
+  action: "connect" | "disconnect"
   tabId: number
   service: Service
 }
 
 // forwarder name, body
 export type ForwarderRequestBody = {
-  action: "SakuraComment"|"Subscribe"
+  action: "SakuraComment" | "Subscribe"
   comment?: string
   comments?: string[]
 }
 
-export type ConnectorRequestBody = {
-
-}
-
+export type ConnectorRequestBody = {}
 
 export interface RequestBody {
   feature: Feature
@@ -75,8 +72,6 @@ export interface RequestBody {
 }
 
 export type BackgroundWorker = "connector" | "forwarder"
-
-
 
 export interface ResponseBody {
   error?: string

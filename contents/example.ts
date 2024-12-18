@@ -5,7 +5,7 @@ import { listen } from "@plasmohq/messaging/message"
 import { Storage } from "@plasmohq/storage"
 
 import { exampleExtractor } from "~lib/extractor/example"
-import { initialize } from "~lib/initializer"
+import { batchInitialize } from "~lib/initializer"
 import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
 import { RequestBody, ResponseBody } from "~types/types"
@@ -79,9 +79,11 @@ const initialHandler: PlasmoMessaging.Handler<
   }
 }
 
-initialize("comment", "handler")
-initialize("selfpost", "subscriber")
+batchInitialize([
+  { feature: "comment", role: "handler" },
+  { feature: "selfpost", role: "subscriber" }
+])
 listen(initialHandler)
 
-console.log('lasterror',chrome.runtime.lastError);
+console.log("lasterror", chrome.runtime.lastError)
 console.log("loaded. content script.")

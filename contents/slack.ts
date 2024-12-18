@@ -4,7 +4,7 @@ import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 
 import { slackExtractor, slackSelfPost } from "~lib/extractor/slack"
-import { initialize } from "~lib/initializer"
+import { batchInitialize } from "~lib/initializer"
 import { subscribeComments } from "~lib/subscriber"
 import { RequestBody, ResponseBody } from "~types/types"
 
@@ -55,8 +55,10 @@ const initialHandler: PlasmoMessaging.Handler<
   }
 }
 
-initialize("comment", "subscriber")
-initialize("selfpost", "handler")
+batchInitialize([
+  { feature: "comment", role: "subscriber" },
+  { feature: "selfpost", role: "handler" }
+])
 listen(initialHandler)
 
 console.log("loaded. subscriber content script.")

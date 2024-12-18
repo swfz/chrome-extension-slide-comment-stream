@@ -5,7 +5,7 @@ import { listen } from "@plasmohq/messaging/message"
 import { Storage } from "@plasmohq/storage"
 
 import { googleslideExtractor } from "~lib/extractor/googleslide"
-import { initialize } from "~lib/initializer"
+import { batchInitialize } from "~lib/initializer"
 import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
 import { defaultConfig } from "~options"
@@ -100,8 +100,10 @@ const initialHandler: PlasmoMessaging.Handler<
 // NOTE: 2重でイベントリスナが登録されるのを防ぐための分岐
 // iframe利用の親側のコンテンツかどうかの判断
 if (document.body.role === "application") {
-  initialize("comment", "handler")
-  initialize("selfpost", "subscriber")
+  batchInitialize([
+    { feature: "comment", role: "handler" },
+    { feature: "selfpost", role: "subscriber" }
+  ])
   listen(initialHandler)
 }
 

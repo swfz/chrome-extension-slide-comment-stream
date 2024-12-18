@@ -110,7 +110,6 @@ const renderComment = (
   const element = document.createElement("p")
   element.style.all = "initial"
   element.innerText = comment
-  console.log("all: initial", element)
 
   element.onanimationend = (e) => {
     const commentElement = e.target

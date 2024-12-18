@@ -23,7 +23,7 @@ export const slackExtractor: CommentExtractor = {
   }
 }
 
-export const slackSelfPost = async (comment: string, send) => {
+export const slackSelfPost = async (comment: string) => {
   const textInput = document.querySelector<HTMLParagraphElement>(
     ".p-threads_footer__input .ql-editor p"
   )
@@ -32,7 +32,10 @@ export const slackSelfPost = async (comment: string, send) => {
     const submitSelector =
       '.p-threads_footer__input button[data-qa="texty_send_button"]'
 
-    const submitButton = await waitForSelector(submitSelector)
+    const submitButton =
+      await waitForSelector<HTMLButtonElement>(submitSelector)
     submitButton?.click()
   }
+
+  return { message: "Success sakura post" }
 }

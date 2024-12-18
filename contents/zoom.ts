@@ -62,9 +62,8 @@ const initialHandler: PlasmoMessaging.Handler<
   }
 
   if (req.action === "SakuraComment") {
-    console.log("sakura", req)
-
-    zoomSelfPost(req.comment, res.send)
+    const message = await zoomSelfPost(req.comment)
+    res.send(message)
   }
 }
 

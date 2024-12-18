@@ -59,7 +59,8 @@ const initialHandler: PlasmoMessaging.Handler<
   }
 
   if (req.action === "SakuraComment") {
-    slackSelfPost(req.comment, res.send)
+    const message = await slackSelfPost(req.comment)
+    res.send(message)
   }
 }
 

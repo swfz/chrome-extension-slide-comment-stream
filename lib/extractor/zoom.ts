@@ -25,20 +25,19 @@ export const zoomExtractor: CommentExtractor = {
   }
 }
 
-export const zoomSelfPost = async (comment, send) => {
+export const zoomSelfPost = async (comment: string) => {
   const p = document.querySelector<HTMLParagraphElement>(".ProseMirror p")
 
   if (p === null || p === undefined) {
-    send({ error: "Error: not found p..." })
-    return
+    return { error: "Error: not found p..." }
   }
 
   p.innerText = comment
 
-  const sendButton = await waitForSelector(
+  const sendButton = await waitForSelector<HTMLButtonElement>(
     "button.chat-rtf-box__send:not([disabled])"
   )
   sendButton?.click()
 
-  send({ message: "Success Sakura Post" })
+  return { message: "Success sakura post" }
 }

@@ -54,14 +54,19 @@ const subscribePageNumber = (
   return observer
 }
 
-const waitForSelector = (selector: string, timeout = 2000) => {
+const waitForSelector = <T extends Element>(
+  selector: string,
+  timeout = 2000
+): Promise<T> => {
   return new Promise((resolve, reject) => {
     const interval = 100
     let elapsed = 0
+
     const checkExistence = () => {
       const element = document.querySelector(selector)
-      if (element) {
-        resolve(element)
+
+      if (element && element instanceof Element) {
+        resolve(element as T)
       } else if (elapsed >= timeout) {
         reject(new Error(`Timeout: ${selector} not found`))
       } else {

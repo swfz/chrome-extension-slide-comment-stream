@@ -109,3 +109,10 @@ export type Config = {
   clapSize: number
   selfpost: boolean
 }
+
+export type SelfpostConfig = {
+  [key: string]: {
+    seconds: number
+    comment: string
+  }[]
+}

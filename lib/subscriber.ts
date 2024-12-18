@@ -26,8 +26,7 @@ const subscribeComments = (
   }
 
   const observer = new MutationObserver(async function (
-    records: MutationRecord[],
-    observer: MutationObserver
+    records: MutationRecord[]
   ) {
     const comments = extractComment(records)
     console.log("extracted comments", comments)

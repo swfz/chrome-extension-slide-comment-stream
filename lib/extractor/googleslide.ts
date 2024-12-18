@@ -5,9 +5,10 @@ export const googleslideExtractor: SlideExtractor = {
     const iframeElement: HTMLIFrameElement | null = document.querySelector(
       ".punch-present-iframe"
     )
-    const boxElement = iframeElement?.contentWindow?.document.querySelector(
-      ".punch-viewer-content"
-    )
+    const boxElement =
+      iframeElement?.contentWindow?.document.querySelector<HTMLDivElement>(
+        ".punch-viewer-content"
+      )
 
     return boxElement
   },

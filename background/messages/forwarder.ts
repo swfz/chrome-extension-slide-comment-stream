@@ -21,6 +21,7 @@ const handler: PlasmoMessaging.MessageHandler<
       comments: req.body.comments
     }).catch((e) => {
       console.warn(e)
+      res.send({ error: e })
     })
   }
   if (req.body?.action === "SakuraComment") {
@@ -30,6 +31,7 @@ const handler: PlasmoMessaging.MessageHandler<
       comment: req.body.comment
     }).catch((e) => {
       console.warn(e)
+      res.send({ error: e })
     })
   }
 }

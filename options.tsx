@@ -5,7 +5,7 @@ import { Storage } from "@plasmohq/storage"
 
 import "./style.css"
 
-import { Config } from "~types/types"
+import { Config, SelfpostConfig } from "~types/types"
 
 export const defaultConfig = {
   color: "#000000",
@@ -27,7 +27,7 @@ const sampleSelfPostConfig = {
 
 function OptionsPage() {
   const [config, setConfig] = useState<Config>(defaultConfig)
-  const [selfpostConfig, setSelfpostConfig] = useState()
+  const [selfpostConfig, setSelfpostConfig] = useState<SelfpostConfig>()
   const [selfpostConfigText, setSelfpostConfigText] = useState<string>()
   const [previewBackground, setPreviewBackground] = useState<string>("#FFFFFF")
   const [error, setError] = useState("")
@@ -93,9 +93,9 @@ function OptionsPage() {
     validateJSON(event.target.value)
   }
 
-  const handlePaste = (e) => {
+  const handlePaste: React.ClipboardEventHandler<HTMLTextAreaElement> = (e) => {
     setTimeout(() => {
-      validateJSON(e.target.value)
+      validateJSON(e.currentTarget.value)
     }, 0)
   }
 
@@ -104,12 +104,12 @@ function OptionsPage() {
   const handleSubmit = async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
 
-    if (tab.id === undefined) {
+    if (tab === undefined) {
       return
     }
 
     await storage.set("config", config)
-    await storage.set("selfpost", JSON.parse(selfpostConfigText))
+    await storage.set("selfpost", JSON.parse(selfpostConfigText || "{}"))
   }
 
   useEffect(() => {
@@ -117,8 +117,8 @@ function OptionsPage() {
       const config = await storage.get<Config>("config")
       setConfig(config || defaultConfig)
 
-      const selfpostConfig = await storage.get("selfpost")
-      setSelfpostConfig(selfpostConfig || {})
+      const selfpostConfig = await storage.get<SelfpostConfig>("selfpost")
+      setSelfpostConfig(selfpostConfig || ({} as SelfpostConfig))
     })()
   }, [])
 
@@ -335,7 +335,8 @@ function OptionsPage() {
             <div className="grow"></div>
             <div
               style={{
-                filter: CssFilterConverter.hexToFilter(config.clapColor).color
+                filter:
+                  CssFilterConverter.hexToFilter(config.clapColor).color || ""
               }}>
               <img
                 src="assets/sign_language_black_24dp.svg"

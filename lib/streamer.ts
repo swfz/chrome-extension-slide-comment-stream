@@ -45,7 +45,7 @@ const fixCommentStyles = (config: Config) => {
     fontFamily: config.font,
     fontSize: `${config.sizePx}px`,
     whiteSpace: `nowrap`
-  }
+  } as const
 }
 
 const fixClapStyles = (config: Config, boxElement: HTMLDivElement) => {
@@ -61,9 +61,9 @@ const fixClapStyles = (config: Config, boxElement: HTMLDivElement) => {
     position: "absolute",
     bottom: `${clapElementBottom}px`,
     right: `${clapElementRight}px`,
-    filter: CssFilterConverter.hexToFilter(config.clapColor).color,
+    filter: CssFilterConverter.hexToFilter(config.clapColor).color || "",
     animation: `shake${shakeIndex} 0.5s ease-in-out infinite, fadeOut 2s ease-in-out forwards`
-  }
+  } as const
 }
 
 const renderClap = (
@@ -86,8 +86,8 @@ const renderClap = (
   const clapElementStyles = fixClapStyles(config, boxElement)
 
   clapElement.style.all = "initial"
-  Object.entries(clapElementStyles).forEach(
-    ([k, v]) => (clapElement.style[k] = v)
+  Object.entries(clapElementStyles).forEach(([k, v]) =>
+    clapElement.style.setProperty(k, v)
   )
   p.innerText = `+${claps.toString()}`
 
@@ -117,7 +117,9 @@ const renderComment = (
       commentElement.style.display = `none`
     }
   }
-  Object.entries(commentStyle).forEach(([k, v]) => (element.style[k] = v))
+  Object.entries(commentStyle).forEach(([k, v]) =>
+    element.style.setProperty(k, v)
+  )
 
   boxElement.appendChild(element)
 }
@@ -127,7 +129,10 @@ const render = (
   config: Config,
   comments: string[]
 ) => {
-  const claps = comments.reduce((n, c) => n + c.match(/[8８]/g)?.length, 0)
+  const claps = comments.reduce(
+    (n, c) => n + (c.match(/[8８]/g)?.length ?? 0),
+    0
+  )
   if (claps > 0) {
     renderClap(boxElement, config, claps)
   }

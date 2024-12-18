@@ -8,12 +8,7 @@ import { exampleExtractor } from "~lib/extractor/example"
 import { batchInitialize } from "~lib/initializer"
 import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
-import {
-  Config,
-  ConnectedStatus,
-  RequestBody,
-  WorkerResponseBody
-} from "~types/types"
+import { Config, RequestBody, WorkerResponseBody } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://tools.swfz.io/document-pinp-react-portal"],
@@ -62,7 +57,7 @@ const initialHandler: PlasmoMessaging.Handler<
       }
 
       observer.disconnect()
-      observer = subscribePageNumber("example", observeElement)
+      observer = subscribePageNumber(observeElement)
       await sendToBackground({
         name: "connector",
         body: {

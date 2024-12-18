@@ -1,15 +1,11 @@
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
-import { PageNumberSubscriber } from "~types/types"
+import { SelfpostConfig } from "~types/types"
 
-const subscribePageNumber = (
-  service: PageNumberSubscriber,
-  observeElement: HTMLElement
-) => {
+const subscribePageNumber = (observeElement: HTMLElement) => {
   const observer = new MutationObserver(async function (
-    records: MutationRecord[],
-    observer: MutationObserver
+    records: MutationRecord[]
   ) {
     if (!observeElement.isConnected) {
       await sendToBackground({
@@ -22,8 +18,11 @@ const subscribePageNumber = (
     }
 
     const storage = new Storage({ area: "local" })
-    const sakura = await storage.get("selfpost")
-    console.log(sakura)
+    const sakura = await storage.get<SelfpostConfig>("selfpost")
+
+    if (sakura === undefined) {
+      return
+    }
 
     const added = records.at(-1)?.addedNodes[0]?.textContent
     const removed = records[0]?.removedNodes[0]?.textContent

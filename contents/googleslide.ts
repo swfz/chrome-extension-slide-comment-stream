@@ -59,7 +59,7 @@ const initialHandler: PlasmoMessaging.Handler<
       }
 
       observer.disconnect()
-      observer = subscribePageNumber("googleslide", observeElement, res.send)
+      observer = subscribePageNumber(observeElement)
 
       await sendToBackground({
         name: "connector",
@@ -73,6 +73,9 @@ const initialHandler: PlasmoMessaging.Handler<
       }).catch((e) => {
         console.warn(e)
       })
+      res.send({ message: "Subscribed page number in slide" })
+    } else {
+      res.send({ message: "Connected example site" })
     }
   }
 

@@ -1,25 +1,35 @@
 import { PlasmoMessaging, sendToContentScript } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
-const handler: PlasmoMessaging.MessageHandler = async (req, res) => {
-  const storage = new Storage({ area: "local" })
-  const status = await storage.get("status")
-  console.log(status)
+import {
+  ConnectedStatus,
+  ForwarderRequestBody,
+  WorkerResponseBody
+} from "~types/types"
 
-  if (req.body.action === "Subscribe") {
+const handler: PlasmoMessaging.MessageHandler<
+  ForwarderRequestBody,
+  WorkerResponseBody
+> = async (req, res) => {
+  const storage = new Storage({ area: "local" })
+  const status = await storage.get<ConnectedStatus>("status")
+
+  if (req.body?.action === "Subscribe") {
     await sendToContentScript({
       action: "Subscribe",
-      tabId: status?.comment_handler.tabId,
+      tabId: status?.comment_handler?.tabId,
       comments: req.body.comments
+    }).catch((e) => {
+      console.warn(e)
     })
   }
-  if (req.body.action === "SakuraComment") {
-    console.warn("sakura", req)
-
+  if (req.body?.action === "SakuraComment") {
     await sendToContentScript({
       action: "SakuraComment",
-      tabId: status?.selfpost_handler.tabId,
+      tabId: status?.selfpost_handler?.tabId,
       comment: req.body.comment
+    }).catch((e) => {
+      console.warn(e)
     })
   }
 }

@@ -3,7 +3,7 @@ import { CommentExtractor } from "~types/types"
 
 export const zoomExtractor: CommentExtractor = {
   listNodeExtractFn: () => {
-    return document.querySelector(".chat-container__chat-list")
+    return document.querySelector<HTMLDivElement>(".chat-container__chat-list")
   },
   isTargetElement: (el) => {
     return [
@@ -14,9 +14,9 @@ export const zoomExtractor: CommentExtractor = {
     })
   },
   commentExtractFn: (el) => {
-    const commentContainer = el.querySelector<HTMLElement>(
-      ".new-chat-message__container"
-    )
+    const commentContainer = (
+      el as HTMLDivElement
+    ).querySelector<HTMLDivElement>(".new-chat-message__container")
     if (commentContainer === null) return ""
 
     console.log(commentContainer)

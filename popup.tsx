@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import { sendToBackground, sendToContentScript } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
@@ -13,8 +13,12 @@ interface Alert {
   error: boolean
   text: string
 }
+interface AlertProps {
+  children: React.ReactNode
+  error: boolean
+}
 
-const Alert = ({ children, error }) => {
+const Alert = ({ children, error }: AlertProps) => {
   return (
     <div
       className={`m-1 p-2 rounded-md ${error ? "bg-red-200 text-red-800" : "bg-blue-200 text-blue-800"}`}>
@@ -45,6 +49,12 @@ function IndexPopup() {
 
   const handleStart = async () => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+
+    if (tab === undefined) {
+      setAlert({ error: true, text: "tab not found" })
+      return
+    }
+
     const res = await sendToContentScript({
       action: "Load",
       tabId: tab.id
@@ -62,6 +72,8 @@ function IndexPopup() {
     await sendToBackground({
       name: "forwarder",
       body: { action: "Subscribe", comments: [sampleComment] }
+    }).catch((e) => {
+      console.warn(e)
     })
   }
 
@@ -69,6 +81,8 @@ function IndexPopup() {
     await sendToBackground({
       name: "forwarder",
       body: { action: "SakuraComment", comment: sampleComment }
+    }).catch((e) => {
+      console.warn(e)
     })
   }
 
@@ -81,7 +95,7 @@ function IndexPopup() {
     }
   }
 
-  const handleEnterKey = (e) => {
+  const handleEnterKey = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSampleComment()
     }

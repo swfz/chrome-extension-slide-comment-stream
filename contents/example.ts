@@ -8,7 +8,12 @@ import { exampleExtractor } from "~lib/extractor/example"
 import { batchInitialize } from "~lib/initializer"
 import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
-import { RequestBody, ResponseBody } from "~types/types"
+import {
+  Config,
+  ConnectedStatus,
+  RequestBody,
+  WorkerResponseBody
+} from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://tools.swfz.io/document-pinp-react-portal"],
@@ -21,11 +26,11 @@ let observer = { disconnect: () => {} }
 const initialHandler: PlasmoMessaging.Handler<
   string,
   RequestBody,
-  ResponseBody
+  WorkerResponseBody
 > = async (req, res) => {
   console.warn("req", req)
   const storage = new Storage({ area: "local" })
-  const config = await storage.get("config")
+  const config = await storage.get<Config>("config")
 
   if (req.action === "Load") {
     const boxElement = exampleExtractor.boxElementFn()
@@ -43,10 +48,13 @@ const initialHandler: PlasmoMessaging.Handler<
         service: "example",
         tabId: req.tabId
       }
+    }).catch((e) => {
+      console.warn(e)
     })
 
-    if (config.selfpost) {
+    if (config?.selfpost) {
       const observeElement = exampleExtractor.pageNumberElementFn()
+      console.log(observeElement)
 
       if (observeElement === null || observeElement === undefined) {
         console.warn("not exist page number element")
@@ -54,7 +62,7 @@ const initialHandler: PlasmoMessaging.Handler<
       }
 
       observer.disconnect()
-      observer = subscribePageNumber("example", observeElement, res.send)
+      observer = subscribePageNumber("example", observeElement)
       await sendToBackground({
         name: "connector",
         body: {
@@ -64,10 +72,12 @@ const initialHandler: PlasmoMessaging.Handler<
           service: "example",
           tabId: req.tabId
         }
+      }).catch((e) => {
+        console.warn(e)
       })
-      res.send({ message: "connected example site" })
+      res.send({ message: "Subscribed page number in slide" })
     } else {
-      res.send({ message: "connected example site" })
+      res.send({ message: "Connected example site" })
     }
   }
 

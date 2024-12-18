@@ -3,50 +3,30 @@ import { Storage } from "@plasmohq/storage"
 
 import {
   ConnectedStatus,
+  ConnectRequestBody,
   Feature,
-  RequestBody,
-  ResponseBody,
   Role,
-  Service
+  Service,
+  WorkerResponseBody
 } from "~types/types"
 
 const STORAGE_KEY = "status"
 
-const disconnect = async (
-  feature: Feature,
-  role: Role,
-  send: PlasmoMessaging.Response<ResponseBody>["send"]
-) => {
+const disconnect = async (feature: Feature, role: Role) => {
   const storage = new Storage({ area: "local" })
   const state = (await storage.get<ConnectedStatus>(STORAGE_KEY)) || {}
   const identifier = `${feature}_${role}`
 
   await storage.set("status", { ...state, [identifier]: null })
-  send({ message: `disconnected ${identifier}.` })
-}
 
-const batchDisconnect = async (rows): ResponseBody => {
-  const storage = new Storage({ area: "local" })
-  const state = (await storage.get<ConnectedStatus>(STORAGE_KEY)) || {}
-
-  const newState = rows.reduce((state, row) => {
-    const identifier = `${row.feature}_${row.role}`
-    state[identifier] = null
-
-    return state
-  }, state)
-
-  await storage.set("status", newState)
-
-  return { message: "disconnected" }
+  return { message: `disconnected ${identifier}.` }
 }
 
 const connect = async (
   feature: Feature,
   role: Role,
   service: Service,
-  tabId: number,
-  send: PlasmoMessaging.Response<ResponseBody>["send"]
+  tabId: number
 ) => {
   const storage = new Storage({ area: "local" })
   const state = (await storage.get<ConnectedStatus>(STORAGE_KEY)) || {}
@@ -61,20 +41,18 @@ const connect = async (
   }
   await storage.set(STORAGE_KEY, { ...state, [identifier]: row })
 
-  send({ message: `connected ${identifier}(${tabId})` })
+  return { message: `connected ${identifier}(${tabId})` }
 }
 
-const status = async (
-  send: PlasmoMessaging.Response<ConnectedStatus | {}>["send"]
-) => {
+const status = async () => {
   const storage = new Storage({ area: "local" })
 
-  send((await storage.get<ConnectedStatus>(STORAGE_KEY)) || {})
+  return (await storage.get<ConnectedStatus>(STORAGE_KEY)) || {}
 }
 
 const handler: PlasmoMessaging.MessageHandler<
-  RequestBody,
-  ResponseBody
+  ConnectRequestBody,
+  WorkerResponseBody
 > = async (req, res) => {
   console.log("connector", req)
 
@@ -84,20 +62,20 @@ const handler: PlasmoMessaging.MessageHandler<
 
   switch (action) {
     case "connect":
-      console.log("connect")
+      if (service === undefined || tabId === undefined) {
+        res.send({ error: "service or tabId param is undefined" })
+        return
+      }
 
-      connect(feature, role, service, tabId, res.send)
+      res.send(await connect(feature, role, service, tabId))
       break
+
     case "disconnect":
-      console.log("disconnect")
-
-      disconnect(feature, role, res.send)
+      res.send(await disconnect(feature, role))
       break
-    case "batchDisconnect":
-      const m = batchDisconnect(req.body.rows)
-      res.send(m)
+
     default:
-      status(res.send)
+      res.send(await status())
   }
 }
 

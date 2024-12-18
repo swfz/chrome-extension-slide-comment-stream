@@ -1,7 +1,12 @@
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
-const subscribePageNumber = (service, observeElement, send) => {
+import { PageNumberSubscriber } from "~types/types"
+
+const subscribePageNumber = (
+  service: PageNumberSubscriber,
+  observeElement: HTMLElement
+) => {
   const observer = new MutationObserver(async function (
     records: MutationRecord[],
     observer: MutationObserver
@@ -10,12 +15,15 @@ const subscribePageNumber = (service, observeElement, send) => {
       await sendToBackground({
         name: "connector",
         body: { feature: "selfpost", role: "subscriber", action: "disconnect" }
+      }).catch((e) => {
+        console.warn(e)
       })
       return
     }
 
     const storage = new Storage({ area: "local" })
     const sakura = await storage.get("selfpost")
+    console.log(sakura)
 
     const added = records.at(-1)?.addedNodes[0]?.textContent
     const removed = records[0]?.removedNodes[0]?.textContent
@@ -31,21 +39,22 @@ const subscribePageNumber = (service, observeElement, send) => {
             await sendToBackground({
               name: "forwarder",
               body: { action: "SakuraComment", comment: commentRow.comment }
+            }).catch((e) => {
+              console.warn(e)
             })
           }, commentRow.seconds * 1000)
         })
       }
     }
   })
+  console.log("observe ")
 
   observer.observe(observeElement, { subtree: true, childList: true })
-
-  send({ message: "Subscribed page number in slide" })
 
   return observer
 }
 
-const waitForSelector = (selector, timeout = 2000) => {
+const waitForSelector = (selector: string, timeout = 2000) => {
   return new Promise((resolve, reject) => {
     const interval = 100
     let elapsed = 0

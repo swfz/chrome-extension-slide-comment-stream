@@ -6,8 +6,7 @@ import { extractors } from "./extractor"
 
 const subscribeComments = (
   service: CommentSubscriber,
-  observeElement,
-  sendResponse
+  observeElement: HTMLElement
 ) => {
   const extractComment = (mutationRecords: MutationRecord[]): string[] => {
     const nodes = mutationRecords
@@ -17,10 +16,12 @@ const subscribeComments = (
         return extractors[service].isTargetElement(element)
       })
       .map((record) => record.addedNodes[0])
+      .filter((node) => node !== undefined)
 
     const comments = Array.from(nodes)
       .map((node) => extractors[service].commentExtractFn(node))
-      .filter((c) => c !== undefined)
+      .filter((c) => c !== undefined && c !== null)
+
     return comments
   }
 
@@ -33,21 +34,27 @@ const subscribeComments = (
     console.log("observe connect", observeElement.isConnected)
 
     if (observeElement.isConnected) {
-      await sendToBackground({
-        name: "forwarder",
-        body: { action: "Subscribe", comments }
-      })
+      if (comments.length > 0) {
+        await sendToBackground({
+          name: "forwarder",
+          body: { action: "Subscribe", comments }
+        }).catch((e) => {
+          console.warn(e)
+        })
+      }
     } else {
+      console.log("observeElement removed.")
+
       await sendToBackground({
         name: "connector",
         body: { feature: "comment", role: "subscriber", action: "disconnect" }
+      }).catch((e) => {
+        console.warn(e)
       })
     }
   })
 
   observer.observe(observeElement, { subtree: true, childList: true })
-
-  sendResponse({ message: "Subscribed comment list in chat." })
 
   return observer
 }

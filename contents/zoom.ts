@@ -6,7 +6,7 @@ import { listen } from "@plasmohq/messaging/message"
 import { zoomExtractor, zoomSelfPost } from "~lib/extractor/zoom"
 import { batchInitialize } from "~lib/initializer"
 import { subscribeComments } from "~lib/subscriber"
-import { RequestBody, ResponseBody } from "~types/types"
+import { RequestBody, WorkerResponseBody } from "~types/types"
 
 let observer = { disconnect: () => {} }
 
@@ -18,7 +18,7 @@ export const config: PlasmoCSConfig = {
 const initialHandler: PlasmoMessaging.Handler<
   string,
   RequestBody,
-  ResponseBody
+  WorkerResponseBody
 > = async (req, res) => {
   console.warn("req", req)
   console.warn("res", res)
@@ -40,6 +40,8 @@ const initialHandler: PlasmoMessaging.Handler<
         tabId: req.tabId,
         service: "zoom"
       }
+    }).catch((e) => {
+      console.warn(e)
     })
     await sendToBackground({
       name: "connector",
@@ -50,10 +52,13 @@ const initialHandler: PlasmoMessaging.Handler<
         tabId: req.tabId,
         service: "zoom"
       }
+    }).catch((e) => {
+      console.warn(e)
     })
 
     observer.disconnect()
-    observer = subscribeComments("zoom", observeElement, res.send)
+    observer = subscribeComments("zoom", observeElement)
+    res.send({ message: "Subscribed comment list in chat." })
   }
 
   if (req.action === "SakuraComment") {

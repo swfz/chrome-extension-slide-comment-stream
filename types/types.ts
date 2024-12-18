@@ -1,14 +1,8 @@
 export type Role = "subscriber" | "handler"
 export type Feature = "comment" | "selfpost"
 
-// self_poster
-// page_subscriber
-// comment_streamer
-// comment_subscriber
-
 // google comment_publisher, selfpost_subscriber
 // slack comment_subscriber, selfpost_publisher
-//
 
 export type State = {
   service: Service
@@ -47,7 +41,7 @@ export type PopupToContentBody = {
 export type ContentToBackgroundBody = {
   feature: Feature
   role: Role
-  action: "connect" | "disconnect"
+  action: ConnectorAction
   tabId: number
   service: Service
 }
@@ -59,7 +53,20 @@ export type ForwarderRequestBody = {
   comments?: string[]
 }
 
-export type ConnectorRequestBody = {}
+type ConnectorAction = "connect" | "disconnect"
+
+export type ConnectRequestBody = {
+  action: ConnectorAction
+  feature: Feature
+  role: Role
+  tabId?: number
+  service?: Service
+}
+
+export type BatchDisconnectRequestBody = {
+  action: ConnectorAction
+  rows: ConnectRequestBody[]
+}
 
 export interface RequestBody {
   feature: Feature
@@ -73,18 +80,19 @@ export interface RequestBody {
 
 export type BackgroundWorker = "connector" | "forwarder"
 
-export interface ResponseBody {
+export interface WorkerResponseBody {
   error?: string
   message?: string
 }
 
 export type CommentSubscriber = "zoom" | "slack"
-export type Service = CommentSubscriber | "example" | "googleslide"
+export type PageNumberSubscriber = "example" | "googleslide"
+export type Service = CommentSubscriber | PageNumberSubscriber
 
 export interface CommentExtractor {
   listNodeExtractFn: () => HTMLElement | null | undefined
-  isTargetElement: (el: HTMLElement) => boolean
-  commentExtractFn: (el: HTMLElement) => string | null | undefined
+  isTargetElement: (el: Element) => boolean
+  commentExtractFn: (el: Node) => string | null | undefined
 }
 
 export interface SlideExtractor {

@@ -8,17 +8,22 @@ export const slackExtractor: CommentExtractor = {
     )
   },
   isTargetElement: (el) => {
+    // ["data-item-key"]
     return (
-      el["data-item-key"] != "input" &&
+      (el as HTMLDivElement).dataset.itemKey != "input" &&
       !el.querySelector(".c-message_kit__resend")
     )
   },
   commentExtractFn: (el) => {
-    return el?.querySelector(".p-rich_text_block")?.innerText
+    console.log("el", el)
+
+    return (el as HTMLDivElement).querySelector<HTMLDivElement>(
+      "div.p-rich_text_block"
+    )?.innerText
   }
 }
 
-export const slackSelfPost = async (comment, send) => {
+export const slackSelfPost = async (comment: string, send) => {
   const textInput = document.querySelector<HTMLParagraphElement>(
     ".p-threads_footer__input .ql-editor p"
   )

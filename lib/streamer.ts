@@ -92,7 +92,7 @@ const renderClap = (
   p.innerText = `+${claps.toString()}`
 
   clapElement.onanimationend = (e) => {
-    const element = e.target
+    const element = e.target as HTMLDivElement
     if (element) {
       element.style.display = `none`
     }
@@ -112,7 +112,7 @@ const renderComment = (
   element.innerText = comment
 
   element.onanimationend = (e) => {
-    const commentElement = e.target
+    const commentElement = e.target as HTMLParagraphElement
     if (commentElement) {
       commentElement.style.display = `none`
     }

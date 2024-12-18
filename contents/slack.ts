@@ -6,7 +6,7 @@ import { listen } from "@plasmohq/messaging/message"
 import { slackExtractor, slackSelfPost } from "~lib/extractor/slack"
 import { batchInitialize } from "~lib/initializer"
 import { subscribeComments } from "~lib/subscriber"
-import { RequestBody, ResponseBody } from "~types/types"
+import { PopupToContentBody, WorkerResponseBody } from "~types/types"
 
 let observer = { disconnect: () => {} }
 
@@ -16,14 +16,17 @@ export const config: PlasmoCSConfig = {
 }
 
 const initialHandler: PlasmoMessaging.Handler<
-  string,
-  RequestBody,
-  ResponseBody
+  PopupToContentBody,
+  WorkerResponseBody
 > = async (req, res) => {
   console.warn("req", req)
   console.warn("res", res)
   if (req.action === "Load") {
     const observeElement = slackExtractor.listNodeExtractFn()
+    if (observeElement === null || observeElement === undefined) {
+      res.send({ error: "Subscribe node not found. please open chat list" })
+      return
+    }
 
     await sendToBackground({
       name: "connector",
@@ -34,6 +37,8 @@ const initialHandler: PlasmoMessaging.Handler<
         tabId: req.tabId,
         service: "slack"
       }
+    }).catch((e) => {
+      console.warn(e)
     })
     await sendToBackground({
       name: "connector",
@@ -44,10 +49,13 @@ const initialHandler: PlasmoMessaging.Handler<
         tabId: req.tabId,
         service: "slack"
       }
+    }).catch((e) => {
+      console.warn(e)
     })
 
     observer.disconnect()
-    observer = subscribeComments("slack", observeElement, res.send)
+    observer = subscribeComments("slack", observeElement)
+    res.send({ message: "Subscribed comment list in chat." })
   }
 
   if (req.action === "SakuraComment") {

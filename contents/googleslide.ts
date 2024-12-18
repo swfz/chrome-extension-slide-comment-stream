@@ -9,7 +9,7 @@ import { batchInitialize } from "~lib/initializer"
 import { subscribePageNumber } from "~lib/poster"
 import { render } from "~lib/streamer"
 import { defaultConfig } from "~options"
-import { Config, RequestBody, ResponseBody } from "~types/types"
+import { Config, RequestBody, WorkerResponseBody } from "~types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],
@@ -22,7 +22,7 @@ let observer = { disconnect: () => {} }
 const initialHandler: PlasmoMessaging.Handler<
   string,
   RequestBody,
-  ResponseBody
+  WorkerResponseBody
 > = async (req, res) => {
   console.warn("req", req)
 
@@ -46,6 +46,8 @@ const initialHandler: PlasmoMessaging.Handler<
         tabId: req.tabId,
         service: "googleslide"
       }
+    }).catch((e) => {
+      console.warn(e)
     })
 
     if (config.selfpost) {
@@ -68,6 +70,8 @@ const initialHandler: PlasmoMessaging.Handler<
           tabId: req.tabId,
           service: "googleslide"
         }
+      }).catch((e) => {
+        console.warn(e)
       })
     }
   }

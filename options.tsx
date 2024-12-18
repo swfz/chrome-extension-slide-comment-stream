@@ -68,7 +68,7 @@ function OptionsPage() {
     }
   }
 
-  const validateJSON = (text) => {
+  const validateJSON = (text: string) => {
     try {
       if (!text.trim()) {
         setError("")
@@ -78,7 +78,11 @@ function OptionsPage() {
       JSON.parse(text)
       setError("")
     } catch (e) {
-      setError("Invalid JSON: " + e.message)
+      if (e instanceof Error) {
+        setError("Invalid JSON: " + e.message)
+      } else {
+        console.error("unkown error", e)
+      }
     }
   }
 

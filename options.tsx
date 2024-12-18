@@ -22,6 +22,7 @@ const sampleSelfPostConfig = {
     { seconds: 0.5, comment: "looks good" },
     { seconds: 3, comment: "cooooooooooool!!!!" }
   ],
+  "3": [{ seconds: 1, comment: "8888888888" }],
   "4": [{ seconds: 2, comment: "wow" }]
 }
 

@@ -117,9 +117,8 @@ const renderComment = (
       commentElement.style.display = `none`
     }
   }
-  Object.entries(commentStyle).forEach(([k, v]) =>
-    element.style.setProperty(k, v)
-  )
+  // @ts-ignore
+  Object.entries(commentStyle).forEach(([k, v]) => (element.style[k] = v))
 
   boxElement.appendChild(element)
 }

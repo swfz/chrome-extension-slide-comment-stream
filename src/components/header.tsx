@@ -1,7 +1,7 @@
 import { PanelRightOpen, Settings } from "lucide-react"
 
 interface Props {
-  tab: chrome.tabs.Tab
+  tab?: chrome.tabs.Tab
 }
 
 const ExtHeader = ({ tab }: Props) => {
@@ -15,12 +15,14 @@ const ExtHeader = ({ tab }: Props) => {
           aria-label="Settings">
           <Settings className="w-5 h-5" />
         </button>
-        <button
-          onClick={(e) => chrome.sidePanel.open({ windowId: tab.windowId })}
-          className="p-2 rounded-full hover:bg-gray-200"
-          aria-label="Open side panel">
-          <PanelRightOpen className="w-5 h-5" />
-        </button>
+        {tab && (
+          <button
+            onClick={(e) => chrome.sidePanel.open({ windowId: tab.windowId })}
+            className="p-2 rounded-full hover:bg-gray-200"
+            aria-label="Open side panel">
+            <PanelRightOpen className="w-5 h-5" />
+          </button>
+        )}
       </div>
     </header>
   )

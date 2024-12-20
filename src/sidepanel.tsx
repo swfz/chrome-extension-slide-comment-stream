@@ -9,6 +9,7 @@ import "./style.css"
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
+import Alert from "./components/alert"
 import ExtHeader from "./components/header"
 import Status from "./components/status"
 
@@ -16,25 +17,12 @@ interface Alert {
   error: boolean
   text: string
 }
-interface AlertProps {
-  children: React.ReactNode
-  error: boolean
-}
-
-const Alert = ({ children, error }: AlertProps) => {
-  return (
-    <div
-      className={`m-1 p-2 rounded-md ${error ? "bg-red-200 text-red-800" : "bg-blue-200 text-blue-800"}`}>
-      <p className="font-bold">{error ? "Error:" : "Info:"}</p>
-      <p className="">{children}</p>
-    </div>
-  )
-}
 
 function IndexSidepanel() {
   const [sampleComment, setSampleComment] = useState<string>("")
   const [feature, setFeature] = useState<Feature | null>(null)
   const [alert, setAlert] = useState<Alert | null>(null)
+  const [tab, setTab] = useState<chrome.tabs.Tab>()
 
   const [config] = useStorage({
     key: "config",
@@ -103,6 +91,7 @@ function IndexSidepanel() {
         active: true,
         currentWindow: true
       })
+      setTab(tab)
       const url = tab?.url
       console.log("url", url)
 
@@ -122,17 +111,8 @@ function IndexSidepanel() {
     <>
       {config ? (
         <div className="w-96 m-1 flex flex-col">
-          <p>Click "Start" on both the slide side and the comment list side</p>
-
-          <div className="flex flex-row bg-gray-100 m-1">
-            <p>This Page available {feature} feature</p>
-            <button
-              className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100"
-              onClick={() => chrome.runtime.openOptionsPage()}>
-              ⚙ Option
-            </button>
-          </div>
-          <ExtHeader></ExtHeader>
+          <ExtHeader tab={tab}></ExtHeader>
+          {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
 
           <Status config={config}></Status>
 
@@ -162,14 +142,10 @@ function IndexSidepanel() {
           {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
         </div>
       ) : (
-        <div className="w-64 -m-1 flex flex-row bg-gray-10 m-1 p-2 rounded-md bg-yellow-200 text-yellow-800">
+        <div className="w-96 m-1 flex flex-col">
+          <ExtHeader tab={tab}></ExtHeader>
           <p className="font-bold">Warn:</p>
           <p className="grow">Please set configuration</p>
-          <button
-            className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100"
-            onClick={() => chrome.runtime.openOptionsPage()}>
-            ⚙ Option
-          </button>
         </div>
       )}
     </>

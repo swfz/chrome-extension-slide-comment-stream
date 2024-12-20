@@ -71,7 +71,9 @@ function Status({ config }: Props) {
     connectionStatus?.comment_handler && connectionStatus?.comment_subscriber
   const isSakuraReady =
     connectionStatus?.selfpost_handler && connectionStatus?.selfpost_subscriber
-  const isReady = config.selfpost ?  isCommentReady && isSakuraReady : isCommentReady
+  const isReady = config.selfpost
+    ? isCommentReady && isSakuraReady
+    : isCommentReady
 
   const handleResetConnection = () => {
     setConnectionStatus({} as ConnectedStatus)

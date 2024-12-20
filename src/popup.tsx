@@ -6,32 +6,18 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import "./style.css"
 
-import { HelpCircle, Play, Send } from "lucide-react"
+import { Play, Send } from "lucide-react"
 
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
+import Alert from "./components/alert"
 import ExtHeader from "./components/header"
 import Status from "./components/status"
 
 interface Alert {
   error: boolean
   text: string
-}
-interface AlertProps {
-  children: React.ReactNode
-  error: boolean
-}
-
-const Alert = ({ children, error }: AlertProps) => {
-  return (
-    <div
-      role="alert"
-      className={`border px-4 py-3 rounded relative mb-4 ${error ? "border-red-400 bg-red-100 text-red-700" : "border-blue-400 bg-blue-100 text-blue-700"}`}>
-      <strong className="font-bold">{error ? "Error:" : "Info:"}</strong>
-      <span className="block sm:inline">{children}</span>
-    </div>
-  )
 }
 
 function IndexPopup() {
@@ -132,7 +118,7 @@ function IndexPopup() {
 
           <Status config={config}></Status>
 
-          <div className="bg-white shadow rounded-lg p-4">
+          <div className="bg-white shadow rounded-lg mb-6 p-4">
             <div className="space-y-4">
               <button
                 className={`w-full py-2 px-4 rounded font-bold text-white bg-green-500 hover:bg-green-600`}
@@ -140,7 +126,11 @@ function IndexPopup() {
                 <Play className="w-4 h-4 inline mr-2" />
                 Start
               </button>
+            </div>
+          </div>
 
+          <div className="bg-white shadow rounded-lg p-4">
+            <div className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="sample-comment" className="font-medium">
                   Sample Comment

@@ -8,7 +8,7 @@ import {
   Role,
   Service,
   WorkerResponseBody
-} from "~types/types"
+} from "~src/types/types"
 
 const STORAGE_KEY = "status"
 

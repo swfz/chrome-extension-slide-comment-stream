@@ -1,7 +1,7 @@
 import CssFilterConverter from "css-filter-converter"
 import clapImage from "data-base64:~assets/sign_language_black_24dp.svg"
 
-import { Config } from "~types/types"
+import { Config } from "~src/types/types"
 
 const removelinkBar = (iframeElement: HTMLIFrameElement) => {
   const linkBar =

@@ -3,10 +3,10 @@ import type { PlasmoCSConfig } from "plasmo"
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 
-import { zoomExtractor, zoomSelfPost } from "~lib/extractor/zoom"
-import { batchInitialize } from "~lib/initializer"
-import { subscribeComments } from "~lib/subscriber"
-import { RequestBody, WorkerResponseBody } from "~types/types"
+import { zoomExtractor, zoomSelfPost } from "~src/lib/extractor/zoom"
+import { batchInitialize } from "~src/lib/initializer"
+import { subscribeComments } from "~src/lib/subscriber"
+import { RequestBody, WorkerResponseBody } from "~src/types/types"
 
 let observer = { disconnect: () => {} }
 

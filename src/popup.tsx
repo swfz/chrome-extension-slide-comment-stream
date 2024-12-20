@@ -6,8 +6,8 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import "./style.css"
 
-import { detectService, serviceToHandlerFeature } from "~lib/service"
-import { Feature } from "~types/types"
+import { detectService, serviceToHandlerFeature } from "~src/lib/service"
+import { Feature } from "~src/types/types"
 
 interface Alert {
   error: boolean

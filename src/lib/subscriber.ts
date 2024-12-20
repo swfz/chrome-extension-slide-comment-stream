@@ -1,6 +1,6 @@
 import { sendToBackground } from "@plasmohq/messaging"
 
-import { CommentSubscriber } from "~types/types"
+import { CommentSubscriber } from "~src/types/types"
 
 import { extractors } from "./extractor"
 

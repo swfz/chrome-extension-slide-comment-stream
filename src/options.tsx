@@ -5,7 +5,7 @@ import { Storage } from "@plasmohq/storage"
 
 import "./style.css"
 
-import { Config, SelfpostConfig } from "~types/types"
+import { Config, SelfpostConfig } from "~src/types/types"
 
 export const defaultConfig = {
   color: "#000000",

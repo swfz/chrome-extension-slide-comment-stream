@@ -1,4 +1,4 @@
-import { CommentExtractor, CommentSubscriber } from "~types/types"
+import { CommentExtractor, CommentSubscriber } from "~src/types/types"
 
 import { slackExtractor } from "./extractor/slack"
 import { zoomExtractor } from "./extractor/zoom"

@@ -4,11 +4,11 @@ import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 import { Storage } from "@plasmohq/storage"
 
-import { exampleExtractor } from "~lib/extractor/example"
-import { batchInitialize } from "~lib/initializer"
-import { subscribePageNumber } from "~lib/poster"
-import { render } from "~lib/streamer"
-import { Config, RequestBody, WorkerResponseBody } from "~types/types"
+import { exampleExtractor } from "~src/lib/extractor/example"
+import { batchInitialize } from "~src/lib/initializer"
+import { subscribePageNumber } from "~src/lib/poster"
+import { render } from "~src/lib/streamer"
+import { Config, RequestBody, WorkerResponseBody } from "~src/types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://tools.swfz.io/document-pinp-react-portal"],

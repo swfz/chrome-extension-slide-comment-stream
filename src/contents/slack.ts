@@ -3,10 +3,10 @@ import type { PlasmoCSConfig } from "plasmo"
 import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 
-import { slackExtractor, slackSelfPost } from "~lib/extractor/slack"
-import { batchInitialize } from "~lib/initializer"
-import { subscribeComments } from "~lib/subscriber"
-import { PopupToContentBody, WorkerResponseBody } from "~types/types"
+import { slackExtractor, slackSelfPost } from "~src/lib/extractor/slack"
+import { batchInitialize } from "~src/lib/initializer"
+import { subscribeComments } from "~src/lib/subscriber"
+import { PopupToContentBody, WorkerResponseBody } from "~src/types/types"
 
 let observer = { disconnect: () => {} }
 

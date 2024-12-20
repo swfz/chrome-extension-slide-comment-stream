@@ -4,12 +4,12 @@ import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
 import { listen } from "@plasmohq/messaging/message"
 import { Storage } from "@plasmohq/storage"
 
-import { googleslideExtractor } from "~lib/extractor/googleslide"
-import { batchInitialize } from "~lib/initializer"
-import { subscribePageNumber } from "~lib/poster"
-import { render } from "~lib/streamer"
-import { defaultConfig } from "~options"
-import { Config, RequestBody, WorkerResponseBody } from "~types/types"
+import { googleslideExtractor } from "~src/lib/extractor/googleslide"
+import { batchInitialize } from "~src/lib/initializer"
+import { subscribePageNumber } from "~src/lib/poster"
+import { render } from "~src/lib/streamer"
+import { defaultConfig } from "~src/options"
+import { Config, RequestBody, WorkerResponseBody } from "~src/types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],

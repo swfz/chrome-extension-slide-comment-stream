@@ -1,7 +1,7 @@
 import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
-import { SelfpostConfig } from "~types/types"
+import { SelfpostConfig } from "~src/types/types"
 
 const subscribePageNumber = (observeElement: HTMLElement) => {
   const observer = new MutationObserver(async function (

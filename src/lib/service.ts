@@ -1,4 +1,4 @@
-import { Feature, Service } from "~types/types"
+import { Feature, Service } from "~src/types/types"
 
 const detectService = (url: string): Service | null => {
   if (url.match(/docs.google.com\/presentation/)) {

@@ -5,7 +5,7 @@ import {
   ConnectedStatus,
   ForwarderRequestBody,
   WorkerResponseBody
-} from "~types/types"
+} from "~src/types/types"
 
 const handler: PlasmoMessaging.MessageHandler<
   ForwarderRequestBody,

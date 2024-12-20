@@ -1,5 +1,5 @@
-import { waitForSelector } from "~lib/poster"
-import { CommentExtractor } from "~types/types"
+import { waitForSelector } from "~src/lib/poster"
+import { CommentExtractor } from "~src/types/types"
 
 export const zoomExtractor: CommentExtractor = {
   listNodeExtractFn: () => {

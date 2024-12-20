@@ -6,6 +6,8 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import "./style.css"
 
+import { HelpCircle, Play, Send } from "lucide-react"
+
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
@@ -24,9 +26,10 @@ interface AlertProps {
 const Alert = ({ children, error }: AlertProps) => {
   return (
     <div
-      className={`m-1 p-2 rounded-md ${error ? "bg-red-200 text-red-800" : "bg-blue-200 text-blue-800"}`}>
-      <p className="font-bold">{error ? "Error:" : "Info:"}</p>
-      <p className="">{children}</p>
+      role="alert"
+      className={`border px-4 py-3 rounded relative mb-4 ${error ? "border-red-400 bg-red-100 text-red-700" : "border-blue-400 bg-blue-100 text-blue-700"}`}>
+      <strong className="font-bold">{error ? "Error:" : "Info:"}</strong>
+      <span className="block sm:inline">{children}</span>
     </div>
   )
 }
@@ -124,54 +127,46 @@ function IndexPopup() {
     <>
       {config ? (
         <div className="w-96 m-1 flex flex-col">
-          <p>Click "Start" on both the slide side and the comment list side</p>
-
-          <div className="flex flex-row bg-gray-100 m-1">
-            <p>This Page available {feature} feature</p>
-            <button
-              className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100"
-              onClick={() => chrome.runtime.openOptionsPage()}>
-              ⚙ Option
-            </button>
-          </div>
-
           <ExtHeader tab={tab}></ExtHeader>
-          <div className="m-1 p-1 bg-gray-100">
-            <details className="">
-              <summary className="">Check Sample Comment</summary>
-              <input
-                type="text"
-                value={sampleComment}
-                onChange={(e) => setSampleComment(e.target.value)}
-                onKeyDown={handleEnterKey}
-                className="border rounded w-full"></input>
-              <button
-                className="my-1 w-full p-2 rounded border border-gray-400 bg-white hover:bg-gray-100"
-                onClick={handleSampleComment}>
-                Sample
-              </button>
-            </details>
-          </div>
-
-          <button
-            className="m-1 p-2 font-medium rounded border border-gray-400 bg-white hover:bg-gray-100"
-            onClick={handleStart}>
-            Start!
-          </button>
-
           {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
 
           <Status config={config}></Status>
+
+          <div className="bg-white shadow rounded-lg p-4">
+            <div className="space-y-4">
+              <button
+                className={`w-full py-2 px-4 rounded font-bold text-white bg-green-500 hover:bg-green-600`}
+                onClick={handleStart}>
+                <Play className="w-4 h-4 inline mr-2" />
+                Start
+              </button>
+
+              <div className="space-y-2">
+                <label htmlFor="sample-comment" className="font-medium">
+                  Sample Comment
+                </label>
+                <input
+                  id="sample-comment"
+                  className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none"
+                  placeholder="Enter your test comment here..."
+                  value={sampleComment}
+                  onKeyDown={handleEnterKey}
+                  onChange={(e) => setSampleComment(e.target.value)}></input>
+                <button
+                  className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleSampleComment}>
+                  <Send className="w-4 h-4 inline mr-2" />
+                  Send Sample Comment
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="w-64 -m-1 flex flex-row bg-gray-10 m-1 p-2 rounded-md bg-yellow-200 text-yellow-800">
+        <div className="w-96 m-1 flex flex-col">
+          <ExtHeader tab={tab}></ExtHeader>
           <p className="font-bold">Warn:</p>
           <p className="grow">Please set configuration</p>
-          <button
-            className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100"
-            onClick={() => chrome.runtime.openOptionsPage()}>
-            ⚙ Option
-          </button>
         </div>
       )}
     </>

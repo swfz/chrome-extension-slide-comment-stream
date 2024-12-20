@@ -9,6 +9,8 @@ import "./style.css"
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
+import Status from "./components/status"
+
 interface Alert {
   error: boolean
   text: string
@@ -32,13 +34,6 @@ function IndexPopup() {
   const [sampleComment, setSampleComment] = useState<string>("")
   const [feature, setFeature] = useState<Feature | null>(null)
   const [alert, setAlert] = useState<Alert | null>(null)
-
-  const [connectionStatus, setConnectionStatus] = useStorage({
-    key: "status",
-    instance: new Storage({
-      area: "local"
-    })
-  })
 
   const [config] = useStorage({
     key: "config",
@@ -101,10 +96,6 @@ function IndexPopup() {
     }
   }
 
-  const handleResetConnection = () => {
-    setConnectionStatus({})
-  }
-
   useEffect(() => {
     ;(async () => {
       const [tab] = await chrome.tabs.query({
@@ -129,7 +120,7 @@ function IndexPopup() {
   return (
     <>
       {config ? (
-        <div className="w-64 m-1 flex flex-col">
+        <div className="w-96 m-1 flex flex-col">
           <p>Click "Start" on both the slide side and the comment list side</p>
 
           <div className="flex flex-row bg-gray-100 m-1">
@@ -166,43 +157,7 @@ function IndexPopup() {
 
           {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
 
-          <div className="m-1 p-1 bg-gray-100">
-            <p className="text-xl">Status</p>
-            <button
-              onClick={handleResetConnection}
-              className="p-1 rounded border border-gray-400 bg-white hover:bg-gray-100">
-              Reset Connection
-            </button>
-            <div>⬜: Not use, ✅: Ready, ❌: Not Ready</div>
-            <div>
-              Comment handler:{" "}
-              {connectionStatus?.comment_handler
-                ? `✅ (${connectionStatus.comment_handler.service})`
-                : "❌"}
-            </div>
-            <div>
-              Comment subscriber:{" "}
-              {connectionStatus?.comment_subscriber
-                ? `✅ (${connectionStatus.comment_subscriber.service})`
-                : "❌"}
-            </div>
-            <div>
-              Sakura handler:{" "}
-              {config?.selfpost
-                ? connectionStatus?.selfpost_handler
-                  ? `✅ (${connectionStatus.selfpost_handler.service})`
-                  : "❌"
-                : "⬜"}
-            </div>
-            <div>
-              Sakura subscriber:{" "}
-              {config?.selfpost
-                ? connectionStatus?.selfpost_subscriber
-                  ? `✅ (${connectionStatus.selfpost_subscriber.service})`
-                  : "❌"
-                : "⬜"}
-            </div>
-          </div>
+          <Status config={config}></Status>
         </div>
       ) : (
         <div className="w-64 -m-1 flex flex-row bg-gray-10 m-1 p-2 rounded-md bg-yellow-200 text-yellow-800">

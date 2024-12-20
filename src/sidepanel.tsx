@@ -6,15 +6,14 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import "./style.css"
 
-import { Play } from "lucide-react"
-
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
 import Alert from "./components/alert"
 import ExtHeader from "./components/header"
-import Sample from "./components/sample"
 import Status from "./components/status"
+import Sample from "./components/sample"
+import { Play } from "lucide-react"
 
 interface Alert {
   error: boolean
@@ -22,7 +21,6 @@ interface Alert {
 }
 
 function IndexSidepanel() {
-  const [sampleComment, setSampleComment] = useState<string>("")
   const [feature, setFeature] = useState<Feature | null>(null)
   const [alert, setAlert] = useState<Alert | null>(null)
   const [tab, setTab] = useState<chrome.tabs.Tab>()
@@ -52,39 +50,6 @@ function IndexSidepanel() {
       setAlert({ error: true, text: res.error })
     } else {
       setAlert({ error: false, text: res.message })
-    }
-  }
-
-  const streamComment = async () => {
-    await sendToBackground({
-      name: "forwarder",
-      body: { action: "Subscribe", comments: [sampleComment] }
-    }).catch((e) => {
-      console.warn(e)
-    })
-  }
-
-  const sakuraComment = async () => {
-    await sendToBackground({
-      name: "forwarder",
-      body: { action: "SakuraComment", comment: sampleComment }
-    }).catch((e) => {
-      console.warn(e)
-    })
-  }
-
-  const handleSampleComment = () => {
-    if (feature === "selfpost") {
-      sakuraComment()
-    }
-    if (feature === "comment") {
-      streamComment()
-    }
-  }
-
-  const handleEnterKey = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSampleComment()
     }
   }
 

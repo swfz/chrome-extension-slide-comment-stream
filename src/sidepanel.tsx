@@ -6,11 +6,14 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import "./style.css"
 
+import { Play } from "lucide-react"
+
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
 import Alert from "./components/alert"
 import ExtHeader from "./components/header"
+import Sample from "./components/sample"
 import Status from "./components/status"
 
 interface Alert {
@@ -116,30 +119,18 @@ function IndexSidepanel() {
 
           <Status config={config}></Status>
 
-          <div className="m-1 p-1 bg-gray-100">
-            <details className="">
-              <summary className="">Check Sample Comment</summary>
-              <input
-                type="text"
-                value={sampleComment}
-                onChange={(e) => setSampleComment(e.target.value)}
-                onKeyDown={handleEnterKey}
-                className="border rounded w-full"></input>
+          <div className="bg-white shadow rounded-lg mb-6 p-4">
+            <div className="space-y-4">
               <button
-                className="my-1 w-full p-2 rounded border border-gray-400 bg-white hover:bg-gray-100"
-                onClick={handleSampleComment}>
-                Sample
+                className={`w-full py-2 px-4 rounded font-bold text-white bg-green-500 hover:bg-green-600`}
+                onClick={handleStart}>
+                <Play className="w-4 h-4 inline mr-2" />
+                Start
               </button>
-            </details>
+            </div>
           </div>
 
-          <button
-            className="m-1 p-2 font-medium rounded border border-gray-400 bg-white hover:bg-gray-100"
-            onClick={handleStart}>
-            Start!
-          </button>
-
-          {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
+          <Sample feature={feature}></Sample>
         </div>
       ) : (
         <div className="w-96 m-1 flex flex-col">

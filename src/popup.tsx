@@ -9,6 +9,7 @@ import "./style.css"
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
+import ExtHeader from "./components/header"
 import Status from "./components/status"
 
 interface Alert {
@@ -34,6 +35,7 @@ function IndexPopup() {
   const [sampleComment, setSampleComment] = useState<string>("")
   const [feature, setFeature] = useState<Feature | null>(null)
   const [alert, setAlert] = useState<Alert | null>(null)
+  const [tab, setTab] = useState<chrome.tabs.Tab>()
 
   const [config] = useStorage({
     key: "config",
@@ -102,6 +104,7 @@ function IndexPopup() {
         active: true,
         currentWindow: true
       })
+      setTab(tab)
       const url = tab?.url
       console.log("url", url)
 
@@ -132,6 +135,7 @@ function IndexPopup() {
             </button>
           </div>
 
+          <ExtHeader tab={tab}></ExtHeader>
           <div className="m-1 p-1 bg-gray-100">
             <details className="">
               <summary className="">Check Sample Comment</summary>

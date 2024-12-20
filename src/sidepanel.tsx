@@ -9,6 +9,7 @@ import "./style.css"
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
+import ExtHeader from "./components/header"
 import Status from "./components/status"
 
 interface Alert {
@@ -131,6 +132,9 @@ function IndexSidepanel() {
               ⚙ Option
             </button>
           </div>
+          <ExtHeader></ExtHeader>
+
+          <Status config={config}></Status>
 
           <div className="m-1 p-1 bg-gray-100">
             <details className="">
@@ -156,8 +160,6 @@ function IndexSidepanel() {
           </button>
 
           {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
-
-          <Status config={config}></Status>
         </div>
       ) : (
         <div className="w-64 -m-1 flex flex-row bg-gray-10 m-1 p-2 rounded-md bg-yellow-200 text-yellow-800">

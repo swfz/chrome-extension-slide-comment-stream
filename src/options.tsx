@@ -5,6 +5,8 @@ import { Storage } from "@plasmohq/storage"
 
 import "./style.css"
 
+import { Check, ChevronDown, ChevronUp, Settings2 } from "lucide-react"
+
 import { Config, SelfpostConfig } from "~src/types/types"
 
 export const defaultConfig = {
@@ -32,6 +34,7 @@ function OptionsPage() {
   const [selfpostConfigText, setSelfpostConfigText] = useState<string>()
   const [previewBackground, setPreviewBackground] = useState<string>("#FFFFFF")
   const [error, setError] = useState("")
+  const [isSelfpostExpanded, setIsSelfpostExpanded] = useState(false)
 
   const storage = new Storage({
     area: "local"
@@ -124,229 +127,254 @@ function OptionsPage() {
   }, [])
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md flex flex-col divide-y divide-gray-300">
-        <h2 className="p-6 text-2xl font-bold text-gray-900">
-          Slide Comment Stream
-        </h2>
-
-        <form>
-          <div className="flex flex-col p-6 space-y-2">
-            <div className="space-y-2">
-              <label
-                htmlFor="color"
-                className="block text-sm font-medium text-gray-700">
-                Comment Color:
-              </label>
-              <div className="flex items-center gap-4">
-                <input
-                  id="color"
-                  type="color"
-                  className="w-16 h-8 p-0 border border-gray-300 rounded"
-                  onChange={handleColorChange("color")}
-                  value={config.color}></input>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="font"
-                className="block text-sm font-medium text-gray-700">
-                Comment Font:
-              </label>
-              <select
-                value={config.font}
-                onChange={handleSelectChange("font")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                {fonts.map((font) => {
-                  return (
-                    <option key={font} value={font}>
-                      {font}
-                    </option>
-                  )
-                })}
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                htmlFor="duration"
-                className="block text-sm font-medium text-gray-700">
-                Duration(seconds):
-              </label>
-              <p className="text-sm text-gray-500">
-                The number of seconds until the comment scrolls away
-              </p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4 md:p-8">
+      <div className="mx-auto max-w-4xl bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center gap-2">
+            <Settings2 className="h-6 w-6" />
+            <h1 className="text-2xl font-bold">Slide Comment Stream</h1>
+          </div>
+          <p className="text-gray-600 mt-1">
+            Configure your comment stream settings
+          </p>
+        </div>
+        <div className="p-6 space-y-6">
+          <div>
+            <label
+              htmlFor="color"
+              className="block text-sm font-medium text-gray-700 mb-1">
+              Comment Color
+            </label>
+            <div className="flex items-center gap-2">
               <input
-                id="duration"
-                type="number"
-                onChange={handleNumberChange("duration")}
-                className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={config.duration}></input>
+                id="color"
+                type="color"
+                className="h-10 w-20 p-1 rounded border border-gray-300"
+                value={config.color}
+                onChange={handleColorChange("color")}
+              />
+              <span className="text-sm text-gray-500">{config.color}</span>
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <label
-                htmlFor="size"
-                className="block text-sm font-medium text-gray-700">
-                Size(px):
-              </label>
-              <p className="text-sm text-gray-500">
-                The size of the comment in pixels
-              </p>
-              <input
-                id="size"
-                type="number"
-                onChange={handleNumberChange("sizePx")}
-                className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={config.sizePx}></input>
-            </div>
+          <div>
+            <label
+              htmlFor="font"
+              className="block text-sm font-medium text-gray-700 mb-1">
+              Font Family
+            </label>
+            <select
+              id="font"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              value={config.font}
+              onChange={handleSelectChange("font")}>
+              <option value="">Select a font</option>
+              {fonts.map((font) => (
+                <option key={font} value={font}>
+                  {font}
+                </option>
+              ))}
+            </select>
+          </div>
 
-            <div className="space-y-2">
-              <label
-                htmlFor="clapColor"
-                className="block text-sm font-medium text-gray-700">
-                Clap(color):
-              </label>
-              <p className="text-sm text-gray-500">
-                The color of the clap effect when a clap comment is posted
-              </p>
+          <div>
+            <label
+              htmlFor="duration"
+              className="block text-sm font-medium text-gray-700 mb-1">
+              Duration (seconds)
+            </label>
+            <input
+              id="duration"
+              type="number"
+              min="1"
+              className="w-32 p-2 border border-gray-300 rounded-md"
+              value={config.duration}
+              onChange={handleNumberChange("duration")}
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              Time until the comment scrolls away
+            </p>
+          </div>
+
+          <div>
+            <label
+              htmlFor="size"
+              className="block text-sm font-medium text-gray-700 mb-1">
+              Size (px)
+            </label>
+            <input
+              id="size"
+              type="number"
+              min="1"
+              className="w-32 p-2 border border-gray-300 rounded-md"
+              value={config.sizePx}
+              onChange={handleNumberChange("sizePx")}
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              Font size of the comments
+            </p>
+          </div>
+
+          <div>
+            <label
+              htmlFor="clapColor"
+              className="block text-sm font-medium text-gray-700 mb-1">
+              Clap Effect Color
+            </label>
+            <div className="flex items-center gap-2">
               <input
                 id="clapColor"
                 type="color"
-                className="w-16 h-8 p-0 border border-gray-300 rounded"
+                className="h-10 w-20 p-1 rounded border border-gray-300"
+                value={config.clapColor}
                 onChange={handleColorChange("clapColor")}
-                value={config.clapColor}></input>
+              />
+              <span className="text-sm text-gray-500">{config.clapColor}</span>
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <label
-                htmlFor="clapSize"
-                className="block text-sm font-medium text-gray-700">
-                Clap(size):
-              </label>
-              <p className="text-sm text-gray-500">
-                The image tag size(width and height) of the clap effect when a
-                clap comment is posted
-              </p>
-              <input
-                id="clapSize"
-                type="number"
-                onChange={handleNumberChange("clapSize")}
-                className="w-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={config.clapSize}></input>
-            </div>
+          <div>
+            <label
+              htmlFor="clapSize"
+              className="block text-sm font-medium text-gray-700 mb-1">
+              Clap Effect Size
+            </label>
+            <input
+              id="clapSize"
+              type="number"
+              min="1"
+              className="w-32 p-2 border border-gray-300 rounded-md"
+              value={config.clapSize}
+              onChange={handleNumberChange("clapSize")}
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              Size of the clap effect icon
+            </p>
+          </div>
 
-            <div className="space-y-2">
-              <label
-                htmlFor="selfpost"
-                className="block text-sm font-medium text-gray-700">
-                Use Selfpost(sakura):
-              </label>
-              <input
-                id="selfpost"
-                type="checkbox"
-                onChange={handleBoolChange("selfpost")}
-                checked={config.selfpost}></input>
-              <div className="m-1 p-1">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <label
+                  htmlFor="selfpost"
+                  className="block text-sm font-medium text-gray-700">
+                  Sakura Mode
+                </label>
                 <p className="text-sm text-gray-500">
-                  A feature to comment on your own presentation in real-time.
-                  You need to predefine the content of the comment and its
-                  timing.
+                  Enable automatic comment posting
                 </p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="selfpost"
+                  className="sr-only peer"
+                  checked={config.selfpost}
+                  onChange={handleBoolChange("selfpost")}
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              </label>
+            </div>
 
-                {config.selfpost ? (
-                  <div>
-                    <p>
-                      This function is used to play a predefined comment at a
-                      predetermined timing.
-                    </p>
-                    <p>The key is the slide number</p>
-                    <p>
-                      When you transition to the target slide number, a
-                      `comment` message is automatically posted after `seconds`
-                      seconds of each line
-                    </p>
-                    <p className="font-bold">For example</p>
-                    <pre className="bg-gray-100 text-gray-800 text-xs p-4 rounded-md overflow-x-auto">
-                      <code>
+            {config.selfpost && (
+              <div className="mt-4 border border-gray-200 rounded-md">
+                <button
+                  onClick={() => setIsSelfpostExpanded(!isSelfpostExpanded)}
+                  className="w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 transition-colors">
+                  <span className="font-medium">Sakura Configuration</span>
+                  {isSelfpostExpanded ? (
+                    <ChevronUp className="h-5 w-5 text-gray-500" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-gray-500" />
+                  )}
+                </button>
+                {isSelfpostExpanded && (
+                  <div className="p-4 space-y-4">
+                    <div className="bg-gray-100 p-4 rounded-md">
+                      <h4 className="font-medium mb-2">
+                        Example Configuration
+                      </h4>
+                      <pre className="text-xs whitespace-pre-wrap">
                         {JSON.stringify(sampleSelfPostConfig, null, 2)}
-                      </code>
-                    </pre>
-                    <label htmlFor="selfpost">Configuration</label>
-                    <textarea
-                      defaultValue={JSON.stringify(selfpostConfig, null, 2)}
-                      onChange={handleSelfhostConfigChange}
-                      onPaste={handlePaste}
-                      className="w-full rounded-md border border-gray-600"
-                      id="selfpost"
-                      rows={20}></textarea>
+                      </pre>
+                    </div>
 
-                    {error && (
-                      <div className="p-3 bg-red-100 border border-red-400 rounded-md">
-                        <p className="text-red-700 text-sm">{error}</p>
-                      </div>
-                    )}
+                    <div>
+                      <label
+                        htmlFor="selfpostConfig"
+                        className="block text-sm font-medium text-gray-700 mb-1">
+                        Configuration
+                      </label>
+                      <textarea
+                        id="selfpostConfig"
+                        className="w-full p-2 border border-gray-300 rounded-md font-mono"
+                        rows={10}
+                        defaultValue={JSON.stringify(selfpostConfig, null, 2)}
+                        onChange={handleSelfhostConfigChange}
+                        onPaste={handlePaste}></textarea>
+                      {error && (
+                        <p className="text-sm text-red-600 mt-1">{error}</p>
+                      )}
+                    </div>
                   </div>
-                ) : (
-                  ""
                 )}
+              </div>
+            )}
+          </div>
+
+          <hr className="my-6 border-t border-gray-200" />
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Preview</h3>
+              <div className="flex items-center gap-2">
+                <label htmlFor="previewBg" className="text-sm">
+                  Background
+                </label>
+                <input
+                  id="previewBg"
+                  type="color"
+                  className="h-8 w-16 p-0 border border-gray-300 rounded"
+                  value={previewBackground}
+                  onChange={(e) => setPreviewBackground(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div
+              className="flex items-center justify-between rounded-lg border p-6"
+              style={{ backgroundColor: previewBackground }}>
+              <span
+                style={{
+                  color: config.color,
+                  fontSize: `${config.sizePx}px`,
+                  fontFamily: config.font
+                }}>
+                Preview Text
+              </span>
+              <div
+                style={{
+                  filter:
+                    CssFilterConverter.hexToFilter(config.clapColor).color || ""
+                }}>
+                <img
+                  src="assets/sign_language_black_24dp.svg"
+                  alt="clap effect"
+                  height={config.clapSize}
+                  width={config.clapSize}
+                />
               </div>
             </div>
           </div>
-        </form>
-
-        <div className="p-4 w-full">
-          <button
-            disabled={isError()}
-            className="p-2 w-full rounded border border-gray-400 bg-white hover:bg-gray-100"
-            onClick={handleSubmit}>
-            Save
-          </button>
         </div>
-
-        <div className="flex flex-col p-6 space-y-6">
-          <h2 className="text-xl font-bold text-gray-90">Preview</h2>
-          <p>
-            On the left, the style settings for comments are applied, and on the
-            right, the style settings for applause are applied
-          </p>
-          <div className="text-sm font-medium text-gray-700">
-            Preview Background Color:
-            <input
-              type="color"
-              className="w-16 h-8 p-0 border border-gray-300 rounded"
-              onChange={(e) => setPreviewBackground(e.target.value)}></input>
-          </div>
-
-          <div
-            className="p-4 flex flex-row border border-gray-900"
-            style={{
-              backgroundColor: previewBackground
-            }}>
-            <div
-              style={{
-                verticalAlign: "bottom",
-                color: config.color,
-                fontSize: config.sizePx,
-                fontFamily: config.font
-              }}>
-              Preview
-            </div>
-            <div className="grow"></div>
-            <div
-              style={{
-                filter:
-                  CssFilterConverter.hexToFilter(config.clapColor).color || ""
-              }}>
-              <img
-                src="assets/sign_language_black_24dp.svg"
-                alt="clap effect"
-                height={config.clapSize}
-                width={config.clapSize}
-              />
-            </div>
-          </div>
+        <div className="p-6 bg-gray-50 border-t border-gray-200">
+          <button
+            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            onClick={handleSubmit}
+            disabled={isError()}>
+            <Check className="inline-block mr-2 h-4 w-4" />
+            Save Settings
+          </button>
         </div>
       </div>
     </div>

@@ -6,14 +6,15 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import "./style.css"
 
+import { Play } from "lucide-react"
+
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
 import { Feature } from "~src/types/types"
 
 import Alert from "./components/alert"
 import ExtHeader from "./components/header"
-import Status from "./components/status"
 import Sample from "./components/sample"
-import { Play } from "lucide-react"
+import Status from "./components/status"
 
 interface Alert {
   error: boolean

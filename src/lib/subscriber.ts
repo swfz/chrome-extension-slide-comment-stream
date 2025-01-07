@@ -19,10 +19,11 @@ const subscribeComments = (
       .filter((node) => node !== undefined)
 
     const comments = Array.from(nodes)
-      .map((node) => extractors[service].commentExtractFn(node))
+      .filter((node) => node !== undefined)
+      .map((node) => extractors[service].commentExtractFn(node as Node))
       .filter((c) => c !== undefined && c !== null)
 
-    return comments
+    return comments as string[]
   }
 
   const observer = new MutationObserver(async function (

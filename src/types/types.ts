@@ -78,6 +78,34 @@ export interface RequestBody {
   comment?: string
 }
 
+export type ContentMessagebase = {
+  action: "Load" | "Subscribe" | "SakuraComment"
+}
+
+export type LoadParams = {
+  tabId: number
+} & ContentMessagebase
+
+export type SakuraCommentParams = {
+  comment: string
+} & ContentMessagebase
+
+export type SubscribeParams = {
+  comments: string[]
+} & ContentMessagebase
+
+export type StreamerContentParams = LoadParams | SubscribeParams
+export type PosterContentParams = LoadParams | SakuraCommentParams
+
+type ActionMap = {
+  Load: LoadParams
+  Subscribe: SubscribeParams
+  SakuraComment: SakuraCommentParams
+}
+
+export type ContentRequestBody<T extends ContentMessagebase> =
+  T["action"] extends keyof ActionMap ? ActionMap[T["action"]] : never
+
 export type BackgroundWorker = "connector" | "forwarder"
 
 export interface WorkerResponseBody {

@@ -1,14 +1,19 @@
 import type { PlasmoCSConfig } from "plasmo"
 
-import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
-import { listen } from "@plasmohq/messaging/message"
+import { sendToBackground } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
 import { exampleExtractor } from "~src/lib/extractor/example"
 import { batchInitialize } from "~src/lib/initializer"
 import { subscribePageNumber } from "~src/lib/poster"
 import { render } from "~src/lib/streamer"
-import { Config, RequestBody, WorkerResponseBody } from "~src/types/types"
+import { isLoadParams, isSubscribeParams } from "~src/types/guards"
+import {
+  Config,
+  ContentRequestBody,
+  StreamerContentParams,
+  WorkerResponseBody
+} from "~src/types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://tools.swfz.io/document-pinp-react-portal"],
@@ -18,19 +23,18 @@ export const config: PlasmoCSConfig = {
 
 let observer = { disconnect: () => {} }
 
-const initialHandler: PlasmoMessaging.Handler<
-  string,
-  RequestBody,
-  WorkerResponseBody
-> = async (req, res) => {
-  console.warn("req", req)
+const initialHandler = async (
+  message: ContentRequestBody<StreamerContentParams>,
+  sender: chrome.runtime.MessageSender,
+  sendResponse: (response?: WorkerResponseBody) => void
+) => {
   const storage = new Storage({ area: "local" })
   const config = await storage.get<Config>("config")
 
-  if (req.action === "Load") {
+  if (isLoadParams(message)) {
     const boxElement = exampleExtractor.boxElementFn()
     if (boxElement === null || boxElement === undefined) {
-      res.send({ error: "Please start in presentation mode." })
+      sendResponse({ error: "Please start in presentation mode." })
       return
     }
 
@@ -41,7 +45,7 @@ const initialHandler: PlasmoMessaging.Handler<
         role: "handler",
         action: "connect",
         service: "example",
-        tabId: req.tabId
+        tabId: message.tabId
       }
     }).catch((e) => {
       console.warn(e)
@@ -65,22 +69,22 @@ const initialHandler: PlasmoMessaging.Handler<
           role: "subscriber",
           action: "connect",
           service: "example",
-          tabId: req.tabId
+          tabId: message.tabId
         }
       }).catch((e) => {
         console.warn(e)
       })
-      res.send({ message: "Subscribed page number in slide" })
+      sendResponse({ message: "Subscribed page number in slide" })
     } else {
-      res.send({ message: "Connected example site" })
+      sendResponse({ message: "Connected example site" })
     }
   }
 
-  if (req.action === "Subscribe") {
+  if (isSubscribeParams(message)) {
     const boxElement = exampleExtractor.boxElementFn()
 
-    render(boxElement, config, req.comments)
-    res.send({ message: "comments rendered" })
+    render(boxElement, config, message.comments)
+    sendResponse({ message: "comments rendered" })
   }
 }
 
@@ -88,7 +92,7 @@ batchInitialize([
   { feature: "comment", role: "handler" },
   { feature: "selfpost", role: "subscriber" }
 ])
-listen(initialHandler)
+chrome.runtime.onMessage.addListener(initialHandler)
 
 console.log("lasterror", chrome.runtime.lastError)
 console.log("loaded. content script.")

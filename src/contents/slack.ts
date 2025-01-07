@@ -20,7 +20,7 @@ export const config: PlasmoCSConfig = {
 }
 const initialHandler = async (
   message: ContentRequestBody<PosterContentParams>,
-  sender: chrome.runtime.MessageSender,
+  _: chrome.runtime.MessageSender,
   sendResponse: (response?: WorkerResponseBody) => void
 ) => {
   // console.warn("req", req)

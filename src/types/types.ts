@@ -124,7 +124,7 @@ export interface CommentExtractor {
 }
 
 export interface SlideExtractor {
-  boxElementFn: () => HTMLElement | null | undefined
+  boxElementFn: () => HTMLDivElement | null | undefined
   pageNumberElementFn: () => HTMLElement | null | undefined
 }
 

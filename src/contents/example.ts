@@ -7,6 +7,7 @@ import { exampleExtractor } from "~src/lib/extractor/example"
 import { batchInitialize } from "~src/lib/initializer"
 import { subscribePageNumber } from "~src/lib/poster"
 import { render } from "~src/lib/streamer"
+import { defaultConfig } from "~src/options"
 import { isLoadParams, isSubscribeParams } from "~src/types/guards"
 import {
   Config,
@@ -25,11 +26,11 @@ let observer = { disconnect: () => {} }
 
 const initialHandler = async (
   message: ContentRequestBody<StreamerContentParams>,
-  sender: chrome.runtime.MessageSender,
+  _: chrome.runtime.MessageSender,
   sendResponse: (response?: WorkerResponseBody) => void
 ) => {
   const storage = new Storage({ area: "local" })
-  const config = await storage.get<Config>("config")
+  const config = (await storage.get<Config>("config")) || defaultConfig
 
   if (isLoadParams(message)) {
     const boxElement = exampleExtractor.boxElementFn()
@@ -82,6 +83,10 @@ const initialHandler = async (
 
   if (isSubscribeParams(message)) {
     const boxElement = exampleExtractor.boxElementFn()
+    if (boxElement === null || boxElement === undefined) {
+      sendResponse({ error: "Not found slide element..." })
+      return
+    }
 
     render(boxElement, config, message.comments)
     sendResponse({ message: "comments rendered" })

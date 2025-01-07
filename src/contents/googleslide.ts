@@ -26,7 +26,7 @@ let observer = { disconnect: () => {} }
 
 const initialHandler = async (
   message: ContentRequestBody<StreamerContentParams>,
-  sender: chrome.runtime.MessageSender,
+  _: chrome.runtime.MessageSender,
   sendResponse: (response?: WorkerResponseBody) => void
 ) => {
   const storage = new Storage({ area: "local" })

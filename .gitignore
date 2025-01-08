@@ -27,7 +27,11 @@ build/
 dist/
 
 # plasmo
-.plasmo
+.plasmo/*
+
+!.plasmo/
+!.plasmo/index.d.ts
+!.plasmo/messaging.d.ts
 
 # typescript
 .tsbuildinfo

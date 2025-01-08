@@ -1,3 +1,5 @@
+import { PlasmoMessaging } from "@plasmohq/messaging"
+
 export type Role = "subscriber" | "handler"
 export type Feature = "comment" | "selfpost"
 
@@ -49,8 +51,6 @@ export type ContentToBackgroundBody = {
 // forwarder name, body
 export type ForwarderRequestBody = {
   action: "SakuraComment" | "Subscribe"
-  comment?: string
-  comments?: string[]
 }
 
 type ConnectorAction = "connect" | "disconnect"
@@ -78,6 +78,30 @@ export interface RequestBody {
   comment?: string
 }
 
+export type LoadParams = PlasmoMessaging.Request<"Load", {}>
+export type SakuraCommentParams = PlasmoMessaging.Request<
+  "SakuraComment",
+  { comment: string }
+>
+export type SubscribeParams = PlasmoMessaging.Request<
+  "Subscribe",
+  { comments: string[] }
+>
+
+export type StreamerContentParams = LoadParams | SubscribeParams
+export type PosterContentParams = LoadParams | SakuraCommentParams
+
+type ActionMap = {
+  Load: LoadParams
+  Subscribe: SubscribeParams
+  SakuraComment: SakuraCommentParams
+}
+
+export type ContentRequestBody<T extends PlasmoMessaging.Request> =
+  T["name"] extends keyof ActionMap
+    ? PlasmoMessaging.Request<T["name"], ActionMap[T["name"]]>
+    : PlasmoMessaging.Request
+
 export type BackgroundWorker = "connector" | "forwarder"
 
 export interface WorkerResponseBody {
@@ -96,7 +120,7 @@ export interface CommentExtractor {
 }
 
 export interface SlideExtractor {
-  boxElementFn: () => HTMLElement | null | undefined
+  boxElementFn: () => HTMLDivElement | null | undefined
   pageNumberElementFn: () => HTMLElement | null | undefined
 }
 
@@ -115,4 +139,11 @@ export type SelfpostConfig = {
     seconds: number
     comment: string
   }[]
+}
+
+declare module "@plasmohq/messaging" {
+  interface MessagesMetadata {
+    // SakuraComment: { comment: string }
+    // Subscribe: [comments: string[]]
+  }
 }

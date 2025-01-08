@@ -6,7 +6,8 @@ import { listen } from "@plasmohq/messaging/message"
 import { zoomExtractor, zoomSelfPost } from "~src/lib/extractor/zoom"
 import { batchInitialize } from "~src/lib/initializer"
 import { subscribeComments } from "~src/lib/subscriber"
-import { RequestBody, WorkerResponseBody } from "~src/types/types"
+import { hasLoadParams, hasSakuraCommentParams } from "~src/types/guards"
+import { WorkerResponseBody } from "~src/types/types"
 
 let observer = { disconnect: () => {} }
 
@@ -15,15 +16,11 @@ export const config: PlasmoCSConfig = {
   all_frames: true
 }
 
-const initialHandler: PlasmoMessaging.Handler<
-  string,
-  RequestBody,
-  WorkerResponseBody
-> = async (req, res) => {
-  console.warn("req", req)
-  console.warn("res", res)
-
-  if (req.action === "Load") {
+const initialHandler: PlasmoMessaging.Handler = async (
+  req,
+  res: PlasmoMessaging.Response<WorkerResponseBody>
+) => {
+  if (hasLoadParams(req)) {
     const observeElement = zoomExtractor.listNodeExtractFn()
 
     if (observeElement === null || observeElement === undefined) {
@@ -61,9 +58,9 @@ const initialHandler: PlasmoMessaging.Handler<
     res.send({ message: "Subscribed comment list in chat." })
   }
 
-  if (req.action === "SakuraComment") {
-    const message = await zoomSelfPost(req.comment)
-    res.send(message)
+  if (hasSakuraCommentParams(req)) {
+    const m = await zoomSelfPost(req.body?.comment || "")
+    res.send(m)
   }
 }
 

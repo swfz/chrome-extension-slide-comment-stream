@@ -8,7 +8,9 @@ import { exampleExtractor } from "~src/lib/extractor/example"
 import { batchInitialize } from "~src/lib/initializer"
 import { subscribePageNumber } from "~src/lib/poster"
 import { render } from "~src/lib/streamer"
-import { Config, RequestBody, WorkerResponseBody } from "~src/types/types"
+import { defaultConfig } from "~src/options"
+import { hasLoadParams, hasSubscribeParams } from "~src/types/guards"
+import { Config, WorkerResponseBody } from "~src/types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://tools.swfz.io/document-pinp-react-portal"],
@@ -18,16 +20,14 @@ export const config: PlasmoCSConfig = {
 
 let observer = { disconnect: () => {} }
 
-const initialHandler: PlasmoMessaging.Handler<
-  string,
-  RequestBody,
-  WorkerResponseBody
-> = async (req, res) => {
-  console.warn("req", req)
+const initialHandler: PlasmoMessaging.Handler = async (
+  req,
+  res: PlasmoMessaging.Response<WorkerResponseBody>
+) => {
   const storage = new Storage({ area: "local" })
-  const config = await storage.get<Config>("config")
+  const config = (await storage.get<Config>("config")) || defaultConfig
 
-  if (req.action === "Load") {
+  if (hasLoadParams(req)) {
     const boxElement = exampleExtractor.boxElementFn()
     if (boxElement === null || boxElement === undefined) {
       res.send({ error: "Please start in presentation mode." })
@@ -76,10 +76,14 @@ const initialHandler: PlasmoMessaging.Handler<
     }
   }
 
-  if (req.action === "Subscribe") {
+  if (hasSubscribeParams(req)) {
     const boxElement = exampleExtractor.boxElementFn()
+    if (boxElement === null || boxElement === undefined) {
+      res.send({ error: "Not found slide element..." })
+      return
+    }
 
-    render(boxElement, config, req.comments)
+    render(boxElement, config, req.body?.comments || [])
     res.send({ message: "comments rendered" })
   }
 }
@@ -90,5 +94,4 @@ batchInitialize([
 ])
 listen(initialHandler)
 
-console.log("lasterror", chrome.runtime.lastError)
 console.log("loaded. content script.")

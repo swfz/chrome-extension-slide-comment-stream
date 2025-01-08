@@ -9,7 +9,8 @@ import { batchInitialize } from "~src/lib/initializer"
 import { subscribePageNumber } from "~src/lib/poster"
 import { render } from "~src/lib/streamer"
 import { defaultConfig } from "~src/options"
-import { Config, RequestBody, WorkerResponseBody } from "~src/types/types"
+import { hasLoadParams, hasSubscribeParams } from "~src/types/guards"
+import { Config, WorkerResponseBody } from "~src/types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],
@@ -19,17 +20,14 @@ export const config: PlasmoCSConfig = {
 
 let observer = { disconnect: () => {} }
 
-const initialHandler: PlasmoMessaging.Handler<
-  string,
-  RequestBody,
-  WorkerResponseBody
-> = async (req, res) => {
-  console.warn("req", req)
-
+const initialHandler: PlasmoMessaging.Handler = async (
+  req,
+  res: PlasmoMessaging.Response<WorkerResponseBody>
+) => {
   const storage = new Storage({ area: "local" })
   const config = (await storage.get<Config>("config")) || defaultConfig
 
-  if (req.action === "Load") {
+  if (hasLoadParams(req)) {
     const boxElement = googleslideExtractor.boxElementFn()
 
     if (boxElement === null || boxElement === undefined) {
@@ -79,7 +77,7 @@ const initialHandler: PlasmoMessaging.Handler<
     }
   }
 
-  if (req.action === "Subscribe") {
+  if (hasSubscribeParams(req)) {
     const boxElement = googleslideExtractor.boxElementFn()
 
     // TODO: iframe内にコンテンツを差し込んでいるためkeyframesの記述を設定したCSSもIframeから読めないとanimationが動作しない
@@ -99,7 +97,8 @@ const initialHandler: PlasmoMessaging.Handler<
       return
     }
 
-    render(boxElement, config, req.comments)
+    const comments = req.body?.comments || []
+    render(boxElement, config, comments)
     res.send({ message: "comments rendered" })
   }
 }

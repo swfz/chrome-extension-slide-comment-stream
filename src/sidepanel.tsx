@@ -9,7 +9,7 @@ import "./style.css"
 import { Play } from "lucide-react"
 
 import { detectService, serviceToHandlerFeature } from "~src/lib/service"
-import { Feature } from "~src/types/types"
+import { Feature, LoadParams } from "~src/types/types"
 
 import Alert from "./components/alert"
 import ExtHeader from "./components/header"
@@ -41,8 +41,8 @@ function IndexSidepanel() {
       return
     }
 
-    const res = await sendToContentScript({
-      action: "Load",
+    const res = await sendToContentScript<LoadParams>({
+      name: "Load",
       tabId: tab.id
     })
 

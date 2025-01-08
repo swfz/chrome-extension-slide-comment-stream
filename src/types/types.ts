@@ -1,3 +1,5 @@
+import { PlasmoMessaging } from "@plasmohq/messaging"
+
 export type Role = "subscriber" | "handler"
 export type Feature = "comment" | "selfpost"
 
@@ -78,21 +80,15 @@ export interface RequestBody {
   comment?: string
 }
 
-export type ContentMessagebase = {
-  action: "Load" | "Subscribe" | "SakuraComment"
-}
-
-export type LoadParams = {
-  tabId: number
-} & ContentMessagebase
-
-export type SakuraCommentParams = {
-  comment: string
-} & ContentMessagebase
-
-export type SubscribeParams = {
-  comments: string[]
-} & ContentMessagebase
+export type LoadParams = PlasmoMessaging.Request<"Load", {}>
+export type SakuraCommentParams = PlasmoMessaging.Request<
+  "SakuraComment",
+  { comment: string }
+>
+export type SubscribeParams = PlasmoMessaging.Request<
+  "Subscribe",
+  { comments: string[] }
+>
 
 export type StreamerContentParams = LoadParams | SubscribeParams
 export type PosterContentParams = LoadParams | SakuraCommentParams
@@ -103,8 +99,10 @@ type ActionMap = {
   SakuraComment: SakuraCommentParams
 }
 
-export type ContentRequestBody<T extends ContentMessagebase> =
-  T["action"] extends keyof ActionMap ? ActionMap[T["action"]] : never
+export type ContentRequestBody<T extends PlasmoMessaging.Request> =
+  T["name"] extends keyof ActionMap
+    ? PlasmoMessaging.Request<T["name"], ActionMap[T["name"]]>
+    : PlasmoMessaging.Request
 
 export type BackgroundWorker = "connector" | "forwarder"
 

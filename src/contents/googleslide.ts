@@ -8,7 +8,7 @@ import { batchInitialize } from "~src/lib/initializer"
 import { subscribePageNumber } from "~src/lib/poster"
 import { render } from "~src/lib/streamer"
 import { defaultConfig } from "~src/options"
-import { isLoadParams, isSubscribeParams } from "~src/types/guards"
+import { hasLoadParams, hasSubscribeParams } from "~src/types/guards"
 import {
   Config,
   ContentRequestBody,
@@ -32,7 +32,7 @@ const initialHandler = async (
   const storage = new Storage({ area: "local" })
   const config = (await storage.get<Config>("config")) || defaultConfig
 
-  if (isLoadParams(message)) {
+  if (hasLoadParams(message)) {
     const boxElement = googleslideExtractor.boxElementFn()
 
     if (boxElement === null || boxElement === undefined) {
@@ -82,7 +82,7 @@ const initialHandler = async (
     }
   }
 
-  if (isSubscribeParams(message)) {
+  if (hasSubscribeParams(message)) {
     const boxElement = googleslideExtractor.boxElementFn()
 
     // TODO: iframe内にコンテンツを差し込んでいるためkeyframesの記述を設定したCSSもIframeから読めないとanimationが動作しない
@@ -102,7 +102,8 @@ const initialHandler = async (
       return
     }
 
-    render(boxElement, config, message.comments)
+    const comments = message.body?.comments || []
+    render(boxElement, config, comments)
     sendResponse({ message: "comments rendered" })
   }
 }

@@ -16,9 +16,11 @@ const handler: PlasmoMessaging.MessageHandler<
 
   if (req.body?.action === "Subscribe") {
     await sendToContentScript({
-      action: "Subscribe",
-      tabId: status?.comment_handler?.tabId,
-      comments: req.body.comments
+      name: "Subscribe",
+      body: {
+        comments: req.body.comments || []
+      },
+      tabId: status?.comment_handler?.tabId
     }).catch((e) => {
       console.warn(e)
       res.send({ error: e })
@@ -26,9 +28,11 @@ const handler: PlasmoMessaging.MessageHandler<
   }
   if (req.body?.action === "SakuraComment") {
     await sendToContentScript({
-      action: "SakuraComment",
-      tabId: status?.selfpost_handler?.tabId,
-      comment: req.body.comment
+      name: "SakuraComment",
+      body: {
+        comment: req.body.comment || ""
+      },
+      tabId: status?.selfpost_handler?.tabId
     }).catch((e) => {
       console.warn(e)
       res.send({ error: e })

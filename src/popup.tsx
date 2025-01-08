@@ -42,7 +42,7 @@ function IndexPopup() {
     }
 
     const res = await sendToContentScript({
-      action: "Load",
+      name: "Load",
       tabId: tab.id
     })
 

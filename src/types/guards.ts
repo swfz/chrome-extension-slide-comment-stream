@@ -1,19 +1,12 @@
-import {
-  ContentMessagebase,
-  LoadParams,
-  SakuraCommentParams,
-  SubscribeParams
-} from "./types"
+import { PlasmoMessaging } from "@plasmohq/messaging"
 
-function createContentScriptTypeGuard<T extends ContentMessagebase>(
-  actionType: T["action"]
-) {
-  return (message: ContentMessagebase): message is T =>
-    message.action === actionType
+import { LoadParams, SakuraCommentParams, SubscribeParams } from "./types"
+
+const hasParams = <T extends PlasmoMessaging.Request>(name: T["name"]) => {
+  return (message: PlasmoMessaging.Request): message is T =>
+    message.name === name
 }
-
-export const isLoadParams = createContentScriptTypeGuard<LoadParams>("Load")
-export const isSubscribeParams =
-  createContentScriptTypeGuard<SubscribeParams>("Subscribe")
-export const isSakuraCommentParams =
-  createContentScriptTypeGuard<SakuraCommentParams>("SakuraComment")
+export const hasLoadParams = hasParams<LoadParams>("Load")
+export const hasSubscribeParams = hasParams<SubscribeParams>("Subscribe")
+export const hasSakuraCommentParams =
+  hasParams<SakuraCommentParams>("SakuraComment")

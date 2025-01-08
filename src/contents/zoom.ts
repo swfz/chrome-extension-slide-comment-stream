@@ -5,7 +5,7 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { zoomExtractor, zoomSelfPost } from "~src/lib/extractor/zoom"
 import { batchInitialize } from "~src/lib/initializer"
 import { subscribeComments } from "~src/lib/subscriber"
-import { isLoadParams, isSakuraCommentParams } from "~src/types/guards"
+import { hasLoadParams, hasSakuraCommentParams } from "~src/types/guards"
 import {
   ContentRequestBody,
   PosterContentParams,
@@ -24,7 +24,7 @@ const initialHandler = async (
   _: chrome.runtime.MessageSender,
   sendResponse: (response?: WorkerResponseBody) => void
 ) => {
-  if (isLoadParams(message)) {
+  if (hasLoadParams(message)) {
     const observeElement = zoomExtractor.listNodeExtractFn()
 
     if (observeElement === null || observeElement === undefined) {
@@ -62,8 +62,8 @@ const initialHandler = async (
     sendResponse({ message: "Subscribed comment list in chat." })
   }
 
-  if (isSakuraCommentParams(message)) {
-    const m = await zoomSelfPost(message.comment)
+  if (hasSakuraCommentParams(message)) {
+    const m = await zoomSelfPost(message.body?.comment || "")
     sendResponse(m)
   }
 }

@@ -8,7 +8,7 @@ import { batchInitialize } from "~src/lib/initializer"
 import { subscribePageNumber } from "~src/lib/poster"
 import { render } from "~src/lib/streamer"
 import { defaultConfig } from "~src/options"
-import { isLoadParams, isSubscribeParams } from "~src/types/guards"
+import { hasLoadParams, hasSubscribeParams } from "~src/types/guards"
 import {
   Config,
   ContentRequestBody,
@@ -32,7 +32,7 @@ const initialHandler = async (
   const storage = new Storage({ area: "local" })
   const config = (await storage.get<Config>("config")) || defaultConfig
 
-  if (isLoadParams(message)) {
+  if (hasLoadParams(message)) {
     const boxElement = exampleExtractor.boxElementFn()
     if (boxElement === null || boxElement === undefined) {
       sendResponse({ error: "Please start in presentation mode." })
@@ -81,14 +81,14 @@ const initialHandler = async (
     }
   }
 
-  if (isSubscribeParams(message)) {
+  if (hasSubscribeParams(message)) {
     const boxElement = exampleExtractor.boxElementFn()
     if (boxElement === null || boxElement === undefined) {
       sendResponse({ error: "Not found slide element..." })
       return
     }
 
-    render(boxElement, config, message.comments)
+    render(boxElement, config, message.body?.comments || [])
     sendResponse({ message: "comments rendered" })
   }
 }

@@ -5,7 +5,7 @@ import { sendToBackground } from "@plasmohq/messaging"
 import { slackExtractor, slackSelfPost } from "~src/lib/extractor/slack"
 import { batchInitialize } from "~src/lib/initializer"
 import { subscribeComments } from "~src/lib/subscriber"
-import { isLoadParams, isSakuraCommentParams } from "~src/types/guards"
+import { hasLoadParams, hasSakuraCommentParams } from "~src/types/guards"
 import {
   ContentRequestBody,
   PosterContentParams,
@@ -25,7 +25,7 @@ const initialHandler = async (
 ) => {
   // console.warn("req", req)
   // console.warn("res", res)
-  if (isLoadParams(message)) {
+  if (hasLoadParams(message)) {
     const observeElement = slackExtractor.listNodeExtractFn()
     if (observeElement === null || observeElement === undefined) {
       sendResponse({ error: "Subscribe node not found. please open chat list" })
@@ -62,8 +62,8 @@ const initialHandler = async (
     sendResponse({ message: "Subscribed comment list in chat." })
   }
 
-  if (isSakuraCommentParams(message)) {
-    const m = await slackSelfPost(message.comment)
+  if (hasSakuraCommentParams(message)) {
+    const m = await slackSelfPost(message.body?.comment || "")
     sendResponse(m)
   }
 }

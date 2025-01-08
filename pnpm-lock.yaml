@@ -16,7 +16,7 @@ importers:
         version: 1.13.0(react@18.2.0)
       css-filter-converter:
         specifier: ^1.0.109
-        version: 1.0.109
+        version: 1.0.110
       lucide-react:
         specifier: ^0.469.0
         version: 0.469.0(react@18.2.0)
@@ -1714,8 +1714,8 @@ packages:
     resolution: {integrity: sha512-x8dy3RnvYdlUcPOjkEHqozhiwzKNSq7GcPuXFbnyMOCHxX8V3OgIg/pYuabl2sbUPfIJaeAQB7PMOK8DFIdoRA==}
     engines: {node: '>=12'}
 
-  css-filter-converter@1.0.109:
-    resolution: {integrity: sha512-EuexRsNM9YFGi/Q1OZBZEKEIaLAqj2lqOBXBN0ITXGBwpNIwNeLoqRRsa9taij1xG2qJFe+XieOK58lg9ZxkuQ==}
+  css-filter-converter@1.0.110:
+    resolution: {integrity: sha512-C5ByBQubCmJXh+kBzx3CESEtCbOTMUliyzBSJF0hsnqsbpCdqPrJYvsPMnFBCZNlxR+YNJFoYO+Fj/rvNZv5CA==}
 
   css-select@4.3.0:
     resolution: {integrity: sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ==}
@@ -5157,7 +5157,7 @@ snapshots:
     dependencies:
       type-fest: 1.4.0
 
-  css-filter-converter@1.0.109:
+  css-filter-converter@1.0.110:
     dependencies:
       color-convert: 2.0.1
       dom-to-image: 2.6.0

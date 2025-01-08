@@ -17,9 +17,7 @@ const handler: PlasmoMessaging.MessageHandler<
   if (req.body?.action === "Subscribe") {
     await sendToContentScript({
       name: "Subscribe",
-      body: {
-        comments: req.body.comments || []
-      },
+      body: req.body,
       tabId: status?.comment_handler?.tabId
     }).catch((e) => {
       console.warn(e)
@@ -29,9 +27,7 @@ const handler: PlasmoMessaging.MessageHandler<
   if (req.body?.action === "SakuraComment") {
     await sendToContentScript({
       name: "SakuraComment",
-      body: {
-        comment: req.body.comment || ""
-      },
+      body: req.body,
       tabId: status?.selfpost_handler?.tabId
     }).catch((e) => {
       console.warn(e)

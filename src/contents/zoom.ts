@@ -1,16 +1,13 @@
 import type { PlasmoCSConfig } from "plasmo"
 
-import { sendToBackground } from "@plasmohq/messaging"
+import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
+import { listen } from "@plasmohq/messaging/message"
 
 import { zoomExtractor, zoomSelfPost } from "~src/lib/extractor/zoom"
 import { batchInitialize } from "~src/lib/initializer"
 import { subscribeComments } from "~src/lib/subscriber"
 import { hasLoadParams, hasSakuraCommentParams } from "~src/types/guards"
-import {
-  ContentRequestBody,
-  PosterContentParams,
-  WorkerResponseBody
-} from "~src/types/types"
+import { WorkerResponseBody } from "~src/types/types"
 
 let observer = { disconnect: () => {} }
 
@@ -19,16 +16,15 @@ export const config: PlasmoCSConfig = {
   all_frames: true
 }
 
-const initialHandler = async (
-  message: ContentRequestBody<PosterContentParams>,
-  _: chrome.runtime.MessageSender,
-  sendResponse: (response?: WorkerResponseBody) => void
+const initialHandler: PlasmoMessaging.Handler = async (
+  req,
+  res: PlasmoMessaging.Response<WorkerResponseBody>
 ) => {
-  if (hasLoadParams(message)) {
+  if (hasLoadParams(req)) {
     const observeElement = zoomExtractor.listNodeExtractFn()
 
     if (observeElement === null || observeElement === undefined) {
-      sendResponse({ error: "Subscribe node not found. please open chat list" })
+      res.send({ error: "Subscribe node not found. please open chat list" })
       return
     }
 
@@ -38,7 +34,7 @@ const initialHandler = async (
         feature: "comment",
         role: "subscriber",
         action: "connect",
-        tabId: message.tabId,
+        tabId: req.tabId,
         service: "zoom"
       }
     }).catch((e) => {
@@ -50,7 +46,7 @@ const initialHandler = async (
         feature: "selfpost",
         role: "handler",
         action: "connect",
-        tabId: message.tabId,
+        tabId: req.tabId,
         service: "zoom"
       }
     }).catch((e) => {
@@ -59,12 +55,12 @@ const initialHandler = async (
 
     observer.disconnect()
     observer = subscribeComments("zoom", observeElement)
-    sendResponse({ message: "Subscribed comment list in chat." })
+    res.send({ message: "Subscribed comment list in chat." })
   }
 
-  if (hasSakuraCommentParams(message)) {
-    const m = await zoomSelfPost(message.body?.comment || "")
-    sendResponse(m)
+  if (hasSakuraCommentParams(req)) {
+    const m = await zoomSelfPost(req.body?.comment || "")
+    res.send(m)
   }
 }
 
@@ -74,7 +70,7 @@ if (window.self !== window.top) {
     { feature: "comment", role: "subscriber" },
     { feature: "selfpost", role: "handler" }
   ])
-  chrome.runtime.onMessage.addListener(initialHandler)
+  listen(initialHandler)
 }
 
 console.log("loaded. subscriber content script.")

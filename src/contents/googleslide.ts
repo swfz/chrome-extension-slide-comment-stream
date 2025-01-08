@@ -1,6 +1,7 @@
 import type { PlasmoCSConfig } from "plasmo"
 
-import { sendToBackground } from "@plasmohq/messaging"
+import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
+import { listen } from "@plasmohq/messaging/message"
 import { Storage } from "@plasmohq/storage"
 
 import { googleslideExtractor } from "~src/lib/extractor/googleslide"
@@ -9,12 +10,7 @@ import { subscribePageNumber } from "~src/lib/poster"
 import { render } from "~src/lib/streamer"
 import { defaultConfig } from "~src/options"
 import { hasLoadParams, hasSubscribeParams } from "~src/types/guards"
-import {
-  Config,
-  ContentRequestBody,
-  StreamerContentParams,
-  WorkerResponseBody
-} from "~src/types/types"
+import { Config, WorkerResponseBody } from "~src/types/types"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],
@@ -24,19 +20,18 @@ export const config: PlasmoCSConfig = {
 
 let observer = { disconnect: () => {} }
 
-const initialHandler = async (
-  message: ContentRequestBody<StreamerContentParams>,
-  _: chrome.runtime.MessageSender,
-  sendResponse: (response?: WorkerResponseBody) => void
+const initialHandler: PlasmoMessaging.Handler = async (
+  req,
+  res: PlasmoMessaging.Response<WorkerResponseBody>
 ) => {
   const storage = new Storage({ area: "local" })
   const config = (await storage.get<Config>("config")) || defaultConfig
 
-  if (hasLoadParams(message)) {
+  if (hasLoadParams(req)) {
     const boxElement = googleslideExtractor.boxElementFn()
 
     if (boxElement === null || boxElement === undefined) {
-      sendResponse({ error: "Please start in presentation mode." })
+      res.send({ error: "Please start in presentation mode." })
       return
     }
 
@@ -46,7 +41,7 @@ const initialHandler = async (
         feature: "comment",
         role: "handler",
         action: "connect",
-        tabId: message.tabId,
+        tabId: req.tabId,
         service: "googleslide"
       }
     }).catch((e) => {
@@ -70,19 +65,19 @@ const initialHandler = async (
           feature: "selfpost",
           role: "subscriber",
           action: "connect",
-          tabId: message.tabId,
+          tabId: req.tabId,
           service: "googleslide"
         }
       }).catch((e) => {
         console.warn(e)
       })
-      sendResponse({ message: "Subscribed page number in slide" })
+      res.send({ message: "Subscribed page number in slide" })
     } else {
-      sendResponse({ message: "Connected example site" })
+      res.send({ message: "Connected example site" })
     }
   }
 
-  if (hasSubscribeParams(message)) {
+  if (hasSubscribeParams(req)) {
     const boxElement = googleslideExtractor.boxElementFn()
 
     // TODO: iframe内にコンテンツを差し込んでいるためkeyframesの記述を設定したCSSもIframeから読めないとanimationが動作しない
@@ -98,13 +93,13 @@ const initialHandler = async (
     // ---------------------------------------
 
     if (boxElement === null || boxElement === undefined) {
-      sendResponse({ error: "Not found slide element..." })
+      res.send({ error: "Not found slide element..." })
       return
     }
 
-    const comments = message.body?.comments || []
+    const comments = req.body?.comments || []
     render(boxElement, config, comments)
-    sendResponse({ message: "comments rendered" })
+    res.send({ message: "comments rendered" })
   }
 }
 
@@ -115,7 +110,7 @@ if (document.body.role === "application") {
     { feature: "comment", role: "handler" },
     { feature: "selfpost", role: "subscriber" }
   ])
-  chrome.runtime.onMessage.addListener(initialHandler)
+  listen(initialHandler)
 }
 
 console.log("loaded. streamer content script.")

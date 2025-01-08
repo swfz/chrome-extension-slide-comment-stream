@@ -1,16 +1,13 @@
 import type { PlasmoCSConfig } from "plasmo"
 
-import { sendToBackground } from "@plasmohq/messaging"
+import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging"
+import { listen } from "@plasmohq/messaging/message"
 
 import { slackExtractor, slackSelfPost } from "~src/lib/extractor/slack"
 import { batchInitialize } from "~src/lib/initializer"
 import { subscribeComments } from "~src/lib/subscriber"
 import { hasLoadParams, hasSakuraCommentParams } from "~src/types/guards"
-import {
-  ContentRequestBody,
-  PosterContentParams,
-  WorkerResponseBody
-} from "~src/types/types"
+import { WorkerResponseBody } from "~src/types/types"
 
 let observer = { disconnect: () => {} }
 
@@ -18,17 +15,19 @@ export const config: PlasmoCSConfig = {
   matches: ["https://app.slack.com/client/*"],
   all_frames: true
 }
-const initialHandler = async (
-  message: ContentRequestBody<PosterContentParams>,
-  _: chrome.runtime.MessageSender,
-  sendResponse: (response?: WorkerResponseBody) => void
+
+const initialHandler: PlasmoMessaging.Handler = async (
+  req,
+  res: PlasmoMessaging.Response<WorkerResponseBody>
 ) => {
+  console.warn(req)
+
   // console.warn("req", req)
   // console.warn("res", res)
-  if (hasLoadParams(message)) {
+  if (hasLoadParams(req)) {
     const observeElement = slackExtractor.listNodeExtractFn()
     if (observeElement === null || observeElement === undefined) {
-      sendResponse({ error: "Subscribe node not found. please open chat list" })
+      res.send({ error: "Subscribe node not found. please open chat list" })
       return
     }
 
@@ -38,7 +37,7 @@ const initialHandler = async (
         feature: "comment",
         role: "subscriber",
         action: "connect",
-        tabId: message.tabId,
+        tabId: req.tabId,
         service: "slack"
       }
     }).catch((e) => {
@@ -50,7 +49,7 @@ const initialHandler = async (
         feature: "selfpost",
         role: "handler",
         action: "connect",
-        tabId: message.tabId,
+        tabId: req.tabId,
         service: "slack"
       }
     }).catch((e) => {
@@ -59,12 +58,12 @@ const initialHandler = async (
 
     observer.disconnect()
     observer = subscribeComments("slack", observeElement)
-    sendResponse({ message: "Subscribed comment list in chat." })
+    res.send({ message: "Subscribed comment list in chat." })
   }
 
-  if (hasSakuraCommentParams(message)) {
-    const m = await slackSelfPost(message.body?.comment || "")
-    sendResponse(m)
+  if (hasSakuraCommentParams(req)) {
+    const m = await slackSelfPost(req.body?.comment || "")
+    res.send(m)
   }
 }
 
@@ -72,7 +71,6 @@ batchInitialize([
   { feature: "comment", role: "subscriber" },
   { feature: "selfpost", role: "handler" }
 ])
-
-chrome.runtime.onMessage.addListener(initialHandler)
+listen(initialHandler)
 
 console.log("loaded. subscriber content script.")

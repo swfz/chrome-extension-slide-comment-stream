@@ -51,8 +51,6 @@ export type ContentToBackgroundBody = {
 // forwarder name, body
 export type ForwarderRequestBody = {
   action: "SakuraComment" | "Subscribe"
-  comment?: string
-  comments?: string[]
 }
 
 type ConnectorAction = "connect" | "disconnect"
@@ -141,4 +139,11 @@ export type SelfpostConfig = {
     seconds: number
     comment: string
   }[]
+}
+
+declare module "@plasmohq/messaging" {
+  interface MessagesMetadata {
+    // SakuraComment: { comment: string }
+    // Subscribe: [comments: string[]]
+  }
 }

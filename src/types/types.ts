@@ -1,4 +1,4 @@
-import { PlasmoMessaging } from "@plasmohq/messaging";
+import type { PlasmoMessaging } from "@plasmohq/messaging";
 
 export type Role = "subscriber" | "handler";
 export type Feature = "comment" | "selfpost";

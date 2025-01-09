@@ -1,7 +1,7 @@
-import { PlasmoMessaging, sendToContentScript } from "@plasmohq/messaging";
+import { type PlasmoMessaging, sendToContentScript } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
 
-import { ConnectedStatus, ForwarderRequestBody, WorkerResponseBody } from "~src/types/types";
+import type { ConnectedStatus, ForwarderRequestBody, WorkerResponseBody } from "~src/types/types";
 
 const handler: PlasmoMessaging.MessageHandler<ForwarderRequestBody, WorkerResponseBody> = async (
   req,

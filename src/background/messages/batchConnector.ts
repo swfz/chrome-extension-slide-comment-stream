@@ -1,7 +1,7 @@
-import { PlasmoMessaging } from "@plasmohq/messaging";
+import type { PlasmoMessaging } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
 
-import {
+import type {
   BatchDisconnectRequestBody,
   Config,
   ConnectedStatus,

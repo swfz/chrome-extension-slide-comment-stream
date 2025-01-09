@@ -1,10 +1,10 @@
 import { CheckCircle, RefreshCw, Square, XCircle } from "lucide-react";
-import React from "react";
+import type React from "react";
 
 import { Storage } from "@plasmohq/storage";
 import { useStorage } from "@plasmohq/storage/hook";
 
-import { Config, ConnectedStatus, State } from "~src/types/types";
+import type { Config, ConnectedStatus, State } from "~src/types/types";
 
 interface Props {
   config: Config;

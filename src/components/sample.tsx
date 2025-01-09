@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { sendToBackground } from "@plasmohq/messaging";
 
-import { Feature } from "~src/types/types";
+import type { Feature } from "~src/types/types";
 
 interface Props {
   feature: Feature | null;

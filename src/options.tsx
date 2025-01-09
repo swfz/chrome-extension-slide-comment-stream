@@ -1,5 +1,5 @@
 import CssFilterConverter from "css-filter-converter";
-import { ChangeEvent, useEffect, useState } from "react";
+import { type ChangeEvent, useEffect, useState } from "react";
 
 import { Storage } from "@plasmohq/storage";
 
@@ -7,7 +7,7 @@ import "./style.css";
 
 import { Check, ChevronDown, ChevronUp, Settings2 } from "lucide-react";
 
-import { Config, SelfpostConfig } from "~src/types/types";
+import type { Config, SelfpostConfig } from "~src/types/types";
 
 export const defaultConfig = {
   color: "#000000",
@@ -44,7 +44,7 @@ function OptionsPage() {
 
   const handleNumberChange = (key: keyof Config) => {
     return (event: ChangeEvent<HTMLInputElement>) => {
-      setConfig((prev) => ({ ...prev, [key]: parseInt(event.target.value) }));
+      setConfig((prev) => ({ ...prev, [key]: Number.parseInt(event.target.value) }));
     };
   };
 

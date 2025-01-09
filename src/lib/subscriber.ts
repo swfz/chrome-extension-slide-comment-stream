@@ -1,6 +1,6 @@
 import { sendToBackground } from "@plasmohq/messaging";
 
-import { CommentSubscriber } from "~src/types/types";
+import type { CommentSubscriber } from "~src/types/types";
 
 import { extractors } from "./extractor";
 
@@ -23,7 +23,7 @@ const subscribeComments = (service: CommentSubscriber, observeElement: HTMLEleme
     return comments as string[];
   };
 
-  const observer = new MutationObserver(async function (records: MutationRecord[]) {
+  const observer = new MutationObserver(async (records: MutationRecord[]) => {
     const comments = extractComment(records);
     console.log("extracted comments", comments);
     console.log("observe connect", observeElement.isConnected);

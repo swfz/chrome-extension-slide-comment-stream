@@ -1,4 +1,4 @@
-import { SlideExtractor } from "~src/types/types";
+import type { SlideExtractor } from "~src/types/types";
 
 export const googleslideExtractor: SlideExtractor = {
   boxElementFn: () => {

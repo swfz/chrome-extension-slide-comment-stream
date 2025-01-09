@@ -1,10 +1,10 @@
 import { sendToBackground } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
 
-import { SelfpostConfig } from "~src/types/types";
+import type { SelfpostConfig } from "~src/types/types";
 
 const subscribePageNumber = (observeElement: HTMLElement) => {
-  const observer = new MutationObserver(async function (records: MutationRecord[]) {
+  const observer = new MutationObserver(async (records: MutationRecord[]) => {
     if (!observeElement.isConnected) {
       await sendToBackground({
         name: "connector",

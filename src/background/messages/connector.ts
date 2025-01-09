@@ -1,10 +1,10 @@
-import { PlasmoMessaging } from "@plasmohq/messaging";
+import type { PlasmoMessaging } from "@plasmohq/messaging";
 import { Storage } from "@plasmohq/storage";
 
-import {
+import type {
   Config,
-  ConnectedStatus,
   ConnectRequestBody,
+  ConnectedStatus,
   Feature,
   Role,
   Service,

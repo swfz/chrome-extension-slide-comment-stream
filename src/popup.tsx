@@ -9,7 +9,7 @@ import "./style.css";
 import { Play } from "lucide-react";
 
 import { detectService, serviceToHandlerFeature } from "~src/lib/service";
-import { Feature } from "~src/types/types";
+import type { Feature } from "~src/types/types";
 
 import Alert from "./components/alert";
 import ExtHeader from "./components/header";

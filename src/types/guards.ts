@@ -1,6 +1,6 @@
-import { PlasmoMessaging } from "@plasmohq/messaging";
+import type { PlasmoMessaging } from "@plasmohq/messaging";
 
-import { LoadParams, SakuraCommentParams, SubscribeParams } from "./types";
+import type { LoadParams, SakuraCommentParams, SubscribeParams } from "./types";
 
 const hasParams = <T extends PlasmoMessaging.Request>(name: T["name"]) => {
   return (message: PlasmoMessaging.Request): message is T => message.name === name;

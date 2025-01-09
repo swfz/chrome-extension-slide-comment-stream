@@ -1,4 +1,4 @@
-import { SlideExtractor } from "~src/types/types";
+import type { SlideExtractor } from "~src/types/types";
 
 export const exampleExtractor: SlideExtractor = {
   boxElementFn: () => document.querySelector<HTMLDivElement>("div.flex"),

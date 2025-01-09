@@ -1,5 +1,5 @@
 import { waitForSelector } from "~src/lib/poster";
-import { CommentExtractor } from "~src/types/types";
+import type { CommentExtractor } from "~src/types/types";
 
 export const slackExtractor: CommentExtractor = {
   listNodeExtractFn: () => {

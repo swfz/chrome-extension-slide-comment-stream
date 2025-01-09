@@ -1,6 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo";
 
-import { PlasmoMessaging, sendToBackground } from "@plasmohq/messaging";
+import { type PlasmoMessaging, sendToBackground } from "@plasmohq/messaging";
 import { listen } from "@plasmohq/messaging/message";
 import { Storage } from "@plasmohq/storage";
 
@@ -10,7 +10,7 @@ import { subscribePageNumber } from "~src/lib/poster";
 import { render } from "~src/lib/streamer";
 import { defaultConfig } from "~src/options";
 import { hasLoadParams, hasSubscribeParams } from "~src/types/guards";
-import { Config, WorkerResponseBody } from "~src/types/types";
+import type { Config, WorkerResponseBody } from "~src/types/types";
 
 export const config: PlasmoCSConfig = {
   matches: ["https://docs.google.com/presentation/d/*/edit"],

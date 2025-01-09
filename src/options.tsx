@@ -5,7 +5,7 @@ import { Storage } from "@plasmohq/storage";
 
 import "./style.css";
 
-import { Check, ChevronDown, ChevronUp, Settings2 } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, Copy, Settings2 } from "lucide-react";
 
 import type { Config, SelfpostConfig } from "~src/types/types";
 
@@ -95,6 +95,12 @@ function OptionsPage() {
     }, 0);
   };
 
+  const handleCopyConfig = (from: keyof Config, to: keyof Config) => {
+    return () => {
+      setConfig((prev) => ({ ...prev, [to]: prev[from] }));
+    };
+  };
+
   const isError = () => error !== "";
 
   const handleSubmit = async () => {
@@ -108,6 +114,7 @@ function OptionsPage() {
     await storage.set("selfpost", JSON.parse(selfpostConfigText || "{}"));
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: storageを依存に含めてしまうと設定の変更が行えないため
   useEffect(() => {
     (async () => {
       const config = await storage.get<Config>("config");
@@ -116,7 +123,7 @@ function OptionsPage() {
       const selfpostConfig = await storage.get<SelfpostConfig>("selfpost");
       setSelfpostConfig(selfpostConfig || ({} as SelfpostConfig));
     })();
-  }, [storage]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-4 md:p-8">
@@ -142,6 +149,14 @@ function OptionsPage() {
                 onChange={handleColorChange("color")}
               />
               <span className="text-sm text-gray-500">{config.color}</span>
+              <button
+                type="button"
+                className="bg-gray-200 hover:bg-gray-300 rounded p-2"
+                onClick={handleCopyConfig("clapColor", "color")}
+              >
+                <Copy className="w-4 h-4 inline mr-1" />
+                Copy from "Clap Effect Color"
+              </button>
             </div>
           </div>
 
@@ -198,6 +213,7 @@ function OptionsPage() {
             <label htmlFor="clapColor" className="block text-sm font-medium text-gray-700 mb-1">
               Clap Effect Color
             </label>
+
             <div className="flex items-center gap-2">
               <input
                 id="clapColor"
@@ -207,6 +223,14 @@ function OptionsPage() {
                 onChange={handleColorChange("clapColor")}
               />
               <span className="text-sm text-gray-500">{config.clapColor}</span>
+              <button
+                type="button"
+                className="bg-gray-200 hover:bg-gray-300 rounded p-2"
+                onClick={handleCopyConfig("color", "clapColor")}
+              >
+                <Copy className="w-4 h-4 inline mr-1" />
+                Copy from "Comment Color"
+              </button>
             </div>
           </div>
 

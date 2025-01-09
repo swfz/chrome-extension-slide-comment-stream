@@ -1,8 +1,8 @@
 {
-  "name": "comment-stream-sample",
-  "displayName": "Comment stream sample",
+  "name": "slide-comment-stream",
+  "displayName": "Slide Comment Stream",
   "version": "0.0.1",
-  "description": "A basic Plasmo extension.",
+  "description": "presentation comment stream in slide",
   "author": "swfz",
   "scripts": {
     "dev": "plasmo dev",

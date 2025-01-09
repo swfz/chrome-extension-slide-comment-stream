@@ -80,7 +80,7 @@ export interface RequestBody {
   comment?: string;
 }
 
-export type LoadParams = PlasmoMessaging.Request<"Load", {}>;
+export type LoadParams = PlasmoMessaging.Request<"Load">;
 export type SakuraCommentParams = PlasmoMessaging.Request<"SakuraComment", { comment: string }>;
 export type SubscribeParams = PlasmoMessaging.Request<"Subscribe", { comments: string[] }>;
 

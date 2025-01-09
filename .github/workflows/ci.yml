@@ -31,3 +31,31 @@ jobs:
           pnpm i --frozen-lockfile
           pnpm typecheck
 
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.7
+      - run: corepack enable
+      - uses: actions/setup-node@v4.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: build
+        run: |
+          pnpm i --frozen-lockfile
+          pnpm format-check
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.7
+      - run: corepack enable
+      - uses: actions/setup-node@v4.1.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: build
+        run: |
+          pnpm i --frozen-lockfile
+          pnpm lint
+

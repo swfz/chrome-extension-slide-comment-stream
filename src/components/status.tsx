@@ -1,23 +1,23 @@
-import { CheckCircle, RefreshCw, Square, XCircle } from "lucide-react"
-import React from "react"
+import { CheckCircle, RefreshCw, Square, XCircle } from "lucide-react";
+import type React from "react";
 
-import { Storage } from "@plasmohq/storage"
-import { useStorage } from "@plasmohq/storage/hook"
+import { Storage } from "@plasmohq/storage";
+import { useStorage } from "@plasmohq/storage/hook";
 
-import { Config, ConnectedStatus, State } from "~src/types/types"
+import type { Config, ConnectedStatus, State } from "~src/types/types";
 
 interface Props {
-  config: Config
+  config: Config;
 }
 
 interface StateRowProps {
-  children: React.ReactNode
-  notUse: boolean
-  state: State | null | undefined
+  children: React.ReactNode;
+  notUse: boolean;
+  state: State | null | undefined;
 }
 
 const StateRow = ({ children, notUse, state }: StateRowProps) => {
-  const ready = state !== null && state !== undefined
+  const ready = state !== null && state !== undefined;
 
   return (
     <div className="flex items-center justify-between">
@@ -32,7 +32,8 @@ const StateRow = ({ children, notUse, state }: StateRowProps) => {
                     : state.service === "zoom"
                       ? "bg-blue-100 text-blue-800"
                       : "bg-yellow-100 text-yellow-800"
-                }`}>
+                }`}
+          >
             {state.service}
           </span>
         )}
@@ -45,7 +46,8 @@ const StateRow = ({ children, notUse, state }: StateRowProps) => {
                 : ready
                   ? "bg-green-100 text-green-800"
                   : "bg-red-100 text-red-800"
-            }`}>
+            }`}
+      >
         {notUse ? (
           <Square className="w-3 h-3 mr-1" />
         ) : ready ? (
@@ -56,28 +58,24 @@ const StateRow = ({ children, notUse, state }: StateRowProps) => {
         {notUse ? "Not Use" : ready ? "Ready" : "Not Ready"}
       </span>
     </div>
-  )
-}
+  );
+};
 
 function Status({ config }: Props) {
   const [connectionStatus, setConnectionStatus] = useStorage<ConnectedStatus>({
     key: "status",
     instance: new Storage({
-      area: "local"
-    })
-  })
+      area: "local",
+    }),
+  });
 
-  const isCommentReady =
-    connectionStatus?.comment_handler && connectionStatus?.comment_subscriber
-  const isSakuraReady =
-    connectionStatus?.selfpost_handler && connectionStatus?.selfpost_subscriber
-  const isReady = config.selfpost
-    ? isCommentReady && isSakuraReady
-    : isCommentReady
+  const isCommentReady = connectionStatus?.comment_handler && connectionStatus?.comment_subscriber;
+  const isSakuraReady = connectionStatus?.selfpost_handler && connectionStatus?.selfpost_subscriber;
+  const isReady = config.selfpost ? isCommentReady && isSakuraReady : isCommentReady;
 
   const handleResetConnection = () => {
-    setConnectionStatus({} as ConnectedStatus)
-  }
+    setConnectionStatus({} as ConnectedStatus);
+  };
 
   return (
     <>
@@ -85,14 +83,15 @@ function Status({ config }: Props) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div
-              className={`w-3 h-3 rounded-full ${isReady ? "bg-green-500" : "bg-red-500"} animate-pulse`}></div>
-            <span className="font-medium">
-              {isReady ? "Ready" : "NotReady"}
-            </span>
+              className={`w-3 h-3 rounded-full ${isReady ? "bg-green-500" : "bg-red-500"} animate-pulse`}
+            />
+            <span className="font-medium">{isReady ? "Ready" : "NotReady"}</span>
           </div>
           <button
+            type="button"
             className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded"
-            onClick={handleResetConnection}>
+            onClick={handleResetConnection}
+          >
             <RefreshCw className="w-4 h-4 inline mr-1" />
             Reset Connection
           </button>
@@ -105,20 +104,19 @@ function Status({ config }: Props) {
           <StateRow notUse={false} state={connectionStatus?.comment_subscriber}>
             Comment subscriber
           </StateRow>
-          <StateRow
-            notUse={config.selfpost === false}
-            state={connectionStatus?.selfpost_handler}>
+          <StateRow notUse={config.selfpost === false} state={connectionStatus?.selfpost_handler}>
             Sakura handler
           </StateRow>
           <StateRow
             notUse={config.selfpost === false}
-            state={connectionStatus?.selfpost_subscriber}>
+            state={connectionStatus?.selfpost_subscriber}
+          >
             Sakura subscriber
           </StateRow>
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Status
+export default Status;

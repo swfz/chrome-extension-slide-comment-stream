@@ -1,7 +1,7 @@
-import { PanelRightOpen, Settings } from "lucide-react"
+import { PanelRightOpen, Settings } from "lucide-react";
 
 interface Props {
-  tab?: chrome.tabs.Tab
+  tab?: chrome.tabs.Tab;
 }
 
 const ExtHeader = ({ tab }: Props) => {
@@ -10,22 +10,26 @@ const ExtHeader = ({ tab }: Props) => {
       <h1 className="text-2xl font-bold">Comment Slide Stream</h1>
       <div className="flex gap-2">
         <button
+          type="button"
           onClick={() => chrome.runtime.openOptionsPage()}
           className="p-2 rounded-full hover:bg-gray-200"
-          aria-label="Settings">
+          aria-label="Settings"
+        >
           <Settings className="w-5 h-5" />
         </button>
         {tab && (
           <button
+            type="button"
             onClick={() => chrome.sidePanel.open({ windowId: tab.windowId })}
             className="p-2 rounded-full hover:bg-gray-200"
-            aria-label="Open side panel">
+            aria-label="Open side panel"
+          >
             <PanelRightOpen className="w-5 h-5" />
           </button>
         )}
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default ExtHeader
+export default ExtHeader;

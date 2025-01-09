@@ -80,15 +80,17 @@ function IndexSidepanel() {
     <>
       {config ? (
         <div className="w-96 m-1 flex flex-col">
-          <ExtHeader tab={tab}></ExtHeader>
+          <ExtHeader tab={tab} />
           {alert ? <Alert error={alert.error}>{alert.text}</Alert> : ""}
 
-          <Status config={config}></Status>
+          <Status config={config} />
 
           <div className="bg-white shadow rounded-lg mb-6 p-4">
             <div className="space-y-4">
               <button
-                className={`w-full py-2 px-4 rounded font-bold text-white bg-green-500 hover:bg-green-600`}
+                className={
+                  "w-full py-2 px-4 rounded font-bold text-white bg-green-500 hover:bg-green-600"
+                }
                 onClick={handleStart}
               >
                 <Play className="w-4 h-4 inline mr-2" />
@@ -97,11 +99,11 @@ function IndexSidepanel() {
             </div>
           </div>
 
-          <Sample feature={feature}></Sample>
+          <Sample feature={feature} />
         </div>
       ) : (
         <div className="w-96 m-1 flex flex-col">
-          <ExtHeader tab={tab}></ExtHeader>
+          <ExtHeader tab={tab} />
           <p className="font-bold">Warn:</p>
           <p className="grow">Please set configuration</p>
         </div>

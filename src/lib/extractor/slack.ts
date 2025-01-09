@@ -10,7 +10,7 @@ export const slackExtractor: CommentExtractor = {
   isTargetElement: (el) => {
     // ["data-item-key"]
     return (
-      (el as HTMLDivElement).dataset.itemKey != "input" &&
+      (el as HTMLDivElement).dataset.itemKey !== "input" &&
       !el.querySelector(".c-message_kit__resend")
     );
   },

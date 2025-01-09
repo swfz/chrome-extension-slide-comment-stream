@@ -59,7 +59,7 @@ const Sample = ({ feature }: Props) => {
             value={sampleComment}
             onKeyDown={handleEnterKey}
             onChange={(e) => setSampleComment(e.target.value)}
-          ></input>
+          />
           <button
             className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={handleSampleComment}

@@ -84,7 +84,7 @@ function Status({ config }: Props) {
           <div className="flex items-center gap-2">
             <div
               className={`w-3 h-3 rounded-full ${isReady ? "bg-green-500" : "bg-red-500"} animate-pulse`}
-            ></div>
+            />
             <span className="font-medium">{isReady ? "Ready" : "NotReady"}</span>
           </div>
           <button

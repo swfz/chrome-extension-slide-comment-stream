@@ -16,11 +16,11 @@ const removelinkBar = (iframeElement: HTMLIFrameElement) => {
   if (linkBar != null && wrapper != null && content != null) {
     linkBar.remove();
 
-    content.style.height = `100%`;
-    content.style.width = `100%`;
+    content.style.height = "100%";
+    content.style.width = "100%";
     content.style.left = "0";
     wrapper.style.height = "100%";
-    wrapper.style.width = `100%`;
+    wrapper.style.width = "100%";
     wrapper.style.top = "0";
     wrapper.style.left = "0";
   }
@@ -34,13 +34,13 @@ const fixCommentStyles = (config: Config) => {
 
   return {
     top: `${verticalPosition}%`,
-    position: `absolute`,
-    right: `-30%`,
+    position: "absolute",
+    right: "-30%",
     animation: `slideLeft ${animationDuration}ms linear`,
     color: config.color,
     fontFamily: config.font,
     fontSize: `${config.sizePx}px`,
-    whiteSpace: `nowrap`,
+    whiteSpace: "nowrap",
   } as const;
 };
 
@@ -84,7 +84,7 @@ const renderClap = (boxElement: HTMLDivElement, config: Config, claps: number): 
   clapElement.onanimationend = (e) => {
     const element = e.target as HTMLDivElement;
     if (element) {
-      element.style.display = `none`;
+      element.style.display = "none";
     }
   };
   boxElement.appendChild(clapElement);
@@ -100,7 +100,7 @@ const renderComment = (boxElement: HTMLDivElement, config: Config, comment: stri
   element.onanimationend = (e) => {
     const commentElement = e.target as HTMLParagraphElement;
     if (commentElement) {
-      commentElement.style.display = `none`;
+      commentElement.style.display = "none";
     }
   };
   // @ts-ignore

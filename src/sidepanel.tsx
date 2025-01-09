@@ -16,14 +16,14 @@ import ExtHeader from "./components/header";
 import Sample from "./components/sample";
 import Status from "./components/status";
 
-interface Alert {
+interface AlertProps {
   error: boolean;
   text: string;
 }
 
 function IndexSidepanel() {
   const [feature, setFeature] = useState<Feature | null>(null);
-  const [alert, setAlert] = useState<Alert | null>(null);
+  const [alert, setAlert] = useState<AlertProps | null>(null);
   const [tab, setTab] = useState<chrome.tabs.Tab>();
 
   const [config] = useStorage({

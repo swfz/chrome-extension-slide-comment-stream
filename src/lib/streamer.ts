@@ -78,7 +78,11 @@ const renderClap = (boxElement: HTMLDivElement, config: Config, claps: number): 
   const clapElementStyles = fixClapStyles(config, boxElement);
 
   clapElement.style.all = "initial";
-  Object.entries(clapElementStyles).forEach(([k, v]) => clapElement.style.setProperty(k, v));
+
+  for (const [k, v] of Object.entries(clapElementStyles)) {
+    clapElement.style.setProperty(k, v);
+  }
+
   p.innerText = `+${claps.toString()}`;
 
   clapElement.onanimationend = (e) => {
@@ -103,8 +107,11 @@ const renderComment = (boxElement: HTMLDivElement, config: Config, comment: stri
       commentElement.style.display = "none";
     }
   };
-  // @ts-ignore
-  Object.entries(commentStyle).forEach(([k, v]) => (element.style[k] = v));
+
+  for (const [k, v] of Object.entries(commentStyle)) {
+    // @ts-ignore
+    element.style[k] = v;
+  }
 
   boxElement.appendChild(element);
 };
@@ -117,7 +124,9 @@ const render = (boxElement: HTMLDivElement, config: Config, comments: string[]) 
 
   const filteredComments = comments.filter((c) => !c.match(/^[8８]+$/));
 
-  filteredComments.forEach((c) => renderComment(boxElement, config, c));
+  for (const c of filteredComments) {
+    renderComment(boxElement, config, c);
+  }
 };
 
 export { removelinkBar, render };

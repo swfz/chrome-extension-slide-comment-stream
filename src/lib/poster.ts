@@ -31,7 +31,7 @@ const subscribePageNumber = (observeElement: HTMLElement) => {
       const plantCommentRows = sakura[added];
 
       if (plantCommentRows !== undefined) {
-        plantCommentRows.forEach((commentRow) => {
+        for (const commentRow of plantCommentRows) {
           setTimeout(async () => {
             await sendToBackground({
               name: "forwarder",
@@ -40,7 +40,7 @@ const subscribePageNumber = (observeElement: HTMLElement) => {
               console.warn(e);
             });
           }, commentRow.seconds * 1000);
-        });
+        }
       }
     }
   });

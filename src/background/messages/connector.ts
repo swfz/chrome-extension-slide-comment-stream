@@ -2,6 +2,7 @@ import { PlasmoMessaging } from "@plasmohq/messaging"
 import { Storage } from "@plasmohq/storage"
 
 import {
+  Config,
   ConnectedStatus,
   ConnectRequestBody,
   Feature,
@@ -15,9 +16,12 @@ const STORAGE_KEY = "status"
 const disconnect = async (feature: Feature, role: Role) => {
   const storage = new Storage({ area: "local" })
   const state = (await storage.get<ConnectedStatus>(STORAGE_KEY)) || {}
+  const config = (await storage.get<Config>("config")) || {} as Config
   const identifier = `${feature}_${role}`
 
-  await storage.set("status", { ...state, [identifier]: null })
+  const value = feature !== "selfpost" ? null : config.selfpost ? null : undefined;
+
+  await storage.set("status", { ...state, [identifier]: value })
 
   return { message: `disconnected ${identifier}.` }
 }
@@ -30,16 +34,19 @@ const connect = async (
 ) => {
   const storage = new Storage({ area: "local" })
   const state = (await storage.get<ConnectedStatus>(STORAGE_KEY)) || {}
+  const config = (await storage.get<Config>("config")) || {} as Config
   const identifier = `${feature}_${role}`
 
-  console.log(identifier, tabId)
   const row = {
     service,
     tabId,
     role,
     feature
   }
-  await storage.set(STORAGE_KEY, { ...state, [identifier]: row })
+
+  const value = feature !== "selfpost" ? row : config.selfpost ? row : undefined;
+
+  await storage.set(STORAGE_KEY, { ...state, [identifier]: value })
 
   return { message: `connected ${identifier}(${tabId})` }
 }

@@ -14,7 +14,9 @@ export type State = {
 }
 
 export type ConnectionIdentifier = `${Feature}_${Role}`
-export type ConnectedStatus = { [K in ConnectionIdentifier]: State | null }
+export type ConnectedStatus = {
+  [K in ConnectionIdentifier]: State | null | undefined
+}
 
 export type ConnectedTabs = {
   [R in Role]: number | null

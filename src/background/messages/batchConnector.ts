@@ -3,6 +3,7 @@ import { Storage } from "@plasmohq/storage"
 
 import {
   BatchDisconnectRequestBody,
+  Config,
   ConnectedStatus,
   ConnectionIdentifier,
   WorkerResponseBody
@@ -25,9 +26,13 @@ const handler: PlasmoMessaging.MessageHandler<
   const state =
     (await storage.get<ConnectedStatus>(STORAGE_KEY)) || ({} as ConnectedStatus)
 
+  const config = (await storage.get<Config>("config")) || {} as Config
+
   const newState = req.body.rows.reduce((state, row) => {
     const identifier: ConnectionIdentifier = `${row.feature}_${row.role}`
-    state[identifier] = null
+    const value = row.feature !== "selfpost" ? null : config.selfpost ? null : undefined;
+
+    state[identifier] = value
 
     return state
   }, state)

@@ -88,6 +88,7 @@ function IndexPopup() {
           <div className="bg-white shadow rounded-lg mb-6 p-4">
             <div className="space-y-4">
               <button
+                type="button"
                 className={
                   "w-full py-2 px-4 rounded font-bold text-white bg-green-500 hover:bg-green-600"
                 }

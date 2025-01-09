@@ -88,6 +88,7 @@ function Status({ config }: Props) {
             <span className="font-medium">{isReady ? "Ready" : "NotReady"}</span>
           </div>
           <button
+            type="button"
             className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded"
             onClick={handleResetConnection}
           >

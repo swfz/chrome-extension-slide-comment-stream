@@ -248,6 +248,7 @@ function OptionsPage() {
             {config.selfpost && (
               <div className="mt-4 border border-gray-200 rounded-md">
                 <button
+                  type="button"
                   onClick={() => setIsSelfpostExpanded(!isSelfpostExpanded)}
                   className="w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
@@ -339,6 +340,7 @@ function OptionsPage() {
         </div>
         <div className="p-6 bg-gray-50 border-t border-gray-200">
           <button
+            type="button"
             className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
             onClick={handleSubmit}
             disabled={isError()}

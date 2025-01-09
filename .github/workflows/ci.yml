@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
       - run: corepack enable
       - uses: actions/setup-node@v4.1.0
         with:
@@ -20,7 +20,7 @@ jobs:
   typecheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
       - run: corepack enable
       - uses: actions/setup-node@v4.1.0
         with:
@@ -34,7 +34,7 @@ jobs:
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
       - run: corepack enable
       - uses: actions/setup-node@v4.1.0
         with:
@@ -48,7 +48,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.7
+      - uses: actions/checkout@v4.2.2
       - run: corepack enable
       - uses: actions/setup-node@v4.1.0
         with:

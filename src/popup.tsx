@@ -1,78 +1,78 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-import { sendToContentScript } from "@plasmohq/messaging"
-import { Storage } from "@plasmohq/storage"
-import { useStorage } from "@plasmohq/storage/hook"
+import { sendToContentScript } from "@plasmohq/messaging";
+import { Storage } from "@plasmohq/storage";
+import { useStorage } from "@plasmohq/storage/hook";
 
-import "./style.css"
+import "./style.css";
 
-import { Play } from "lucide-react"
+import { Play } from "lucide-react";
 
-import { detectService, serviceToHandlerFeature } from "~src/lib/service"
-import { Feature } from "~src/types/types"
+import { detectService, serviceToHandlerFeature } from "~src/lib/service";
+import { Feature } from "~src/types/types";
 
-import Alert from "./components/alert"
-import ExtHeader from "./components/header"
-import Sample from "./components/sample"
-import Status from "./components/status"
+import Alert from "./components/alert";
+import ExtHeader from "./components/header";
+import Sample from "./components/sample";
+import Status from "./components/status";
 
 interface Alert {
-  error: boolean
-  text: string
+  error: boolean;
+  text: string;
 }
 
 function IndexPopup() {
-  const [feature, setFeature] = useState<Feature | null>(null)
-  const [alert, setAlert] = useState<Alert | null>(null)
-  const [tab, setTab] = useState<chrome.tabs.Tab>()
+  const [feature, setFeature] = useState<Feature | null>(null);
+  const [alert, setAlert] = useState<Alert | null>(null);
+  const [tab, setTab] = useState<chrome.tabs.Tab>();
 
   const [config] = useStorage({
     key: "config",
     instance: new Storage({
-      area: "local"
-    })
-  })
+      area: "local",
+    }),
+  });
 
   const handleStart = async () => {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
     if (tab === undefined) {
-      setAlert({ error: true, text: "tab not found" })
-      return
+      setAlert({ error: true, text: "tab not found" });
+      return;
     }
 
     const res = await sendToContentScript({
       name: "Load",
-      tabId: tab.id
-    })
+      tabId: tab.id,
+    });
 
-    console.warn(res)
+    console.warn(res);
     if (res.error) {
-      setAlert({ error: true, text: res.error })
+      setAlert({ error: true, text: res.error });
     } else {
-      setAlert({ error: false, text: res.message })
+      setAlert({ error: false, text: res.message });
     }
-  }
+  };
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       const [tab] = await chrome.tabs.query({
         active: true,
-        currentWindow: true
-      })
-      setTab(tab)
-      const url = tab?.url
-      console.log("url", url)
+        currentWindow: true,
+      });
+      setTab(tab);
+      const url = tab?.url;
+      console.log("url", url);
 
-      if (url === undefined) return
+      if (url === undefined) return;
 
-      const service = detectService(url)
+      const service = detectService(url);
 
-      console.log("service", service)
-      if (service === null) return
-      setFeature(serviceToHandlerFeature(service))
-    })()
-  }, [])
+      console.log("service", service);
+      if (service === null) return;
+      setFeature(serviceToHandlerFeature(service));
+    })();
+  }, []);
 
   // TODO: コメントリストのDL機能
 
@@ -89,7 +89,8 @@ function IndexPopup() {
             <div className="space-y-4">
               <button
                 className={`w-full py-2 px-4 rounded font-bold text-white bg-green-500 hover:bg-green-600`}
-                onClick={handleStart}>
+                onClick={handleStart}
+              >
                 <Play className="w-4 h-4 inline mr-2" />
                 Start
               </button>
@@ -106,7 +107,7 @@ function IndexPopup() {
         </div>
       )}
     </>
-  )
+  );
 }
 
-export default IndexPopup
+export default IndexPopup;

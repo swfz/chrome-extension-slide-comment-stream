@@ -1,49 +1,49 @@
-import { Send } from "lucide-react"
-import { useState } from "react"
+import { Send } from "lucide-react";
+import { useState } from "react";
 
-import { sendToBackground } from "@plasmohq/messaging"
+import { sendToBackground } from "@plasmohq/messaging";
 
-import { Feature } from "~src/types/types"
+import { Feature } from "~src/types/types";
 
 interface Props {
-  feature: Feature | null
+  feature: Feature | null;
 }
 
 const Sample = ({ feature }: Props) => {
-  const [sampleComment, setSampleComment] = useState<string>("")
+  const [sampleComment, setSampleComment] = useState<string>("");
 
   const streamComment = async () => {
     await sendToBackground({
       name: "forwarder",
-      body: { action: "Subscribe", comments: [sampleComment] }
+      body: { action: "Subscribe", comments: [sampleComment] },
     }).catch((e) => {
-      console.warn(e)
-    })
-  }
+      console.warn(e);
+    });
+  };
 
   const sakuraComment = async () => {
     await sendToBackground({
       name: "forwarder",
-      body: { action: "SakuraComment", comment: sampleComment }
+      body: { action: "SakuraComment", comment: sampleComment },
     }).catch((e) => {
-      console.warn(e)
-    })
-  }
+      console.warn(e);
+    });
+  };
 
   const handleSampleComment = () => {
     if (feature === "selfpost") {
-      sakuraComment()
+      sakuraComment();
     }
     if (feature === "comment") {
-      streamComment()
+      streamComment();
     }
-  }
+  };
 
   const handleEnterKey = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleSampleComment()
+      handleSampleComment();
     }
-  }
+  };
 
   return (
     <div className="bg-white shadow rounded-lg p-4">
@@ -58,17 +58,19 @@ const Sample = ({ feature }: Props) => {
             placeholder="Enter your test comment here..."
             value={sampleComment}
             onKeyDown={handleEnterKey}
-            onChange={(e) => setSampleComment(e.target.value)}></input>
+            onChange={(e) => setSampleComment(e.target.value)}
+          ></input>
           <button
             className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={handleSampleComment}>
+            onClick={handleSampleComment}
+          >
             <Send className="w-4 h-4 inline mr-2" />
             Send Sample Comment
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sample
+export default Sample;

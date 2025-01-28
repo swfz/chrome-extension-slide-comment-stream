@@ -5,6 +5,7 @@ import type { CommentSubscriber } from "~src/types/types";
 import { extractors } from "./extractor";
 
 const subscribeComments = (service: CommentSubscriber, observeElement: HTMLElement) => {
+  const extractedIdentifiers = new Set<string>();
   const extractComment = (mutationRecords: MutationRecord[]): string[] => {
     const nodes = mutationRecords
       .filter((record) => {
@@ -17,7 +18,7 @@ const subscribeComments = (service: CommentSubscriber, observeElement: HTMLEleme
 
     const comments = Array.from(nodes)
       .filter((node) => node !== undefined)
-      .map((node) => extractors[service].commentExtractFn(node as Node))
+      .map((node) => extractors[service].commentExtractFn(node as Node, extractedIdentifiers))
       .filter((c) => c !== undefined && c !== null);
 
     return comments as string[];

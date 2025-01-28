@@ -112,7 +112,7 @@ export type Service = CommentSubscriber | PageNumberSubscriber;
 export interface CommentExtractor {
   listNodeExtractFn: () => HTMLElement | null | undefined;
   isTargetElement: (el: Element) => boolean;
-  commentExtractFn: (el: Node) => string | null | undefined;
+  commentExtractFn: (el: Node, uniq?: Set<string>) => string | null | undefined;
 }
 
 export interface SlideExtractor {

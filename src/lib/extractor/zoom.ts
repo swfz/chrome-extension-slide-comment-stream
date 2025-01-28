@@ -13,13 +13,15 @@ export const zoomExtractor: CommentExtractor = {
       return el.className.match(className);
     });
   },
-  commentExtractFn: (el) => {
+  commentExtractFn: (el, uniq = new Set()) => {
     const commentContainer = (el as HTMLDivElement).querySelector<HTMLDivElement>(
       ".new-chat-message__container",
     );
     if (commentContainer === null) return "";
 
-    console.log(commentContainer);
+    const id = commentContainer.getAttribute("id") as string;
+    if (uniq.has(id)) return "";
+    uniq.add(id);
 
     return commentContainer.getAttribute("aria-label")?.split(", ").at(-1);
   },

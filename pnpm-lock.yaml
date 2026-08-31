@@ -10,25 +10,25 @@ importers:
     dependencies:
       '@plasmohq/messaging':
         specifier: ^0.6.2
-        version: 0.6.2(react@18.3.1)
+        version: 0.6.2(react@19.2.8)
       '@plasmohq/storage':
         specifier: ^1.13.0
-        version: 1.13.0(react@18.3.1)
+        version: 1.13.0(react@19.2.8)
       css-filter-converter:
         specifier: ^1.0.109
         version: 1.0.112
       lucide-react:
         specifier: ^0.577.0
-        version: 0.577.0(react@18.3.1)
+        version: 0.577.0(react@19.2.8)
       plasmo:
         specifier: 0.89.4
-        version: 0.89.4(@swc/core@1.10.1(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(lodash@4.17.21)(postcss@8.5.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 0.89.4(@swc/core@1.10.1(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(lodash@4.17.21)(postcss@8.5.10)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
-        specifier: 18.3.1
-        version: 18.3.1
+        specifier: 19.2.8
+        version: 19.2.8
       react-dom:
-        specifier: 18.3.1
-        version: 18.3.1(react@18.3.1)
+        specifier: 19.2.8
+        version: 19.2.8(react@19.2.8)
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -43,11 +43,11 @@ importers:
         specifier: 20.19.39
         version: 20.19.39
       '@types/react':
-        specifier: 18.3.18
-        version: 18.3.18
+        specifier: 19.2.18
+        version: 19.2.18
       '@types/react-dom':
-        specifier: 18.3.5
-        version: 18.3.5(@types/react@18.3.18)
+        specifier: 19.2.5
+        version: 19.2.5(@types/react@19.2.18)
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.10)
@@ -1454,16 +1454,13 @@ packages:
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
 
-  '@types/prop-types@15.7.14':
-    resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
-
-  '@types/react-dom@18.3.5':
-    resolution: {integrity: sha512-P4t6saawp+b/dFrUr2cvkVsfvPguwsxtH6dNIYRllMsefqFzkZk5UIjzyDOv5g1dXIPdG4Sp1yCR4Z6RCUsG/Q==}
+  '@types/react-dom@19.2.5':
+    resolution: {integrity: sha512-fMPwH9v7r/pp43yUd2/Mbiex5KouJwwR3dzHkhLREUC6764VyDsqxhAxv6OFEYR1RhjOyD1naqba8ECDBe7ZQg==}
     peerDependencies:
-      '@types/react': ^18.0.0
+      '@types/react': ^19.2.0
 
-  '@types/react@18.3.18':
-    resolution: {integrity: sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ==}
+  '@types/react@19.2.18':
+    resolution: {integrity: sha512-AnzbBERsrLKtk2XSfTbYRLjQPdy116Sty4q+T+Bp3IC4l6jNBvreVPAHmpq9qhXQM7CXZPjLVmGMw9sy+hxQ3w==}
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -1804,6 +1801,9 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  csstype@3.2.3:
+    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
   debug@4.4.0:
     resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
@@ -2454,10 +2454,6 @@ packages:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
     engines: {node: '>=10'}
 
-  loose-envify@1.4.0:
-    resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
-    hasBin: true
-
   lowercase-keys@3.0.0:
     resolution: {integrity: sha512-ozCC6gdQ+glXOQsveKD0YsDy8DSQFjDTz4zyzEHNV5+JP5D62LmfDZ6o1cycFx9ouG940M5dE8C8CTewdj2YWQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -2825,10 +2821,10 @@ packages:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
 
-  react-dom@18.3.1:
-    resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
+  react-dom@19.2.8:
+    resolution: {integrity: sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==}
     peerDependencies:
-      react: ^18.3.1
+      react: ^19.2.8
 
   react-error-overlay@6.0.9:
     resolution: {integrity: sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==}
@@ -2841,8 +2837,8 @@ packages:
     resolution: {integrity: sha512-Gvzk7OZpiqKSkxsQvO/mbTN1poglhmAV7gR/DdIrRrSMXraRQQlfikRJOr3Nb9GTMPC5kof948Zy6jJZIFtDvQ==}
     engines: {node: '>=0.10.0'}
 
-  react@18.3.1:
-    resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
+  react@19.2.8:
+    resolution: {integrity: sha512-PWaYA1L/q9u2u7xYQi+Y3L3Yfnie7XyLeaJICV1MGD6LprsBxcAqGjYyr0eY3p+QdsA+x/Irkt4Qif8D63+Sbw==}
     engines: {node: '>=0.10.0'}
 
   read-cache@1.0.0:
@@ -2931,8 +2927,8 @@ packages:
   sax@1.4.1:
     resolution: {integrity: sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg==}
 
-  scheduler@0.23.2:
-    resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
+  scheduler@0.27.0:
+    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
   semver@5.7.2:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
@@ -4363,21 +4359,21 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@plasmohq/consolidate@0.17.0(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@plasmohq/consolidate@0.17.0(lodash@4.17.21)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       bluebird: 3.7.2
     optionalDependencies:
       lodash: 4.17.21
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
 
   '@plasmohq/init@0.7.0': {}
 
-  '@plasmohq/messaging@0.6.2(react@18.3.1)':
+  '@plasmohq/messaging@0.6.2(react@19.2.8)':
     dependencies:
       nanoid: 5.0.3
     optionalDependencies:
-      react: 18.3.1
+      react: 19.2.8
 
   '@plasmohq/parcel-bundler@0.5.6':
     dependencies:
@@ -4395,7 +4391,7 @@ snapshots:
     transitivePeerDependencies:
       - '@parcel/core'
 
-  '@plasmohq/parcel-config@0.41.1(@swc/core@1.10.1(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(lodash@4.17.21)(postcss@8.5.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.2.2)':
+  '@plasmohq/parcel-config@0.41.1(@swc/core@1.10.1(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(lodash@4.17.21)(postcss@8.5.10)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.2.2)':
     dependencies:
       '@parcel/compressor-raw': 2.9.3(@parcel/core@2.9.3)
       '@parcel/config-default': 2.9.3(@parcel/core@2.9.3)(@swc/helpers@0.5.15)(postcss@8.5.10)(typescript@5.2.2)
@@ -4431,7 +4427,7 @@ snapshots:
       '@plasmohq/parcel-transformer-inline-css': 0.3.11
       '@plasmohq/parcel-transformer-manifest': 0.20.1
       '@plasmohq/parcel-transformer-svelte': 0.6.0
-      '@plasmohq/parcel-transformer-vue': 0.5.0(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@plasmohq/parcel-transformer-vue': 0.5.0(lodash@4.17.21)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/helpers'
@@ -4613,7 +4609,7 @@ snapshots:
       '@parcel/utils': 2.9.3
       svelte: 4.2.2
 
-  '@plasmohq/parcel-transformer-vue@0.5.0(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@plasmohq/parcel-transformer-vue@0.5.0(lodash@4.17.21)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@parcel/core': 2.9.3
       '@parcel/diagnostic': 2.9.3
@@ -4621,7 +4617,7 @@ snapshots:
       '@parcel/source-map': 2.1.1
       '@parcel/types': 2.9.3(@parcel/core@2.9.3)
       '@parcel/utils': 2.9.3
-      '@plasmohq/consolidate': 0.17.0(lodash@4.17.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@plasmohq/consolidate': 0.17.0(lodash@4.17.21)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@vue/compiler-sfc': 3.3.4
       nullthrows: 1.1.1
       semver: 7.5.4
@@ -4674,11 +4670,11 @@ snapshots:
       - walrus
       - whiskers
 
-  '@plasmohq/storage@1.13.0(react@18.3.1)':
+  '@plasmohq/storage@1.13.0(react@19.2.8)':
     dependencies:
       pify: 6.1.0
     optionalDependencies:
-      react: 18.3.1
+      react: 19.2.8
 
   '@pnpm/config.env-replace@1.1.0': {}
 
@@ -4905,16 +4901,13 @@ snapshots:
 
   '@types/parse-json@4.0.2': {}
 
-  '@types/prop-types@15.7.14': {}
-
-  '@types/react-dom@18.3.5(@types/react@18.3.18)':
+  '@types/react-dom@19.2.5(@types/react@19.2.18)':
     dependencies:
-      '@types/react': 18.3.18
+      '@types/react': 19.2.18
 
-  '@types/react@18.3.18':
+  '@types/react@19.2.18':
     dependencies:
-      '@types/prop-types': 15.7.14
-      csstype: 3.1.3
+      csstype: 3.2.3
 
   '@types/trusted-types@2.0.7': {}
 
@@ -5285,6 +5278,8 @@ snapshots:
       css-tree: 1.1.3
 
   csstype@3.1.3: {}
+
+  csstype@3.2.3: {}
 
   debug@4.4.0:
     dependencies:
@@ -5901,10 +5896,6 @@ snapshots:
       chalk: 4.1.2
       is-unicode-supported: 0.1.0
 
-  loose-envify@1.4.0:
-    dependencies:
-      js-tokens: 4.0.0
-
   lowercase-keys@3.0.0: {}
 
   lru-cache@10.4.3: {}
@@ -5917,9 +5908,9 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-react@0.577.0(react@18.3.1):
+  lucide-react@0.577.0(react@19.2.8):
     dependencies:
-      react: 18.3.1
+      react: 19.2.8
 
   magic-string@0.30.15:
     dependencies:
@@ -6130,7 +6121,7 @@ snapshots:
 
   pirates@4.0.6: {}
 
-  plasmo@0.89.4(@swc/core@1.10.1(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(lodash@4.17.21)(postcss@8.5.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  plasmo@0.89.4(@swc/core@1.10.1(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(lodash@4.17.21)(postcss@8.5.10)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       '@expo/spawn-async': 1.7.2
       '@parcel/core': 2.9.3
@@ -6138,7 +6129,7 @@ snapshots:
       '@parcel/package-manager': 2.9.3(@parcel/core@2.9.3)
       '@parcel/watcher': 2.2.0
       '@plasmohq/init': 0.7.0
-      '@plasmohq/parcel-config': 0.41.1(@swc/core@1.10.1(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(lodash@4.17.21)(postcss@8.5.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.2.2)
+      '@plasmohq/parcel-config': 0.41.1(@swc/core@1.10.1(@swc/helpers@0.5.15))(@swc/helpers@0.5.15)(lodash@4.17.21)(postcss@8.5.10)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@5.2.2)
       '@plasmohq/parcel-core': 0.1.10
       buffer: 6.0.3
       chalk: 5.3.0
@@ -6319,11 +6310,10 @@ snapshots:
       minimist: 1.2.8
       strip-json-comments: 2.0.1
 
-  react-dom@18.3.1(react@18.3.1):
+  react-dom@19.2.8(react@19.2.8):
     dependencies:
-      loose-envify: 1.4.0
-      react: 18.3.1
-      scheduler: 0.23.2
+      react: 19.2.8
+      scheduler: 0.27.0
 
   react-error-overlay@6.0.9: {}
 
@@ -6331,9 +6321,7 @@ snapshots:
 
   react-refresh@0.9.0: {}
 
-  react@18.3.1:
-    dependencies:
-      loose-envify: 1.4.0
+  react@19.2.8: {}
 
   read-cache@1.0.0:
     dependencies:
@@ -6415,9 +6403,7 @@ snapshots:
   sax@1.4.1:
     optional: true
 
-  scheduler@0.23.2:
-    dependencies:
-      loose-envify: 1.4.0
+  scheduler@0.27.0: {}
 
   semver@5.7.2: {}
 

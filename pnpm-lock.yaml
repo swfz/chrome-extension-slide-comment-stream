@@ -15,7 +15,7 @@ importers:
         specifier: ^1.13.0
         version: 1.13.0(react@18.3.1)
       css-filter-converter:
-        specifier: ^1.0.112
+        specifier: ^1.0.109
         version: 1.0.112
       lucide-react:
         specifier: ^0.577.0
@@ -52,7 +52,7 @@ importers:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.5.10)
       postcss:
-        specifier: ^8.5.10
+        specifier: ^8.4.49
         version: 8.5.10
       tailwindcss:
         specifier: ^3.4.17
